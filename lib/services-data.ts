@@ -1,0 +1,351 @@
+export interface ServiceFeature {
+  id: number;
+  icon: string;
+  title: string;
+  description: string;
+  featured: boolean;
+  link?: string;
+}
+
+export interface ServiceData {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  features: ServiceFeature[];
+  primaryColor: string;
+  borderColor: string;
+  buttonColor: string;
+  backgroundGradient: string;
+  imageUrl: string;
+  imageAlt: string;
+  partnersTitle: string;
+  partnersIcon: string;
+  partnersIconColor: string;
+  detailedFeatures: string[];
+  benefits: string[];
+  targetAudience: string[];
+  serviceLink: string;
+  getStartedLink: string;
+  subserviceLinks: { name: string; link: string }[];
+}
+
+export const servicesData: ServiceData[] = [
+  {
+    id: "guidance",
+    title: "ScioGuidance",
+    subtitle: "Empowering students and professionals with personalized career guidance and strategic planning",
+    description: "Our comprehensive career guidance program helps individuals discover their potential and chart clear paths to success through personalized counseling, interactive workshops, and digital platforms.",
+    features: [
+      {
+        id: 1,
+        icon: "fas fa-user-graduate",
+        title: "One-on-One Counseling",
+        description: "Personalized career counseling sessions for students and professionals.",
+        featured: false,
+        link: "/services/guidance/counseling"
+      },
+      {
+        id: 2,
+        icon: "fas fa-users",
+        title: "Career Awareness Workshops",
+        description: "Interactive workshops to help students explore career options.",
+        featured: false,
+        link: "/services/guidance/workshops"
+      },
+      {
+        id: 3,
+        icon: "fas fa-globe",
+        title: "Career Awareness Portal",
+        description: "Digital platform for ongoing career support and exploration.",
+        featured: true,
+        link: "/services/guidance/portal"
+      }
+    ],
+    primaryColor: "scio-blue",
+    borderColor: "blue-100",
+    buttonColor: "scio-orange",
+    backgroundGradient: "from-blue-50 via-slate-50 to-gray-50",
+    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Students in career guidance session",
+    partnersTitle: "Schools that we Enable",
+    partnersIcon: "fas fa-handshake",
+    partnersIconColor: "text-scio-blue",
+    detailedFeatures: [
+      "One-on-One Counseling",
+      "Career Awareness Workshops", 
+      "Career Awareness Portal",
+      "Psychometric Assessments",
+      "Industry Exposure Programs"
+    ],
+    benefits: [
+      "Discover your true potential and strengths",
+      "Make informed career decisions",
+      "Access to industry insights and trends",
+      "Personalized career roadmaps"
+    ],
+    targetAudience: [
+      "High school students",
+      "College students",
+      "Working professionals",
+      "Career changers"
+    ],
+    serviceLink: "/services/guidance",
+    getStartedLink: "https://guidance.sciolabs.in/",
+    subserviceLinks: [
+      { name: "One-on-One Counseling", link: "/services/guidance/counseling" },
+      { name: "Career Workshops", link: "/services/guidance/workshops" },
+      { name: "Career Portal", link: "/services/guidance/portal" }
+    ]
+  },
+  {
+    id: "thrive",
+    title: "ScioThrive",
+    subtitle: "Comprehensive training programs designed to elevate skills and accelerate professional growth",
+    description: "Designed to accelerate professional growth through modern teaching strategies, corporate training, and specialized programs for educators, professionals, and teenagers.",
+    features: [
+      {
+        id: 1,
+        icon: "fas fa-chalkboard-teacher",
+        title: "Educator Training",
+        description: "Modern teaching strategies and digital toolkits for teachers.",
+        featured: false,
+        link: "/services/thrive/educator-training"
+      },
+      {
+        id: 2,
+        icon: "fas fa-briefcase",
+        title: "Corporate Training",
+        description: "Professional development to enhance workplace skills.",
+        featured: false,
+        link: "/services/thrive/corporate-training"
+      },
+      {
+        id: 3,
+        icon: "fas fa-graduation-cap",
+        title: "Teens Training",
+        description: "Life skills and communication training for teenagers.",
+        featured: true,
+        link: "/services/thrive/teens-training"
+      }
+    ],
+    primaryColor: "scio-orange",
+    borderColor: "orange-100",
+    buttonColor: "scio-blue",
+    backgroundGradient: "from-orange-50 via-amber-50 to-yellow-50",
+    imageUrl: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Professional training and education",
+    partnersTitle: "Training Partners",
+    partnersIcon: "fas fa-handshake",
+    partnersIconColor: "text-scio-orange",
+    detailedFeatures: [
+      "Educator Training",
+      "Corporate Training",
+      "Teens Training",
+      "Leadership Development",
+      "Digital Skills Training"
+    ],
+    benefits: [
+      "Enhanced teaching methodologies",
+      "Improved workplace productivity",
+      "Better leadership skills",
+      "Future-ready skill development"
+    ],
+    targetAudience: [
+      "Educators and teachers",
+      "Corporate professionals",
+      "Teenagers and young adults",
+      "Team leaders and managers"
+    ],
+    serviceLink: "/services/thrive",
+    getStartedLink: "#",
+    subserviceLinks: [
+      { name: "Educator Training", link: "/services/thrive/educator-training" },
+      { name: "Corporate Training", link: "/services/thrive/corporate-training" },
+      { name: "Teens Training", link: "/services/thrive/teens-training" }
+    ]
+  },
+  {
+    id: "care",
+    title: "ScioCare",
+    subtitle: "Specialized programs for caregivers and frontline workers in healthcare and community services",
+    description: "Focused on empowering caregivers and frontline workers with essential communication skills and professional development opportunities in healthcare and community services.",
+    features: [
+      {
+        id: 1,
+        icon: "fas fa-heart",
+        title: "CareBridge English",
+        description: "English communication program tailored for caregivers and frontline workers.",
+        featured: false,
+        link: "/services/care/carebridge-english"
+      },
+      {
+        id: 2,
+        icon: "fas fa-rocket",
+        title: "CareLaunch",
+        description: "Foundational program to kickstart careers in caregiving sectors.",
+        featured: false,
+        link: "/services/care/carelaunch"
+      },
+      {
+        id: 3,
+        icon: "fas fa-compass",
+        title: "Pathways360°",
+        description: "Holistic growth program focusing on personal and professional development.",
+        featured: true,
+        link: "/services/care/pathways360"
+      }
+    ],
+    primaryColor: "scio-green",
+    borderColor: "green-100",
+    buttonColor: "scio-blue",
+    backgroundGradient: "from-green-50 via-emerald-50 to-teal-50",
+    imageUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Healthcare and caregiving training",
+    partnersTitle: "Healthcare Partners",
+    partnersIcon: "fas fa-handshake",
+    partnersIconColor: "text-scio-green",
+    detailedFeatures: [
+      "CareBridge English",
+      "CareLaunch",
+      "Pathways360°",
+      "Healthcare Communication",
+      "Professional Certification"
+    ],
+    benefits: [
+      "Improved patient communication",
+      "Career advancement opportunities",
+      "Cultural sensitivity training",
+      "Professional recognition"
+    ],
+    targetAudience: [
+      "Healthcare workers",
+      "Caregivers",
+      "Frontline workers",
+      "Community service providers"
+    ],
+    serviceLink: "/services/care",
+    getStartedLink: "#",
+    subserviceLinks: [
+      { name: "CareBridge English", link: "/services/care/carebridge-english" },
+      { name: "CareLaunch", link: "/services/care/carelaunch" },
+      { name: "Pathways360°", link: "/services/care/pathways360" }
+    ]
+  },
+  {
+    id: "lingua",
+    title: "ScioLingua",
+    subtitle: "Faith-based and foundational language learning programs for diverse educational needs",
+    description: "Innovative language programs that integrate faith-based learning with foundational English education, designed for diverse educational needs and spiritual growth.",
+    features: [
+      {
+        id: 1,
+        icon: "fas fa-book",
+        title: "TheoLingua",
+        description: "Level 1, Level 2, Level 3 – Faith-based English learning paths.",
+        featured: false,
+        link: "https://theo.sciolabs.in/"
+      },
+      {
+        id: 2,
+        icon: "fas fa-seedling",
+        title: "rootED",
+        description: "Foundations (Class 3) & Expressions (Class 7) – Language programs for schools.",
+        featured: true,
+        link: "/services/lingua/rooted"
+      }
+    ],
+    primaryColor: "scio-purple",
+    borderColor: "purple-100",
+    buttonColor: "scio-orange",
+    backgroundGradient: "from-purple-50 via-violet-50 to-indigo-50",
+    imageUrl: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Language learning and education",
+    partnersTitle: "Educational Partners",
+    partnersIcon: "fas fa-handshake",
+    partnersIconColor: "text-scio-purple",
+    detailedFeatures: [
+      "TheoLingua - Level 1",
+      "TheoLingua - Level 2", 
+      "TheoLingua - Level 3",
+      "rootED - Foundations (Class 3)",
+      "rootED - Expressions (Class 7)"
+    ],
+    benefits: [
+      "Integrated faith and language learning",
+      "Age-appropriate curriculum",
+      "Cultural and spiritual growth",
+      "Strong foundation in English"
+    ],
+    targetAudience: [
+      "Faith-based institutions",
+      "Elementary school students",
+      "Religious communities",
+      "Educational institutions"
+    ],
+    serviceLink: "/services/lingua",
+    getStartedLink: "#",
+    subserviceLinks: [
+      { name: "TheoLingua", link: "https://theo.sciolabs.in" },
+      { name: "rootED", link: "/services/lingua/rooted" }
+    ]
+  },
+  {
+    id: "sprints",
+    title: "ScioSprints",
+    subtitle: "Gamified learning solutions and custom educational portals for enhanced student engagement",
+    description: "Revolutionary gamified learning solutions and custom educational portals that enhance student engagement through interactive content and personalized learning experiences.",
+    features: [
+      {
+        id: 1,
+        icon: "fas fa-gamepad",
+        title: "CBSE (4–8)",
+        description: "Gamified revision content for core subjects.",
+        featured: false,
+        link: "/services/sprints/cbse"
+      },
+      {
+        id: 2,
+        icon: "fas fa-school",
+        title: "Custom School Portals",
+        description: "Branded portals tailored to individual school needs.",
+        featured: true,
+        link: "/services/sprints/custom-portals"
+      }
+    ],
+    primaryColor: "scio-blue",
+    borderColor: "blue-100",
+    buttonColor: "scio-green",
+    backgroundGradient: "from-cyan-50 via-sky-50 to-blue-50",
+    imageUrl: "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Gamified learning and educational technology",
+    partnersTitle: "Technology Partners",
+    partnersIcon: "fas fa-handshake",
+    partnersIconColor: "text-scio-blue",
+    detailedFeatures: [
+      "CBSE Gamified Content",
+      "Custom School Portals",
+      "Interactive Learning",
+      "Progress Tracking",
+      "Branded Solutions"
+    ],
+    benefits: [
+      "Increased student engagement",
+      "Better learning outcomes",
+      "Personalized learning paths",
+      "Real-time progress tracking"
+    ],
+    targetAudience: [
+      "CBSE schools",
+      "Educational institutions",
+      "Students (Grades 4-8)",
+      "Educational technology teams"
+    ],
+    serviceLink: "/services/sprints",
+    getStartedLink: "https://sprints.sciolabs.in/",
+    subserviceLinks: [
+      { name: "CBSE (4–8)", link: "/services/sprints/cbse" },
+      { name: "Custom School Portals", link: "/services/sprints/custom-portals" }
+    ]
+  }
+];
