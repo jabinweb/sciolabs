@@ -150,6 +150,15 @@ export default function Header() {
               </div>
             </div>
 
+            {/* Add to desktop menu */}
+            <Link 
+              href="/blog" 
+              className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
+            >
+              Blog
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${underlineClass} transition-all duration-300 group-hover:w-full`}></span>
+            </Link>
+
             <Link 
               href="/contact" 
               className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
@@ -257,6 +266,15 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
+              </Link>
+
+              {/* Mobile Blog Link */}
+              <Link 
+                href="/blog" 
+                className={`font-body ${textClass} ${hoverTextClass} transition-colors font-medium text-lg`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Blog
               </Link>
             </div>
           </div>
