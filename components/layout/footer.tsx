@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -34,15 +33,15 @@ export default function Footer() {
             {/* Contact Info */}
             {/* <div className="space-y-3">
               <div className="flex items-start space-x-3 text-gray-300">
-                <MapPin className="w-5 h-5 text-scio-orange mt-0.5 flex-shrink-0" />
+                <i className="fas fa-map-marker-alt text-scio-orange mt-0.5 flex-shrink-0"></i>
                 <span className="font-body text-sm">N-304, Ashiyana Sector – N, Lucknow – 226012, India</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
-                <Phone className="w-5 h-5 text-scio-orange flex-shrink-0" />
+                <i className="fas fa-phone text-scio-orange flex-shrink-0"></i>
                 <span className="font-body text-sm">+91 9495212484</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
-                <Mail className="w-5 h-5 text-scio-orange flex-shrink-0" />
+                <i className="fas fa-envelope text-scio-orange flex-shrink-0"></i>
                 <span className="font-body text-sm">info@sciolabs.in</span>
               </div>
             </div> */}
@@ -50,16 +49,16 @@ export default function Footer() {
             {/* Social Links */}
             <div className="flex space-x-4 mt-6">
               <Link href="#" className="w-10 h-10 bg-scio-blue/20 hover:bg-scio-blue rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
-                <Facebook className="w-5 h-5" />
+                <i className="fab fa-facebook-f text-white"></i>
               </Link>
               <Link href="#" className="w-10 h-10 bg-scio-blue/20 hover:bg-scio-blue rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
-                <Twitter className="w-5 h-5" />
+                <i className="fab fa-twitter text-white"></i>
               </Link>
               <Link href="#" className="w-10 h-10 bg-scio-blue/20 hover:bg-scio-blue rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
-                <Linkedin className="w-5 h-5" />
+                <i className="fab fa-linkedin-in text-white"></i>
               </Link>
               <Link href="#" className="w-10 h-10 bg-scio-blue/20 hover:bg-scio-blue rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
-                <Instagram className="w-5 h-5" />
+                <i className="fab fa-instagram text-white"></i>
               </Link>
             </div>
           </div>
@@ -156,3 +155,4 @@ export default function Footer() {
     </footer>
   );
 }
+

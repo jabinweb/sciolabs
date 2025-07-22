@@ -15,10 +15,10 @@ export default function CTASection() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-10">
-          <h2 className="font-heading heading-primary text-4xl md:text-6xl text-white mb-6 text-balance">
+          <h2 className="font-heading heading-primary text-3xl md:text-5xl text-white mb-6 text-balance">
             Looking to build skills that matter?
           </h2>
-          <p className="font-body text-body text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="font-body text-body text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Join thousands of learners who’ve experienced our guided programs—designed to equip you for success in careers, classrooms, and beyond.
           </p>
         </div>
