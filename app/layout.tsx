@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CTASection from "@/components/landing/cta";
+import NewsletterSection from "@/components/landing/newsletter";
 
 
 const inter = Inter({
@@ -26,7 +27,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "ScioLabs - Empowering Lives Through Education",
+  title: "ScioLabs - Upward Equipping",
   description: "Transforming careers and lives through personalized guidance and innovative training programs.",
   manifest: "/manifest.json",
   appleWebApp: {
@@ -87,6 +88,7 @@ export default function RootLayout({
         <Header />
         {children}
         <CTASection />
+        <NewsletterSection />
         <Footer />
       </body>
     </html>

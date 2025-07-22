@@ -10,7 +10,7 @@ export default function IntroVideoSection() {
             Discover ScioLabs
           </h2>
           <p className="font-body text-xl text-gray-300 max-w-3xl mx-auto">
-            Watch our introduction video to learn more about our mission and services
+            Take a quick look at our key areas of impact in education and training.
           </p>
         </div>
         

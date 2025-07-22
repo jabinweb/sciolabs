@@ -34,31 +34,31 @@ export const servicesData: ServiceData[] = [
   {
     id: "guidance",
     title: "ScioGuidance",
-    subtitle: "Empowering students and professionals with personalized career guidance and strategic planning",
+    subtitle: "Personalized career guidance and strategic planning for students and professionals",
     description: "Our comprehensive career guidance program helps individuals discover their potential and chart clear paths to success through personalized counseling, interactive workshops, and digital platforms.",
     features: [
       {
         id: 1,
         icon: "fas fa-user-graduate",
         title: "One-on-One Counseling",
-        description: "Personalized career counseling sessions for students and professionals.",
+        description: "Personalized guidance and assessments to clarify career paths and choices.",
         featured: false,
         link: "/services/guidance/counseling"
       },
       {
         id: 2,
         icon: "fas fa-users",
-        title: "Career Awareness Workshops",
-        description: "Interactive workshops to help students explore career options.",
+        title: "Career Workshops",
+        description: "Interactive sessions that introduce students to diverse career opportunities.",
         featured: false,
         link: "/services/guidance/workshops"
       },
       {
         id: 3,
         icon: "fas fa-globe",
-        title: "Career Awareness Portal",
-        description: "Digital platform for ongoing career support and exploration.",
-        featured: true,
+        title: "Career Portal",
+        description: "Explore careers digitally with tools for planning, discovery, and growth.",
+        featured: false,
         link: "/services/guidance/portal"
       }
     ],
@@ -101,14 +101,14 @@ export const servicesData: ServiceData[] = [
   {
     id: "thrive",
     title: "ScioThrive",
-    subtitle: "Comprehensive training programs designed to elevate skills and accelerate professional growth",
+    subtitle: "Skill-building programs to accelerate growth and unlock potential in academic and professional settings",
     description: "Designed to accelerate professional growth through modern teaching strategies, corporate training, and specialized programs for educators, professionals, and teenagers.",
     features: [
       {
         id: 1,
         icon: "fas fa-chalkboard-teacher",
         title: "Educator Training",
-        description: "Modern teaching strategies and digital toolkits for teachers.",
+        description: "Equip teachers with modern pedagogy and practical ed-tech tools.",
         featured: false,
         link: "/services/thrive/educator-training"
       },
@@ -116,16 +116,16 @@ export const servicesData: ServiceData[] = [
         id: 2,
         icon: "fas fa-briefcase",
         title: "Corporate Training",
-        description: "Professional development to enhance workplace skills.",
+        description: "Boost team productivity and communication with targeted skill-building sessions.",
         featured: false,
         link: "/services/thrive/corporate-training"
       },
       {
         id: 3,
         icon: "fas fa-graduation-cap",
-        title: "Teens Training",
-        description: "Life skills and communication training for teenagers.",
-        featured: true,
+        title: "GenZ Training",
+        description: "Empowering teens and young adults with essential life skills and effective communication.",
+        featured: false,
         link: "/services/thrive/teens-training"
       }
     ],
@@ -168,22 +168,22 @@ export const servicesData: ServiceData[] = [
   {
     id: "care",
     title: "ScioCare",
-    subtitle: "Specialized programs for caregivers and frontline workers in healthcare and community services",
+    subtitle: "Equipping healthcare and community workers with essential communication and professional skills",
     description: "Focused on empowering caregivers and frontline workers with essential communication skills and professional development opportunities in healthcare and community services.",
     features: [
       {
         id: 1,
         icon: "fas fa-heart",
         title: "CareBridge English",
-        description: "English communication program tailored for caregivers and frontline workers.",
+        description: "Empowering caregivers with role-specific English and workplace communication skills.",
         featured: false,
         link: "/services/care/carebridge-english"
       },
       {
         id: 2,
         icon: "fas fa-rocket",
-        title: "CareLaunch",
-        description: "Foundational program to kickstart careers in caregiving sectors.",
+        title: "CareSteps",
+        description: "Foundational soft skills training for freshers entering caregiving professions.",
         featured: false,
         link: "/services/care/carelaunch"
       },
@@ -191,8 +191,8 @@ export const servicesData: ServiceData[] = [
         id: 3,
         icon: "fas fa-compass",
         title: "Pathways360°",
-        description: "Holistic growth program focusing on personal and professional development.",
-        featured: true,
+        description: "Finishing school program for healthcare professionals for personal, social, and professional readiness.",
+        featured: false,
         link: "/services/care/pathways360"
       }
     ],
@@ -235,14 +235,14 @@ export const servicesData: ServiceData[] = [
   {
     id: "lingua",
     title: "ScioLingua",
-    subtitle: "Faith-based and foundational language learning programs for diverse educational needs",
+    subtitle: "Custom English programs designed to build confidence and communication in diverse learning contexts",
     description: "Innovative language programs that integrate faith-based learning with foundational English education, designed for diverse educational needs and spiritual growth.",
     features: [
       {
         id: 1,
         icon: "fas fa-book",
         title: "TheoLingua",
-        description: "Level 1, Level 2, Level 3 – Faith-based English learning paths.",
+        description: "A Bible-based ESL program to strengthen theological reading and communication skills.",
         featured: false,
         link: "https://theo.sciolabs.in/"
       },
@@ -250,8 +250,8 @@ export const servicesData: ServiceData[] = [
         id: 2,
         icon: "fas fa-seedling",
         title: "rootED",
-        description: "Foundations (Class 3) & Expressions (Class 7) – Language programs for schools.",
-        featured: true,
+        description: "A foundational English program to build literacy and communication skills for early learners and ESL students.",
+        featured: false,
         link: "/services/lingua/rooted"
       }
     ],
@@ -293,14 +293,14 @@ export const servicesData: ServiceData[] = [
   {
     id: "sprints",
     title: "ScioSprints",
-    subtitle: "Gamified learning solutions and custom educational portals for enhanced student engagement",
+    subtitle: "Gamified learning and digital revision tools to boost learner engagement and classroom outcomes",
     description: "Revolutionary gamified learning solutions and custom educational portals that enhance student engagement through interactive content and personalized learning experiences.",
     features: [
       {
         id: 1,
         icon: "fas fa-gamepad",
-        title: "CBSE (4–8)",
-        description: "Gamified revision content for core subjects.",
+        title: "Standard CBSE Portal",
+        description: "Curriculum-aligned gamified revision for middle school CBSE students — for schools and individual learners.",
         featured: false,
         link: "/services/sprints/cbse"
       },
@@ -308,8 +308,8 @@ export const servicesData: ServiceData[] = [
         id: 2,
         icon: "fas fa-school",
         title: "Custom School Portals",
-        description: "Branded portals tailored to individual school needs.",
-        featured: true,
+        description: "Personalized revision platforms tailored to your school's curriculum and branding.",
+        featured: false,
         link: "/services/sprints/custom-portals"
       }
     ],

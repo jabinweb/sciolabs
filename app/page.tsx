@@ -10,9 +10,9 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <StatsSection />
-        <TestimonialsSection />
         <IntroVideoSection />
         <ServicesSection />
+        <TestimonialsSection />
       </main>
     </>
   );

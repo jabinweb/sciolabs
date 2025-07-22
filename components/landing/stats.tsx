@@ -3,37 +3,37 @@ import { Card, CardContent } from '@/components/ui/card';
 export default function StatsSection() {
   const stats = [
     { 
-      number: "1,000+", 
-      label: "Schools Partnered PAN-India", 
+      number: "15000+", 
+      label: "Educators Trained", 
       description: "",
       gradient: "from-blue-500/20 via-sky-400/10 to-cyan-300/20",
       size: "md"
     },
     { 
-      number: "1,600+", 
-      label: "Counselors Trained", 
+      number: "250+", 
+      label: "one-on-one counseling sessions", 
       description: "",
       gradient: "from-indigo-500/20 via-purple-400/10 to-blue-300/20",
       size: "sm"
     },
     { 
-      number: "5.5 Cr+", 
-      label: "Economic Opportunities Created", 
-      description: "worth of",
+      number: "20+", 
+      label: "institutional tie-ups", 
+      description: "",
       subLabel: "Annually",
       gradient: "from-emerald-500/20 via-teal-400/10 to-green-300/20",
       size: "lg"
     },
     { 
-      number: "2.1 Million+", 
-      label: "Students Served in Total", 
+      number: "70,000+", 
+      label: "Learning Hours Delivered", 
       description: "",
       gradient: "from-orange-500/20 via-amber-400/10 to-yellow-300/20",
       size: "md"
     },
     { 
-      number: "74%", 
-      label: "College Enrollment Ratio in CSR Projects", 
+      number: "4000+", 
+      label: "Revision games created", 
       description: "",
       gradient: "from-rose-500/20 via-pink-400/10 to-red-300/20",
       size: "sm"
@@ -93,14 +93,11 @@ export default function StatsSection() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
-          <h2 className="font-heading heading-primary text-4xl md:text-6xl mb-6 text-balance">
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              The Impact
-            </span>{' '}
-            <span className="text-gray-800">We Have Created</span>
+          <h2 className="font-heading heading-primary text-4xl md:text-5xl text-white mb-6">
+            <span className="text-gray-800">Our Reach. Our Results.</span>
           </h2>
-          <p className="font-body text-body text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
-            With Schools, CSR-Govt, & Counselors
+          <p className="font-body text-body text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            Driving meaningful change through learning, guidance, and growth—one learner at a time.
           </p>
         </div>
 

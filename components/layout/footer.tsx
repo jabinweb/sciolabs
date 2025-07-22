@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { MapPin, Phone, Mail, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 
 export default function Footer() {
@@ -15,9 +16,14 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center mb-6">
-              <div className="text-3xl font-heading font-bold">
-                <span className="text-scio-blue">Scio</span>
-                <span className="text-scio-orange">Labs</span>
+              <div className="relative w-40 h-12">
+                <Image
+                  src="/scioLabs_light.png"
+                  alt="ScioLabs Logo"
+                  fill
+                  className="object-contain object-left"
+                  priority
+                />
               </div>
             </div>
             <p className="font-body text-gray-300 mb-6 max-w-md leading-relaxed">
@@ -26,7 +32,7 @@ export default function Footer() {
             </p>
             
             {/* Contact Info */}
-            <div className="space-y-3">
+            {/* <div className="space-y-3">
               <div className="flex items-start space-x-3 text-gray-300">
                 <MapPin className="w-5 h-5 text-scio-orange mt-0.5 flex-shrink-0" />
                 <span className="font-body text-sm">N-304, Ashiyana Sector – N, Lucknow – 226012, India</span>
@@ -39,7 +45,7 @@ export default function Footer() {
                 <Mail className="w-5 h-5 text-scio-orange flex-shrink-0" />
                 <span className="font-body text-sm">info@sciolabs.in</span>
               </div>
-            </div>
+            </div> */}
 
             {/* Social Links */}
             <div className="flex space-x-4 mt-6">

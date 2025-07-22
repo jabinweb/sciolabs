@@ -3,9 +3,10 @@ import Link from 'next/link';
 
 export default function HeroSection() {
   const cyclingWords = [
-    { text: 'Guidance', delay: '' },
-    { text: 'Education', delay: 'delay-1' },
-    { text: 'Excellence', delay: 'delay-2' }
+    { text: 'Training', delay: '' },
+    { text: 'Guidance', delay: 'delay-1' },
+    { text: 'Innovation', delay: 'delay-2' },
+    { text: 'Curriculums', delay: 'delay-3' }
   ];
 
   return (
@@ -35,7 +36,7 @@ export default function HeroSection() {
             <div className="space-y-4 sm:space-y-6">
               <h1 className="font-heading heading-primary text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white text-balance leading-tight">
                 <span className="block opacity-0 animate-slide-up">
-                  Empowering Lives Through
+                  Upward Equipping Through
                 </span>
                 <span className="block mt-2 sm:mt-4 relative h-12 sm:h-16 md:h-20 flex items-center justify-center">
                   {cyclingWords.map((word, index) => (
@@ -55,12 +56,12 @@ export default function HeroSection() {
               </h1>
               
               <p className="font-body text-body text-base sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed opacity-0 animate-slide-up-delay-3 px-2">
-                Transform your future with our comprehensive educational services tailored to your needs.
+                Move forward with confidence through focused training and purposeful guidance.
               </p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-6 sm:pt-8 opacity-0 animate-slide-up-delay-3">
-              <Link href="/services" className="w-full sm:w-auto">
+              <Link href="/#services" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
                   className="w-full sm:w-auto bg-scio-orange hover:bg-scio-orange-dark text-white px-6 sm:px-10 py-4 sm:py-6 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg sm:shadow-2xl hover:shadow-orange-500/25 border-0"
