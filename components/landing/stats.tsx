@@ -17,18 +17,18 @@ export default function StatsSection() {
       size: "sm"
     },
     { 
+      number: "70,000+", 
+      label: "Learning Hours Delivered", 
+      description: "",
+      gradient: "from-orange-500/20 via-amber-400/10 to-yellow-300/20",
+      size: "lg"
+    },
+    { 
       number: "20+", 
       label: "institutional tie-ups", 
       description: "",
       subLabel: "Annually",
       gradient: "from-emerald-500/20 via-teal-400/10 to-green-300/20",
-      size: "lg"
-    },
-    { 
-      number: "70,000+", 
-      label: "Learning Hours Delivered", 
-      description: "",
-      gradient: "from-orange-500/20 via-amber-400/10 to-yellow-300/20",
       size: "md"
     },
     { 
