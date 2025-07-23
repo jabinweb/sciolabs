@@ -1,3 +1,5 @@
+'use client';
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,8 +7,59 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import { useState } from "react"
 
 export default function ContactPage() {
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState("")
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
+    setError("")
+    setSuccess(false)
+
+    const form = e.currentTarget
+    // Collect all form fields into a data object
+    const data = {
+      firstName: (form.firstName as HTMLInputElement).value,
+      lastName: (form.lastName as HTMLInputElement).value,
+      email: (form.email as HTMLInputElement).value,
+      phone: (form.phone as HTMLInputElement).value,
+      service: (form.service as HTMLInputElement).value,
+      message: (form.message as HTMLInputElement).value,
+    }
+
+    // Universal form payload
+    const payload = {
+      formName: "contact",
+      data,
+      email: data.email,
+      phone: data.phone,
+      source: "contact"
+    }
+
+    try {
+      const res = await fetch("/api/forms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      const result = await res.json()
+      if (result.success) {
+        setSuccess(true)
+        form.reset()
+      } else {
+        setError(result.error || "Failed to send message")
+      }
+    } catch {
+      setError("Failed to send message")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <main>
       {/* Hero Section */}
@@ -116,7 +169,7 @@ export default function ContactPage() {
                 <h3 className="font-heading heading-primary text-2xl text-scio-blue mb-6">
                   Send us a Message
                 </h3>
-                <form className="space-y-5">
+                <form className="space-y-5" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName" className="font-heading text-sm font-medium text-gray-700">
@@ -124,9 +177,11 @@ export default function ContactPage() {
                       </Label>
                       <Input 
                         id="firstName"
+                        name="firstName"
                         type="text" 
                         placeholder="Your first name"
                         className="h-11 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
+                        required
                       />
                     </div>
                     <div className="space-y-2">
@@ -135,9 +190,11 @@ export default function ContactPage() {
                       </Label>
                       <Input 
                         id="lastName"
+                        name="lastName"
                         type="text" 
                         placeholder="Your last name"
                         className="h-11 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
+                        required
                       />
                     </div>
                   </div>
@@ -148,9 +205,11 @@ export default function ContactPage() {
                     </Label>
                     <Input 
                       id="email"
+                      name="email"
                       type="email" 
                       placeholder="your.email@example.com"
                       className="h-11 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
+                      required
                     />
                   </div>
                   
@@ -160,6 +219,7 @@ export default function ContactPage() {
                     </Label>
                     <Input 
                       id="phone"
+                      name="phone"
                       type="tel" 
                       placeholder="+91 9876543210"
                       className="h-11 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
@@ -170,7 +230,7 @@ export default function ContactPage() {
                     <Label htmlFor="service" className="font-heading text-sm font-medium text-gray-700">
                       Service Interested In
                     </Label>
-                    <Select>
+                    <Select name="service">
                       <SelectTrigger className="w-full h-11 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue">
                         <SelectValue placeholder="Select a service" />
                       </SelectTrigger>
@@ -196,9 +256,11 @@ export default function ContactPage() {
                     </Label>
                     <Textarea 
                       id="message"
+                      name="message"
                       rows={4} 
                       placeholder="Tell us about your requirements..."
                       className="rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue resize-none"
+                      required
                     />
                   </div>
                   
@@ -206,10 +268,21 @@ export default function ContactPage() {
                     type="submit" 
                     size="lg"
                     className="w-full bg-scio-blue hover:bg-scio-blue-dark text-white h-12 rounded-lg font-heading font-semibold text-base transition-all duration-300"
+                    disabled={loading}
                   >
                     <Send className="w-5 h-5 mr-2" />
-                    Send Message
+                    {loading ? "Sending..." : "Send Message"}
                   </Button>
+                  {success && (
+                    <div className="mt-4 text-green-600 font-medium">
+                      Thank you! Your message has been sent.
+                    </div>
+                  )}
+                  {error && (
+                    <div className="mt-4 text-red-600 font-medium">
+                      {error}
+                    </div>
+                  )}
                 </form>
               </CardContent>
             </Card>

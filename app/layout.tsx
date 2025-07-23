@@ -5,6 +5,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CTASection from "@/components/landing/cta";
 import NewsletterSection from "@/components/landing/newsletter";
+import { SessionProvider } from "next-auth/react";
 
 
 const inter = Inter({
@@ -85,11 +86,13 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${poppins.variable} antialiased`}>
-        <Header />
-        {children}
-        <CTASection />
-        <NewsletterSection />
-        <Footer />
+        <SessionProvider>
+          <Header />
+          {children}
+          <CTASection />
+          <NewsletterSection />
+          <Footer />
+        </SessionProvider>
       </body>
     </html>
   );

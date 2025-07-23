@@ -1,0 +1,16 @@
+import { Metadata } from "next"
+import BlogPostForm from "@/components/admin/blog-post-form"
+
+export const metadata: Metadata = {
+  title: "Edit Blog Post",
+  description: "Edit an existing blog post."
+}
+
+export default async function EditBlogPostPage({ 
+  params 
+}: { 
+  params: { postId: string } 
+}) {
+  const { postId } = params
+  return <BlogPostForm postId={postId} />
+}
