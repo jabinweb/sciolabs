@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { servicesData } from "@/lib/services-data"
 
-export default function ServicesContentPage() {
+export default function ServicesManagementPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -13,7 +13,7 @@ export default function ServicesContentPage() {
       </div>
 
       <div className="space-y-6">
-        {servicesData.map((service, index) => (
+        {servicesData.map((service) => (
           <Card key={service.id} className="border-0 shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -49,7 +49,7 @@ export default function ServicesContentPage() {
                 <div>
                   <label className="block text-sm font-medium mb-2">Features</label>
                   <div className="space-y-3">
-                    {service.features.map((feature, featureIndex) => (
+                    {service.features.map((feature) => (
                       <div key={feature.id} className="p-3 border rounded-lg">
                         <input 
                           className="w-full mb-2 p-1 border rounded"
