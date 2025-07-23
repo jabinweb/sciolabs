@@ -1,5 +1,6 @@
+'use client';
+
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 
 export default function IntroVideoSection() {
   return (
@@ -16,13 +17,15 @@ export default function IntroVideoSection() {
         
         <Card className="bg-white/10 backdrop-blur-md border border-white/20 overflow-hidden">
           <CardContent className="p-0">
-            <div className="relative aspect-video bg-gray-800 flex items-center justify-center">
-              <Button 
-                size="lg"
-                className="bg-scio-orange hover:bg-scio-orange-dark text-white rounded-full w-20 h-20"
-              >
-                <i className="fas fa-play text-2xl"></i>
-              </Button>
+            <div className="relative aspect-video">
+              <iframe 
+                className="w-full h-full"
+                src="https://videos.sproutvideo.com/embed/aa9bdab31811e9c620/4f8448e43829ea5f" 
+                frameBorder="0" 
+                allowFullScreen 
+                referrerPolicy="no-referrer-when-downgrade" 
+                title="ScioLabs Introduction Video"
+              />
             </div>
           </CardContent>
         </Card>

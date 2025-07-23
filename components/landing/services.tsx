@@ -21,7 +21,7 @@ export default function ServicesSection() {
     return (
       <Link href={service.link || '#'} key={service.id}>
         <Card className={cardClass}>
-          <CardContent className="px-4 py-0 sm:px-6">
+          <CardContent className="px-4 py-0 sm:px-6" id='services'>
             <div className="flex items-start space-x-4">
               <div className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${iconBgClass}`}>
                 <i className={`${service.icon} text-white text-lg sm:text-xl`}></i>

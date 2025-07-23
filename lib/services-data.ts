@@ -32,73 +32,6 @@ export interface ServiceData {
 
 export const servicesData: ServiceData[] = [
   {
-    id: "guidance",
-    title: "ScioGuidance",
-    subtitle: "Personalized career guidance and strategic planning for students and professionals",
-    description: "Our comprehensive career guidance program helps individuals discover their potential and chart clear paths to success through personalized counseling, interactive workshops, and digital platforms.",
-    features: [
-      {
-        id: 1,
-        icon: "fas fa-user-graduate",
-        title: "One-on-One Counseling",
-        description: "Personalized guidance and assessments to clarify career paths and choices.",
-        featured: false,
-        link: "/services/guidance/counseling"
-      },
-      {
-        id: 2,
-        icon: "fas fa-users",
-        title: "Career Workshops",
-        description: "Interactive sessions that introduce students to diverse career opportunities.",
-        featured: false,
-        link: "/services/guidance/workshops"
-      },
-      {
-        id: 3,
-        icon: "fas fa-globe",
-        title: "Career Portal",
-        description: "Explore careers digitally with tools for planning, discovery, and growth.",
-        featured: false,
-        link: "/services/guidance/portal"
-      }
-    ],
-    primaryColor: "scio-blue",
-    borderColor: "blue-100",
-    buttonColor: "scio-orange",
-    backgroundGradient: "from-blue-50 via-slate-50 to-gray-50",
-    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    imageAlt: "Students in career guidance session",
-    partnersTitle: "Schools that we Enable",
-    partnersIcon: "fas fa-handshake",
-    partnersIconColor: "text-scio-blue",
-    detailedFeatures: [
-      "One-on-One Counseling",
-      "Career Awareness Workshops", 
-      "Career Awareness Portal",
-      "Psychometric Assessments",
-      "Industry Exposure Programs"
-    ],
-    benefits: [
-      "Discover your true potential and strengths",
-      "Make informed career decisions",
-      "Access to industry insights and trends",
-      "Personalized career roadmaps"
-    ],
-    targetAudience: [
-      "High school students",
-      "College students",
-      "Working professionals",
-      "Career changers"
-    ],
-    serviceLink: "/services/guidance",
-    getStartedLink: "https://guidance.sciolabs.in/",
-    subserviceLinks: [
-      { name: "One-on-One Counseling", link: "/services/guidance/counseling" },
-      { name: "Career Workshops", link: "/services/guidance/workshops" },
-      { name: "Career Portal", link: "/services/guidance/portal" }
-    ]
-  },
-  {
     id: "thrive",
     title: "ScioThrive",
     subtitle: "Skill-building programs to accelerate growth and unlock potential in academic and professional settings",
@@ -129,15 +62,15 @@ export const servicesData: ServiceData[] = [
         link: "/services/thrive/teens-training"
       }
     ],
-    primaryColor: "scio-orange",
-    borderColor: "orange-100",
+    primaryColor: "scio-blue",
+    borderColor: "scio-blue",
     buttonColor: "scio-blue",
-    backgroundGradient: "from-orange-50 via-amber-50 to-yellow-50",
+    backgroundGradient: "from-blue-50 via-sky-50 to-slate-50",
     imageUrl: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     imageAlt: "Professional training and education",
     partnersTitle: "Training Partners",
     partnersIcon: "fas fa-handshake",
-    partnersIconColor: "text-scio-orange",
+    partnersIconColor: "text-scio-blue",
     detailedFeatures: [
       "Educator Training",
       "Corporate Training",
@@ -163,6 +96,122 @@ export const servicesData: ServiceData[] = [
       { name: "Educator Training", link: "/services/thrive/educator-training" },
       { name: "Corporate Training", link: "/services/thrive/corporate-training" },
       { name: "Teens Training", link: "/services/thrive/teens-training" }
+    ]
+  },
+  {
+    id: "sprints",
+    title: "ScioSprints",
+    subtitle: "Gamified learning and digital revision tools to boost learner engagement and classroom outcomes",
+    description: "Revolutionary gamified learning solutions and custom educational portals that enhance student engagement through interactive content and personalized learning experiences.",
+    features: [
+      {
+        id: 1,
+        icon: "fas fa-gamepad",
+        title: "Standard CBSE Portal",
+        description: "Curriculum-aligned gamified revision for middle school CBSE students — for schools and individual learners.",
+        featured: false,
+        link: "/services/sprints/cbse"
+      },
+      {
+        id: 2,
+        icon: "fas fa-school",
+        title: "Custom School Portals",
+        description: "Personalized revision platforms tailored to your school's curriculum and branding.",
+        featured: false,
+        link: "/services/sprints/custom-portals"
+      }
+    ],
+    primaryColor: "scio-blue",
+    borderColor: "scio-blue",
+    buttonColor: "scio-blue",
+    backgroundGradient: "from-blue-50 via-sky-50 to-slate-50",
+    imageUrl: "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Gamified learning and educational technology",
+    partnersTitle: "Technology Partners",
+    partnersIcon: "fas fa-handshake",
+    partnersIconColor: "text-scio-blue",
+    detailedFeatures: [
+      "CBSE Gamified Content",
+      "Custom School Portals",
+      "Interactive Learning",
+      "Progress Tracking",
+      "Branded Solutions"
+    ],
+    benefits: [
+      "Increased student engagement",
+      "Better learning outcomes",
+      "Personalized learning paths",
+      "Real-time progress tracking"
+    ],
+    targetAudience: [
+      "CBSE schools",
+      "Educational institutions",
+      "Students (Grades 4-8)",
+      "Educational technology teams"
+    ],
+    serviceLink: "/services/sprints",
+    getStartedLink: "https://sprints.sciolabs.in/",
+    subserviceLinks: [
+      { name: "CBSE (4–8)", link: "/services/sprints/cbse" },
+      { name: "Custom School Portals", link: "/services/sprints/custom-portals" }
+    ]
+  },
+  {
+    id: "lingua",
+    title: "ScioLingua",
+    subtitle: "Custom English programs designed to build confidence and communication in diverse learning contexts",
+    description: "Innovative language programs that integrate faith-based learning with foundational English education, designed for diverse educational needs and spiritual growth.",
+    features: [
+      {
+        id: 1,
+        icon: "fas fa-book",
+        title: "TheoLingua",
+        description: "A Bible-based ESL program to strengthen theological reading and communication skills.",
+        featured: false,
+        link: "https://theo.sciolabs.in/"
+      },
+      {
+        id: 2,
+        icon: "fas fa-seedling",
+        title: "rootED",
+        description: "A foundational English program to build literacy and communication skills for early learners and ESL students.",
+        featured: false,
+        link: "/services/lingua/rooted"
+      }
+    ],
+    primaryColor: "scio-blue",
+    borderColor: "scio-blue",
+    buttonColor: "scio-blue",
+    backgroundGradient: "from-blue-50 via-sky-50 to-slate-50",
+    imageUrl: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Language learning and education",
+    partnersTitle: "Educational Partners",
+    partnersIcon: "fas fa-handshake",
+    partnersIconColor: "text-scio-blue",
+    detailedFeatures: [
+      "TheoLingua - Level 1",
+      "TheoLingua - Level 2", 
+      "TheoLingua - Level 3",
+      "rootED - Foundations (Class 3)",
+      "rootED - Expressions (Class 7)"
+    ],
+    benefits: [
+      "Integrated faith and language learning",
+      "Age-appropriate curriculum",
+      "Cultural and spiritual growth",
+      "Strong foundation in English"
+    ],
+    targetAudience: [
+      "Faith-based institutions",
+      "Elementary school students",
+      "Religious communities",
+      "Educational institutions"
+    ],
+    serviceLink: "/services/lingua",
+    getStartedLink: "#",
+    subserviceLinks: [
+      { name: "TheoLingua", link: "https://theo.sciolabs.in" },
+      { name: "rootED", link: "/services/lingua/rooted" }
     ]
   },
   {
@@ -196,15 +245,15 @@ export const servicesData: ServiceData[] = [
         link: "/services/care/pathways360"
       }
     ],
-    primaryColor: "scio-green",
-    borderColor: "green-100",
+    primaryColor: "scio-blue",
+    borderColor: "scio-blue",
     buttonColor: "scio-blue",
-    backgroundGradient: "from-green-50 via-emerald-50 to-teal-50",
+    backgroundGradient: "from-blue-50 via-sky-50 to-slate-50",
     imageUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     imageAlt: "Healthcare and caregiving training",
     partnersTitle: "Healthcare Partners",
     partnersIcon: "fas fa-handshake",
-    partnersIconColor: "text-scio-green",
+    partnersIconColor: "text-scio-blue",
     detailedFeatures: [
       "CareBridge English",
       "CareLaunch",
@@ -233,119 +282,70 @@ export const servicesData: ServiceData[] = [
     ]
   },
   {
-    id: "lingua",
-    title: "ScioLingua",
-    subtitle: "Custom English programs designed to build confidence and communication in diverse learning contexts",
-    description: "Innovative language programs that integrate faith-based learning with foundational English education, designed for diverse educational needs and spiritual growth.",
+    id: "guidance",
+    title: "ScioGuidance",
+    subtitle: "Personalized career guidance and strategic planning for students and professionals",
+    description: "Our comprehensive career guidance program helps individuals discover their potential and chart clear paths to success through personalized counseling, interactive workshops, and digital platforms.",
     features: [
       {
         id: 1,
-        icon: "fas fa-book",
-        title: "TheoLingua",
-        description: "A Bible-based ESL program to strengthen theological reading and communication skills.",
+        icon: "fas fa-user-graduate",
+        title: "One-on-One Counseling",
+        description: "Personalized guidance and assessments to clarify career paths and choices.",
         featured: false,
-        link: "https://theo.sciolabs.in/"
+        link: "/services/guidance/counseling"
       },
       {
         id: 2,
-        icon: "fas fa-seedling",
-        title: "rootED",
-        description: "A foundational English program to build literacy and communication skills for early learners and ESL students.",
+        icon: "fas fa-users",
+        title: "Career Workshops",
+        description: "Interactive sessions that introduce students to diverse career opportunities.",
         featured: false,
-        link: "/services/lingua/rooted"
-      }
-    ],
-    primaryColor: "scio-purple",
-    borderColor: "purple-100",
-    buttonColor: "scio-orange",
-    backgroundGradient: "from-purple-50 via-violet-50 to-indigo-50",
-    imageUrl: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    imageAlt: "Language learning and education",
-    partnersTitle: "Educational Partners",
-    partnersIcon: "fas fa-handshake",
-    partnersIconColor: "text-scio-purple",
-    detailedFeatures: [
-      "TheoLingua - Level 1",
-      "TheoLingua - Level 2", 
-      "TheoLingua - Level 3",
-      "rootED - Foundations (Class 3)",
-      "rootED - Expressions (Class 7)"
-    ],
-    benefits: [
-      "Integrated faith and language learning",
-      "Age-appropriate curriculum",
-      "Cultural and spiritual growth",
-      "Strong foundation in English"
-    ],
-    targetAudience: [
-      "Faith-based institutions",
-      "Elementary school students",
-      "Religious communities",
-      "Educational institutions"
-    ],
-    serviceLink: "/services/lingua",
-    getStartedLink: "#",
-    subserviceLinks: [
-      { name: "TheoLingua", link: "https://theo.sciolabs.in" },
-      { name: "rootED", link: "/services/lingua/rooted" }
-    ]
-  },
-  {
-    id: "sprints",
-    title: "ScioSprints",
-    subtitle: "Gamified learning and digital revision tools to boost learner engagement and classroom outcomes",
-    description: "Revolutionary gamified learning solutions and custom educational portals that enhance student engagement through interactive content and personalized learning experiences.",
-    features: [
-      {
-        id: 1,
-        icon: "fas fa-gamepad",
-        title: "Standard CBSE Portal",
-        description: "Curriculum-aligned gamified revision for middle school CBSE students — for schools and individual learners.",
-        featured: false,
-        link: "/services/sprints/cbse"
+        link: "/services/guidance/workshops"
       },
       {
-        id: 2,
-        icon: "fas fa-school",
-        title: "Custom School Portals",
-        description: "Personalized revision platforms tailored to your school's curriculum and branding.",
+        id: 3,
+        icon: "fas fa-globe",
+        title: "Career Portal",
+        description: "Explore careers digitally with tools for planning, discovery, and growth.",
         featured: false,
-        link: "/services/sprints/custom-portals"
+        link: "/services/guidance/portal"
       }
     ],
     primaryColor: "scio-blue",
-    borderColor: "blue-100",
-    buttonColor: "scio-green",
-    backgroundGradient: "from-cyan-50 via-sky-50 to-blue-50",
-    imageUrl: "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    imageAlt: "Gamified learning and educational technology",
-    partnersTitle: "Technology Partners",
+    borderColor: "scio-blue",
+    buttonColor: "scio-blue",
+    backgroundGradient: "from-blue-50 via-sky-50 to-slate-50",
+    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Students in career guidance session",
+    partnersTitle: "Schools that we Enable",
     partnersIcon: "fas fa-handshake",
     partnersIconColor: "text-scio-blue",
     detailedFeatures: [
-      "CBSE Gamified Content",
-      "Custom School Portals",
-      "Interactive Learning",
-      "Progress Tracking",
-      "Branded Solutions"
+      "One-on-One Counseling",
+      "Career Awareness Workshops", 
+      "Career Awareness Portal",
+      "Psychometric Assessments",
+      "Industry Exposure Programs"
     ],
     benefits: [
-      "Increased student engagement",
-      "Better learning outcomes",
-      "Personalized learning paths",
-      "Real-time progress tracking"
+      "Discover your true potential and strengths",
+      "Make informed career decisions",
+      "Access to industry insights and trends",
+      "Personalized career roadmaps"
     ],
     targetAudience: [
-      "CBSE schools",
-      "Educational institutions",
-      "Students (Grades 4-8)",
-      "Educational technology teams"
+      "High school students",
+      "College students",
+      "Working professionals",
+      "Career changers"
     ],
-    serviceLink: "/services/sprints",
-    getStartedLink: "https://sprints.sciolabs.in/",
+    serviceLink: "/services/guidance",
+    getStartedLink: "https://guidance.sciolabs.in/",
     subserviceLinks: [
-      { name: "CBSE (4–8)", link: "/services/sprints/cbse" },
-      { name: "Custom School Portals", link: "/services/sprints/custom-portals" }
+      { name: "One-on-One Counseling", link: "/services/guidance/counseling" },
+      { name: "Career Workshops", link: "/services/guidance/workshops" },
+      { name: "Career Portal", link: "/services/guidance/portal" }
     ]
   }
 ];

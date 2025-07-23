@@ -11,7 +11,7 @@ export default function StatsSection() {
     },
     { 
       number: "250+", 
-      label: "one-on-one counseling sessions", 
+      label: "One-on-One Counseling Sessions", 
       description: "",
       gradient: "from-indigo-500/20 via-purple-400/10 to-blue-300/20",
       size: "sm"
@@ -25,15 +25,15 @@ export default function StatsSection() {
     },
     { 
       number: "20+", 
-      label: "institutional tie-ups", 
+      label: "Institutional Partnership", 
       description: "",
-      subLabel: "Annually",
+      subLabel: "",
       gradient: "from-emerald-500/20 via-teal-400/10 to-green-300/20",
       size: "md"
     },
     { 
       number: "4000+", 
-      label: "Revision games created", 
+      label: "Revision Games Created", 
       description: "",
       gradient: "from-rose-500/20 via-pink-400/10 to-red-300/20",
       size: "sm"
