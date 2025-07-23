@@ -99,7 +99,7 @@ export default function Footer() {
             <h4 className="font-heading text-lg font-semibold mb-6 text-scio-blue">Our Services</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/services/guidance" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
+                <Link href="https://guidance.sciolabs.in/" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
                   <span className="w-2 h-2 bg-scio-blue rounded-full mr-3 group-hover:scale-125 transition-transform duration-300"></span>
                   ScioGuidance
                 </Link>
@@ -111,7 +111,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/services/care" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
+                <Link href="https://care.sciolabs.in/" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
                   <span className="w-2 h-2 bg-scio-blue rounded-full mr-3 group-hover:scale-125 transition-transform duration-300"></span>
                   ScioCare
                 </Link>
@@ -123,7 +123,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/services/sprints" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
+                <Link href="https://sprints.sciolabs.in/" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
                   <span className="w-2 h-2 bg-scio-blue rounded-full mr-3 group-hover:scale-125 transition-transform duration-300"></span>
                   ScioSprints
                 </Link>

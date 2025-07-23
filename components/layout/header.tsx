@@ -96,7 +96,7 @@ export default function Header() {
                   <div className="mb-4">
                     <h3 className="font-heading text-sm font-bold text-gray-500 mb-2 px-3 uppercase tracking-wider">Services</h3>
                     <Link 
-                      href="/services/guidance" 
+                      href="https://guidance.sciolabs.in/" 
                       className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-800 hover:text-scio-blue transition-colors font-body"
                       onClick={() => setIsWhatWeDoOpen(false)}
                     >
@@ -115,7 +115,7 @@ export default function Header() {
                   <div>
                     <h3 className="font-heading text-sm font-bold text-gray-500 mb-2 px-3 uppercase tracking-wider">Products</h3>
                     <Link 
-                      href="/services/sprints" 
+                      href="https://sprints.sciolabs.in/" 
                       className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-800 hover:text-scio-blue transition-colors font-body"
                       onClick={() => setIsWhatWeDoOpen(false)}
                     >
@@ -129,7 +129,7 @@ export default function Header() {
                       ScioLingua
                     </Link>
                     <Link 
-                      href="/services/care" 
+                      href="https://care.sciolabs.in/" 
                       className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-800 hover:text-scio-blue transition-colors font-body"
                       onClick={() => setIsWhatWeDoOpen(false)}
                     >

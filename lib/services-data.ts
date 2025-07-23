@@ -149,7 +149,7 @@ export const servicesData: ServiceData[] = [
       "Students (Grades 4-8)",
       "Educational technology teams"
     ],
-    serviceLink: "/services/sprints",
+    serviceLink: "https://sprints.sciolabs.in",
     getStartedLink: "https://sprints.sciolabs.in/",
     subserviceLinks: [
       { name: "CBSE (4–8)", link: "/services/sprints/cbse" },
@@ -273,7 +273,7 @@ export const servicesData: ServiceData[] = [
       "Frontline workers",
       "Community service providers"
     ],
-    serviceLink: "/services/care",
+    serviceLink: "https://care.sciolabs.in",
     getStartedLink: "#",
     subserviceLinks: [
       { name: "CareBridge English", link: "/services/care/carebridge-english" },
@@ -340,7 +340,7 @@ export const servicesData: ServiceData[] = [
       "Working professionals",
       "Career changers"
     ],
-    serviceLink: "/services/guidance",
+    serviceLink: "https://guidance.sciolabs.in",
     getStartedLink: "https://guidance.sciolabs.in/",
     subserviceLinks: [
       { name: "One-on-One Counseling", link: "/services/guidance/counseling" },
