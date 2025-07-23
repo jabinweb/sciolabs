@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 export default async function EditBlogPostPage({ 
   params 
 }: { 
-  params: { postId: string } 
+  params: Promise<{ postId: string }> 
 }) {
-  const { postId } = params
+  const { postId } = await params
   return <BlogPostForm postId={postId} />
 }
