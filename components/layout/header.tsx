@@ -12,8 +12,8 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Change header style when scrolled past hero section (approximately 80vh)
-      setIsScrolled(window.scrollY > window.innerHeight * 0.8);
+      // Change header style when scrolled past a smaller threshold for better visibility
+      setIsScrolled(window.scrollY > 100);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -35,13 +35,14 @@ export default function Header() {
   }, []);
 
   const headerClass = isScrolled 
-    ? "fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-50 shadow-sm" 
-    : "fixed top-0 left-0 right-0 bg-transparent backdrop-blur-md border-b border-white/10 z-50";
+    ? "fixed top-0 left-0 right-0 bg-white/98 backdrop-blur-md border-b border-gray-200 z-50 shadow-lg" 
+    : "fixed top-0 left-0 right-0 bg-transparent backdrop-blur-sm border-b border-white/10 z-50";
 
-  const textClass = isScrolled ? "text-gray-700" : "text-white/90";
+  const textClass = isScrolled ? "text-gray-800" : "text-white";
   const hoverTextClass = isScrolled ? "hover:text-scio-blue" : "hover:text-scio-orange";
   const underlineClass = isScrolled ? "bg-scio-blue" : "bg-scio-orange";
-  const mobileButtonClass = isScrolled ? "text-gray-700 hover:text-scio-blue" : "text-white hover:text-scio-orange";
+  const mobileButtonClass = isScrolled ? "text-gray-800 hover:text-scio-blue" : "text-white hover:text-scio-orange";
+  const logoSrc = isScrolled ? "/sciolabs_logo.png" : "/scioLabs_light.png";
 
   return (
     <nav className={headerClass}>
@@ -51,7 +52,7 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative w-12 h-12 transition-transform duration-300 group-hover:scale-105">
               <Image
-                src="/sciolabs_logo.png"
+                src={logoSrc}
                 alt="Scio Labs Logo"
                 fill
                 className="object-contain"
