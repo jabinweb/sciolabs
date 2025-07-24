@@ -25,6 +25,7 @@ import {
   Undo,
   Redo,
   Code,
+  Eye,
 } from 'lucide-react'
 
 interface EditorProps {
@@ -45,6 +46,7 @@ export function Editor({
   const [linkDialogOpen, setLinkDialogOpen] = useState(false)
   const [imageDialogOpen, setImageDialogOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [isPreview, setIsPreview] = useState(false)
   
   // Fix for SSR hydration issues - ensure component is mounted
   useEffect(() => {
@@ -99,6 +101,16 @@ export function Editor({
     editor?.chain().focus().setImage({ src: imageUrl }).run()
     setImageUrl('')
     setImageDialogOpen(false)
+  }
+
+  const formatMarkdown = (text: string) => {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 underline">$1</a>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/g, '<ul class="list-disc pl-6">$1</ul>')
   }
 
   // Return a loading state while client-side hydration is happening
@@ -280,11 +292,42 @@ export function Editor({
         </div>
       )}
       
-      <EditorContent
-        editor={editor}
-        className="prose max-w-none p-4"
-      />
+      {/* Preview Toggle Buttons - always show in preview mode */}
+      <div className="p-2 flex items-center border-b gap-2 bg-muted/50">
+        <Button
+          type="button"
+          variant={!isPreview ? "default" : "ghost"}
+          size="sm"
+          onClick={() => setIsPreview(false)}
+          className="h-8"
+        >
+          <Code className="h-4 w-4 mr-1" />
+          Edit
+        </Button>
+        <Button
+          type="button"
+          variant={isPreview ? "default" : "ghost"}
+          size="sm"
+          onClick={() => setIsPreview(true)}
+          className="h-8"
+        >
+          <Eye className="h-4 w-4 mr-1" />
+          Preview
+        </Button>
+      </div>
+      
+      {isPreview ? (
+        <div 
+          className="p-4 prose max-w-none"
+          dangerouslySetInnerHTML={{ __html: formatMarkdown(value) }}
+        />
+      ) : (
+        <EditorContent
+          editor={editor}
+          className="prose max-w-none p-4"
+        />
+      )}
     </div>
   )
 }
-         
+
