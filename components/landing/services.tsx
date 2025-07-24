@@ -171,7 +171,7 @@ export default function ServicesSection() {
                 </h4>
                 
                 {/* Carousel for many images, static for few */}
-                {partnersData[section.id].length > 6 ? (
+                {partnersData[section.id].length > 5 ? (
                   <div className="relative overflow-hidden">
                     <div 
                       className="flex gap-6 sm:gap-10 animate-scroll opacity-70 hover:opacity-100 transition-opacity duration-300"
