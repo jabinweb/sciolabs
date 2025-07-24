@@ -68,7 +68,7 @@ export const servicesData: ServiceData[] = [
     backgroundGradient: "from-blue-50 via-sky-50 to-slate-50",
     imageUrl: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     imageAlt: "Professional training and education",
-    partnersTitle: "Training Partners",
+    partnersTitle: "Our Past Clients",
     partnersIcon: "fas fa-handshake",
     partnersIconColor: "text-scio-blue",
     detailedFeatures: [
@@ -127,7 +127,7 @@ export const servicesData: ServiceData[] = [
     backgroundGradient: "from-blue-50 via-sky-50 to-slate-50",
     imageUrl: "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     imageAlt: "Gamified learning and educational technology",
-    partnersTitle: "Technology Partners",
+    partnersTitle: "Digital Platforms",
     partnersIcon: "fas fa-handshake",
     partnersIconColor: "text-scio-blue",
     detailedFeatures: [

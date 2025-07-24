@@ -1,10 +1,54 @@
+'use client';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { servicesData, type ServiceFeature, type ServiceData } from '@/lib/services-data';
+import { useState, useEffect } from 'react';
 
 export default function ServicesSection() {
+  const [partnersData, setPartnersData] = useState<Record<string, string[]>>({});
+
+  useEffect(() => {
+    const checkPartners = async () => {
+      const partners: Record<string, string[]> = {};
+      
+      for (const service of servicesData) {
+        try {
+          const serviceDir = service.id === 'guidance' ? 'ScioGuidance' : 
+                           service.id === 'sprints' ? 'ScioSprints' : 
+                           service.id === 'thrive' ? 'ScioThrive' : null;
+          
+          if (serviceDir) {
+            
+            // Fetch directory listing from API
+            const response = await fetch(`/api/directory/${serviceDir}`);
+            
+            if (response.ok) {
+              const data = await response.json();
+              
+              if (data.images && data.images.length > 0) {
+                const imagePaths = data.images.map((img: string) => `/${serviceDir}/${img}`);
+                partners[service.id] = imagePaths;
+              } else {
+                console.log(`No images found for ${service.id}`);
+              }
+            } else {
+              const errorData = await response.json();
+              console.log(`Error response for ${serviceDir}:`, errorData);
+            }
+          }
+        } catch (error) {
+          console.error(`Error checking partners for ${service.id}:`, error);
+        }
+      }
+      
+      setPartnersData(partners);
+    };
+
+    checkPartners();
+  }, []);
+
   const renderServiceCard = (service: ServiceFeature, primaryColor: string, borderColor: string) => {
     const cardClass = service.featured 
       ? `group mb-4 shadow-lg hover:shadow-2xl transition-all duration-300 text-white bg-${primaryColor} border-0`
@@ -50,6 +94,8 @@ export default function ServicesSection() {
     const floatingColor2 = section.primaryColor === 'scio-blue' ? 'bg-scio-orange' : 'bg-scio-blue';
     const paddingClass = index === 0 ? "pt-32 pb-20" : "py-20";
     const isImageRight = index % 2 === 0; // Even indices have image on right, odd on left
+
+    const hasPartners = partnersData[section.id] && partnersData[section.id].length > 0;
 
     return (
       <section key={section.id} id={section.id} className={`${paddingClass} bg-gradient-to-br ${section.backgroundGradient} relative overflow-hidden`}>
@@ -111,26 +157,40 @@ export default function ServicesSection() {
               </div>
               {/* Floating elements - Position changes based on image side */}
               <div className={`absolute -top-4 sm:-top-6 ${isImageRight ? '-right-4 sm:-right-6' : '-left-4 sm:-left-6'} w-16 sm:w-24 h-16 sm:h-24 ${floatingColor1} rounded-xl sm:rounded-2xl opacity-80 animate-pulse`}></div>
-              <div className={`absolute -bottom-4 sm:-bottom-6 ${isImageRight ? '-left-4 sm:-left-6' : '-right-4 sm:-right-6'} w-20 sm:w-32 h-20 sm:h-32 ${floatingColor2} rounded-2xl sm:rounded-3xl opacity-60 animate-pulse delay-1000`}></div>
+              <div className={`absolute -bottom-4 sm:-bottom-6 ${isImageRight ? '-left-4 sm:-left-6' : '-right-4 sm:right-6'} w-20 sm:w-32 h-20 sm:h-32 ${floatingColor2} rounded-2xl sm:rounded-3xl opacity-60 animate-pulse delay-1000`}></div>
             </div>
           </div>
 
-          {/* Partners Section */}
-          <div className="mt-12 sm:mt-20">
-            <div className="mx-auto">
-              <h4 className={`font-heading heading-secondary text-xl sm:text-2xl text-gray-800 mb-6 sm:mb-8 text-left flex items-center`}>
-                <i className={`${section.partnersIcon} ${section.partnersIconColor} mr-2 sm:mr-3 text-lg sm:text-xl`}></i>
-                {section.partnersTitle}
-              </h4>
-              <div className="flex flex-wrap items-center justify-start gap-4 sm:gap-8 opacity-70 hover:opacity-100 transition-opacity duration-300">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="h-12 sm:h-16 w-24 sm:w-32 bg-gray-200 rounded-lg flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110">
-                    <span className="text-gray-500 font-body text-xs sm:text-sm">Partner {i}</span>
-                  </div>
-                ))}
+          {/* Partners Section - Only show if partners exist */}
+          {hasPartners && (
+            <div className="mt-12 sm:mt-20">
+              <div className="mx-auto">
+                <h4 className={`font-heading heading-secondary text-xl sm:text-2xl text-gray-800 mb-6 sm:mb-8 text-left flex items-center`}>
+                  <i className={`${section.partnersIcon} ${section.partnersIconColor} mr-2 sm:mr-3 text-lg sm:text-xl`}></i>
+                  {section.partnersTitle}
+                </h4>
+                <div className="flex flex-wrap items-center justify-start gap-4 sm:gap-8 opacity-70 hover:opacity-100 transition-opacity duration-300">
+                  {partnersData[section.id].map((imagePath, i) => {
+                    return (
+                      <div key={i} className="h-12 sm:h-16 w-24 sm:w-32 bg-gray-200 rounded-lg flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 overflow-hidden">
+                        <Image
+                          src={imagePath}
+                          alt={`Partner ${i + 1}`}
+                          width={100}
+                          height={80}
+                          className="object-contain p-2 mix-blend-multiply"
+                          style={{
+                            mixBlendMode: 'multiply',
+                            height: '60px',
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
     );
