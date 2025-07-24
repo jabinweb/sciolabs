@@ -5,70 +5,55 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
 export default function TestimonialsSection() {
-  const [activeTab, setActiveTab] = useState('schools');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const testimonials = {
-    schools: [
-      {
-        id: 1,
-        quote: "Children have millions of choices and they find it very difficult to decide what they want to do and thats where career counselling comes in.",
-        name: "Mr. Vikram Aditya",
-        title: "HONY. Secretary, MSMSV, Jaipur",
-        image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        logo: "/placeholder-logo.png"
-      },
-      {
-        id: 2,
-        quote: "The comprehensive guidance program has transformed how our students approach career decisions.",
-        name: "Dr. Priya Sharma",
-        title: "Principal, Delhi Public School",
-        image: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        logo: "/placeholder-logo.png"
-      }
-    ],
-    csr: [
-      {
-        id: 1,
-        quote: "Our partnership with Scio Labs has enabled us to reach thousands of students with quality career guidance.",
-        name: "Mr. Rajesh Kumar",
-        title: "CSR Head, Tech Mahindra",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        logo: "/placeholder-logo.png"
-      }
-    ],
-    counselors: [
-      {
-        id: 1,
-        quote: "The training program equipped me with modern tools and techniques to better guide students.",
-        name: "Ms. Anita Reddy",
-        title: "Career Counselor, Bangalore",
-        image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        logo: "/placeholder-logo.png"
-      }
-    ]
-  };
-
-  const tabs = [
-    { id: 'schools', label: 'Schools' },
-    { id: 'csr', label: 'CSR-Government' },
-    { id: 'counselors', label: 'Counselors' }
+  const testimonials = [
+    {
+      id: 1,
+      service: "ScioThrive",
+      quote: "Davis Abraham led an engaging and interactive online session for mid to senior-level officers, using technology effectively. A truly memorable experience.",
+      name: "Smt. Aditi Mishra",
+      title: "National Productivity Council",
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      serviceColor: "text-scio-blue"
+    },
+    {
+      id: 2,
+      service: "ScioLingua",
+      quote: "ScioLabs' BeGin curriculum is research-backed, teacher-friendly, and child-centered—making classroom implementation smooth and impactful.",
+      name: "Annie Samuel",
+      title: "EmpowerED",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      serviceColor: "text-scio-blue"
+    },
+    {
+      id: 3,
+      service: "ScioCare",
+      quote: "The English for Nurses curriculum is structured, relevant, and engaging—boosting student confidence and communication skills in real healthcare contexts.",
+      name: "Amy Tephilla A",
+      title: "CBH College of Nursing",
+      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      serviceColor: "text-scio-blue"
+    },
+    {
+      id: 4,
+      service: "ScioGuidance",
+      quote: "The career counseling session was insightful, friendly, and tailored—providing clear direction and practical next steps.",
+      name: "Dr. S. Sharma",
+      title: "Parent from Lucknow",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      serviceColor: "text-scio-blue"
+    }
   ];
 
-  const currentTestimonials = testimonials[activeTab as keyof typeof testimonials];
-  const currentTestimonial = currentTestimonials[currentIndex];
+  const currentTestimonial = testimonials[currentIndex];
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % currentTestimonials.length);
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + currentTestimonials.length) % currentTestimonials.length);
-  };
-
-  const handleTabChange = (tabId: string) => {
-    setActiveTab(tabId);
-    setCurrentIndex(0);
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   return (
@@ -77,28 +62,11 @@ export default function TestimonialsSection() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="font-heading heading-primary text-4xl md:text-5xl mb-6 text-scio-blue">
-            Testimonials
+            What Our Clients Say
           </h2>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex justify-center mb-12">
-          <div className="flex space-x-2 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-lg">
-            {tabs.map((tab) => (
-              <Button
-                key={tab.id}
-                variant={activeTab === tab.id ? "default" : "ghost"}
-                className={`px-8 py-3 rounded-full font-medium transition-all duration-300 ${
-                  activeTab === tab.id 
-                    ? 'bg-scio-blue text-white shadow-md' 
-                    : 'text-gray-600 hover:text-scio-blue hover:bg-blue-50'
-                }`}
-                onClick={() => handleTabChange(tab.id)}
-              >
-                {tab.label}
-              </Button>
-            ))}
-          </div>
+          <p className="font-body text-body text-lg text-gray-600 max-w-2xl mx-auto">
+            Hear from our partners and clients about their experience with ScioLabs
+          </p>
         </div>
 
         {/* Testimonial Content */}
@@ -109,7 +77,6 @@ export default function TestimonialsSection() {
             size="icon"
             className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-12 z-10 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl border-2 border-gray-200 hover:border-scio-blue transition-all duration-300"
             onClick={handlePrev}
-            disabled={currentTestimonials.length <= 1}
           >
             <i className="fas fa-chevron-left text-scio-blue"></i>
           </Button>
@@ -119,7 +86,6 @@ export default function TestimonialsSection() {
             size="icon"
             className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-12 z-10 w-12 h-12 rounded-full bg-white shadow-lg hover:shadow-xl border-2 border-gray-200 hover:border-scio-blue transition-all duration-300"
             onClick={handleNext}
-            disabled={currentTestimonials.length <= 1}
           >
             <i className="fas fa-chevron-right text-scio-blue"></i>
           </Button>
@@ -130,6 +96,13 @@ export default function TestimonialsSection() {
               <div className="flex flex-col lg:flex-row gap-8">
                 {/* Quote Section */}
                 <div className="flex-1">
+                  {/* Service Badge */}
+                  <div className="inline-flex items-center px-4 py-2 bg-scio-blue/10 rounded-full mb-6">
+                    <span className={`font-heading text-sm font-semibold ${currentTestimonial.serviceColor}`}>
+                      {currentTestimonial.service}
+                    </span>
+                  </div>
+
                   {/* Quote Icon */}
                   <div className="text-scio-orange mb-6">
                     <svg width="48" height="36" viewBox="0 0 48 36" fill="currentColor">
@@ -151,15 +124,6 @@ export default function TestimonialsSection() {
                       {currentTestimonial.title}
                     </p>
                   </div>
-                  
-                  {/* Organization Logo */}
-                  <div className="mt-8">
-                    <div className="w-20 h-10 bg-gradient-to-r from-scio-blue/10 to-scio-orange/10 rounded-lg flex items-center justify-center border border-gray-200">
-                      <div className="w-16 h-8 bg-gradient-to-r from-scio-blue to-scio-orange rounded flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">LOGO</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
                 
                 {/* Image Section */}
@@ -180,7 +144,7 @@ export default function TestimonialsSection() {
 
         {/* Navigation Dots */}
         <div className="flex justify-center mt-12 space-x-3">
-          {currentTestimonials.map((_, index) => (
+          {testimonials.map((_, index) => (
             <button
               key={index}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
@@ -194,3 +158,4 @@ export default function TestimonialsSection() {
     </section>
   );
 }
+                

@@ -112,8 +112,8 @@ export default function StatsSection() {
                 key={index} 
                 className={`group bg-gradient-to-br ${stat.gradient} backdrop-blur-sm border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02] hover:-translate-y-1 ${sizeClasses}`}
               >
-                <CardContent className="h-full flex flex-col justify-between">
-                  <div className="space-y-4">
+                <CardContent className="h-full flex flex-col justify-center items-center">
+                  <div className="space-y-3 text-center">
                     <div className={`font-heading font-bold bg-gradient-to-br from-gray-800 to-gray-600 bg-clip-text text-transparent ${textSizes.number}`}>
                       {stat.number}
                     </div>
@@ -135,7 +135,7 @@ export default function StatsSection() {
                   </div>
                   
                   {/* Decorative element */}
-                  <div className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="w-full h-1 bg-gradient-to-r from-transparent via-gray-400/50 to-transparent rounded-full"></div>
                   </div>
                 </CardContent>
