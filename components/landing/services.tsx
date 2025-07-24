@@ -169,25 +169,53 @@ export default function ServicesSection() {
                   <i className={`${section.partnersIcon} ${section.partnersIconColor} mr-2 sm:mr-3 text-lg sm:text-xl`}></i>
                   {section.partnersTitle}
                 </h4>
-                <div className="flex flex-wrap items-center justify-start gap-4 sm:gap-8 opacity-70 hover:opacity-100 transition-opacity duration-300">
-                  {partnersData[section.id].map((imagePath, i) => {
-                    return (
-                      <div key={i} className="h-12 sm:h-16 w-24 sm:w-32 bg-gray-200 rounded-lg flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 overflow-hidden">
+                
+                {/* Carousel for many images, static for few */}
+                {partnersData[section.id].length > 6 ? (
+                  <div className="relative overflow-hidden">
+                    <div 
+                      className="flex gap-6 sm:gap-10 animate-scroll opacity-70 hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        width: `${partnersData[section.id].length * 200}px`,
+                        animation: `scroll ${partnersData[section.id].length * 3}s linear infinite`
+                      }}
+                    >
+                      {[...partnersData[section.id], ...partnersData[section.id]].map((imagePath, i) => (
+                        <div key={i} className="flex-shrink-0 h-16 sm:h-20 w-32 sm:w-40 bg-gray-200 rounded-lg flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 overflow-hidden">
+                          <Image
+                            src={imagePath}
+                            alt={`Partner ${(i % partnersData[section.id].length) + 1}`}
+                            width={140}
+                            height={100}
+                            className="object-contain p-3 mix-blend-multiply"
+                            style={{
+                              mixBlendMode: 'multiply',
+                              height: '80px',
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap items-center justify-start gap-6 sm:gap-10 opacity-70 hover:opacity-100 transition-opacity duration-300">
+                    {partnersData[section.id].map((imagePath, i) => (
+                      <div key={i} className="h-16 sm:h-20 w-32 sm:w-40 bg-gray-200 rounded-lg flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110 overflow-hidden">
                         <Image
                           src={imagePath}
                           alt={`Partner ${i + 1}`}
-                          width={100}
-                          height={80}
-                          className="object-contain p-2 mix-blend-multiply"
+                          width={140}
+                          height={100}
+                          className="object-contain p-3 mix-blend-multiply"
                           style={{
                             mixBlendMode: 'multiply',
-                            height: '60px',
+                            height: '80px',
                           }}
                         />
                       </div>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
