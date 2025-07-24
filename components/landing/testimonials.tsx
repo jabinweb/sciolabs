@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 
 export default function TestimonialsSection() {
@@ -97,17 +98,13 @@ export default function TestimonialsSection() {
                 {/* Quote Section */}
                 <div className="flex-1">
                   {/* Service Badge */}
-                  <div className="inline-flex items-center px-4 py-2 bg-scio-blue/10 rounded-full mb-6">
-                    <span className={`font-heading text-sm font-semibold ${currentTestimonial.serviceColor}`}>
-                      {currentTestimonial.service}
-                    </span>
-                  </div>
+                  <Badge variant="outline" className="bg-scio-blue/10 text-scio-blue border-scio-blue mb-6">
+                    {currentTestimonial.service}
+                  </Badge>
 
                   {/* Quote Icon */}
                   <div className="text-scio-orange mb-6">
-                    <svg width="48" height="36" viewBox="0 0 48 36" fill="currentColor">
-                      <path d="M12 0C5.4 0 0 5.4 0 12v12c0 6.6 5.4 12 12 12s12-5.4 12-12c0-6.6-5.4-12-12-12zm0 18c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6zm24-18c-6.6 0-12 5.4-12 12v12c0 6.6 5.4 12 12 12s12-5.4 12-12c0-6.6-5.4-12-12-12zm0 18c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"/>
-                    </svg>
+                    <i className="fas fa-quote-left text-5xl"></i>
                   </div>
                   
                   {/* Quote Text */}
@@ -158,4 +155,4 @@ export default function TestimonialsSection() {
     </section>
   );
 }
-                
+
