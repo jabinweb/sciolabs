@@ -1,6 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { Calendar, User, Tag, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 interface BlogPost {
   id: string;
@@ -26,74 +29,176 @@ async function getPost(slug: string): Promise<BlogPost | null> {
   return data.post || null;
 }
 
-export default async function BlogSinglePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function BlogSinglePage({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> 
+}) {
+  const { slug } = await params
   const post = await getPost(slug);
 
   if (!post) {
     notFound();
   }
 
+  // Parse tags if they're stored as JSON string
+  let parsedTags: string[] = []
+  try {
+    if (typeof post.tags === 'string') {
+      parsedTags = JSON.parse(post.tags)
+    } else if (Array.isArray(post.tags)) {
+      parsedTags = post.tags
+    }
+  } catch (error) {
+    console.error('Error parsing tags:', error)
+    parsedTags = []
+  }
+
   return (
-    <main>
-      {/* Hero Section */}
-      <section className="py-20 pt-28 bg-gradient-to-br from-scio-blue via-scio-blue-light to-scio-orange relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/30"></div>
-        <div className="max-w-4xl mx-auto px-6 relative z-10">
-          <div className="text-center text-white">
-            <h1 className="font-heading heading-primary text-4xl md:text-5xl mb-6">
-              {post.title}
-            </h1>
-            <p className="font-body text-lg text-gray-100 max-w-2xl mx-auto leading-relaxed mb-4">
+    <main className="min-h-screen bg-gray-50">
+      {/* Dark Hero Section */}
+      <section className="relative bg-gray-900 text-white">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-scio-blue rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-scio-orange rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="relative z-10 max-w-5xl mx-auto px-6 py-20">
+          {/* Back Button */}
+          <Link 
+            href="/blog" 
+            className="inline-flex items-center gap-2 text-gray-300 hover:text-white transition-colors mb-8 group"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Blog
+          </Link>
+
+          {/* Category & Meta */}
+          <div className="flex flex-wrap items-center gap-4 mb-6">
+            {post.category?.name && (
+              <Badge className="bg-scio-blue hover:bg-scio-blue-dark text-white">
+                {post.category.name}
+              </Badge>
+            )}
+            <div className="flex items-center gap-4 text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                {post.publishDate ? new Date(post.publishDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                }) : ''}
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                {post.author?.name}
+              </div>
+            </div>
+          </div>
+
+          {/* Title */}
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            {post.title}
+          </h1>
+
+          {/* Excerpt */}
+          {post.excerpt && (
+            <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">
               {post.excerpt}
             </p>
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <span className="bg-scio-blue/10 text-scio-blue px-3 py-1 rounded-full text-sm font-medium">
-                {post.category?.name}
-              </span>
-              <span className="text-gray-200 text-sm">
-                {post.publishDate ? new Date(post.publishDate).toLocaleDateString() : ''}
-              </span>
-              <span className="text-gray-200 text-sm">
-                {post.tags?.join(', ')}
-              </span>
-            </div>
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-10 h-10 bg-scio-blue rounded-full flex items-center justify-center">
-                <span className="text-white font-semibold text-sm">
-                  {post.author?.name?.split(' ').map(n => n[0]).join('')}
+          )}
+
+          {/* Tags */}
+          {parsedTags.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <Tag className="w-4 h-4 text-gray-400" />
+              {parsedTags.map((tag, index) => (
+                <span 
+                  key={index}
+                  className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm border border-gray-700"
+                >
+                  {tag}
                 </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Content Section */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-6">
+          <Card className="shadow-xl border-0">
+            <CardContent className="p-0">
+              {/* Featured Image */}
+              {post.imageUrl && (
+                <div className="relative h-96 md:h-[500px] overflow-hidden rounded-t-lg">
+                  <Image
+                    src={post.imageUrl}
+                    alt={post.title}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              )}
+
+              {/* Article Content */}
+              <div className="p-8 md:p-12">
+                <div 
+                  className="prose prose-lg prose-gray max-w-none
+                    prose-headings:font-heading prose-headings:text-gray-900
+                    prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
+                    prose-p:text-gray-700 prose-p:leading-relaxed
+                    prose-a:text-scio-blue prose-a:no-underline hover:prose-a:underline
+                    prose-strong:text-gray-900 prose-strong:font-semibold
+                    prose-ul:text-gray-700 prose-ol:text-gray-700
+                    prose-li:text-gray-700 prose-li:leading-relaxed
+                    prose-blockquote:border-l-scio-blue prose-blockquote:bg-gray-50 prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:rounded-r
+                    prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-scio-blue
+                    prose-img:rounded-lg prose-img:shadow-lg"
+                  dangerouslySetInnerHTML={{ __html: post.content }} 
+                />
+
+                {/* Author Info */}
+                <div className="mt-12 pt-8 border-t border-gray-200">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-scio-blue rounded-full flex items-center justify-center">
+                      <span className="text-white font-semibold text-lg">
+                        {post.author?.name?.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-heading text-lg font-semibold text-gray-900">
+                        {post.author?.name}
+                      </h4>
+                      <p className="text-gray-600">Author</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="font-heading text-sm font-semibold text-white">{post.author?.name}</p>
-              </div>
+            </CardContent>
+          </Card>
+
+          {/* Related Posts Section */}
+          <div className="mt-16">
+            <h3 className="font-heading text-2xl font-bold text-gray-900 mb-8">
+              Continue Reading
+            </h3>
+            <div className="text-center">
+              <Link 
+                href="/blog"
+                className="inline-flex items-center gap-2 bg-scio-blue hover:bg-scio-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              >
+                View All Posts
+                <ArrowLeft className="w-4 h-4 rotate-180" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
-      {/* Post Content */}
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-6">
-          <Card className="border-0 shadow-lg">
-            <CardContent>
-              {post.imageUrl && (
-                <div className="mb-8">
-                  <Image
-                    src={post.imageUrl}
-                    alt={post.title}
-                    width={800}
-                    height={400}
-                    className="rounded-xl object-cover w-full h-auto"
-                  />
-                </div>
-              )}
-              <div className="prose prose-lg max-w-none font-body text-gray-800">
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
     </main>
-  );
+  )
 }

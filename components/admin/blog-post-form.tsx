@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,7 +23,9 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
     slug: '',
     isPublished: false,
     imageUrl: '',
-    tags: ''
+    tags: '',
+    categoryId: '',
+    publishDate: ''
   })
 
   const generateSlug = (title: string) => {
@@ -77,6 +79,52 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (postId) {
+      const fetchPost = async () => {
+        try {
+          const response = await fetch(`/api/admin/blog/${postId}`)
+          if (response.ok) {
+            const data = await response.json()
+            const post = data.post
+            
+            // Parse tags if they're stored as JSON string
+            let parsedTags: string[] = []
+            try {
+              if (typeof post.tags === 'string') {
+                parsedTags = JSON.parse(post.tags)
+              } else if (Array.isArray(post.tags)) {
+                parsedTags = post.tags
+              }
+            } catch (error) {
+              console.error('Error parsing tags:', error)
+              parsedTags = []
+            }
+
+            setFormData({
+              title: post.title || '',
+              content: post.content || '',
+              excerpt: post.excerpt || '',
+              slug: post.slug || '',
+              tags: parsedTags.join(', '),
+              categoryId: post.categoryId || '',
+              imageUrl: post.imageUrl || '',
+              isPublished: post.isPublished || false,
+              publishDate: post.publishDate ? new Date(post.publishDate).toISOString().split('T')[0] : ''
+            })
+            setLoading(false)
+          }
+        } catch (error) {
+          console.error('Error fetching post:', error)
+          setLoading(false)
+        }
+      }
+      fetchPost()
+    } else {
+      setLoading(false)
+    }
+  }, [postId])
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
