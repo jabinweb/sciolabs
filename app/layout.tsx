@@ -6,6 +6,7 @@ import Footer from "@/components/layout/footer";
 import CTASection from "@/components/landing/cta";
 import NewsletterSection from "@/components/landing/newsletter";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from 'sonner'
 
 
 const inter = Inter({
@@ -92,6 +93,14 @@ export default function RootLayout({
           <CTASection />
           <NewsletterSection />
           <Footer />
+          <Toaster 
+            position="top-right" 
+            richColors 
+            closeButton
+            toastOptions={{
+              duration: 4000,
+            }}
+          />
         </SessionProvider>
       </body>
     </html>

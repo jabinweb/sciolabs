@@ -5,6 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { toast } from 'sonner'
 
 interface User {
   id: string
@@ -41,10 +44,20 @@ export default function UsersPage() {
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('')
   const [error, setError] = useState('')
+  const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [editForm, setEditForm] = useState({
+    name: '',
+    email: '',
+    role: '',
+    password: ''
+  })
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
 
   const fetchUsers = useCallback(async (page = 1, searchTerm = search, role = roleFilter) => {
     try {
       setLoading(true)
+      console.log('Fetching users with params:', { page, searchTerm, role })
+      
       const params = new URLSearchParams({
         page: page.toString(),
         limit: pagination.limit.toString(),
@@ -53,17 +66,25 @@ export default function UsersPage() {
       })
 
       const response = await fetch(`/api/admin/users?${params}`)
+      console.log('Users fetch response status:', response.status)
       
       if (!response.ok) {
-        throw new Error('Failed to fetch users')
+        const errorData = await response.json()
+        console.error('Users fetch error:', errorData)
+        throw new Error(errorData.error || 'Failed to fetch users')
       }
 
       const data: UsersResponse = await response.json()
+      console.log('Users data:', data)
       setUsers(data.users)
       setPagination(data.pagination)
       setError('')
+      toast.success(`Loaded ${data.users.length} users`)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch users')
+      console.error('Users fetch exception:', err)
+      const errorMsg = err instanceof Error ? err.message : 'Failed to fetch users'
+      setError(errorMsg)
+      toast.error(`Failed to load users: ${errorMsg}`)
     } finally {
       setLoading(false)
     }
@@ -73,19 +94,84 @@ export default function UsersPage() {
     if (!confirm('Are you sure you want to delete this user?')) return
 
     try {
+      console.log('Deleting user:', userId)
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: 'DELETE'
       })
 
+      console.log('Delete user response status:', response.status)
+
       if (!response.ok) {
         const error = await response.json()
+        console.error('Delete user error:', error)
         throw new Error(error.error || 'Failed to delete user')
       }
 
+      toast.success('User deleted successfully')
       // Refresh users list
       fetchUsers(pagination.page)
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to delete user')
+      console.error('Delete user exception:', err)
+      const errorMsg = err instanceof Error ? err.message : 'Failed to delete user'
+      toast.error(`Failed to delete user: ${errorMsg}`)
+    }
+  }
+
+  const openEditDialog = (user: User) => {
+    setEditingUser(user)
+    setEditForm({
+      name: user.name || '',
+      email: user.email,
+      role: user.role,
+      password: ''
+    })
+    setEditDialogOpen(true)
+  }
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingUser) return
+
+    try {
+      console.log('Updating user:', editingUser.id, editForm)
+      
+      // Only send non-empty fields
+      const updateData: Record<string, unknown> = {}
+      if (editForm.name.trim()) updateData.name = editForm.name.trim()
+      if (editForm.email.trim()) updateData.email = editForm.email.trim()
+      if (editForm.role) updateData.role = editForm.role
+      if (editForm.password.trim()) updateData.password = editForm.password.trim()
+
+      const response = await fetch(`/api/admin/users/${editingUser.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData)
+      })
+
+      console.log('Update user response status:', response.status)
+
+      if (!response.ok) {
+        const error = await response.json()
+        console.error('Update user error:', error)
+        throw new Error(error.error || 'Failed to update user')
+      }
+
+      const data = await response.json()
+      console.log('User updated successfully:', data)
+
+      toast.success('User updated successfully')
+      setEditDialogOpen(false)
+      setEditingUser(null)
+      setEditForm({ name: '', email: '', role: '', password: '' })
+      
+      // Refresh users list
+      fetchUsers(pagination.page)
+    } catch (err) {
+      console.error('Update user exception:', err)
+      const errorMsg = err instanceof Error ? err.message : 'Failed to update user'
+      toast.error(`Failed to update user: ${errorMsg}`)
     }
   }
 
@@ -227,7 +313,11 @@ export default function UsersPage() {
                     </td>
                     <td className="p-3">
                       <div className="flex space-x-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => openEditDialog(user)}
+                        >
                           <i className="fas fa-edit mr-1"></i>
                           Edit
                         </Button>
@@ -294,6 +384,79 @@ export default function UsersPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Edit User Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">Name</Label>
+              <Input
+                id="edit-name"
+                value={editForm.name}
+                onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Enter name"
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="edit-email">Email</Label>
+              <Input
+                id="edit-email"
+                type="email"
+                value={editForm.email}
+                onChange={(e) => setEditForm(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="Enter email"
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="edit-role">Role</Label>
+              <Select value={editForm.role} onValueChange={(value) => setEditForm(prev => ({ ...prev, role: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="edit-password">New Password (Optional)</Label>
+              <Input
+                id="edit-password"
+                type="password"
+                value={editForm.password}
+                onChange={(e) => setEditForm(prev => ({ ...prev, password: e.target.value }))}
+                placeholder="Leave blank to keep current password"
+              />
+              <p className="text-sm text-gray-500">
+                Leave empty to keep the current password. Minimum 6 characters if changing.
+              </p>
+            </div>
+            
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setEditDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-scio-blue hover:bg-scio-blue-dark">
+                Update User
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

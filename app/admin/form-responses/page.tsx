@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ClipboardList, Filter, RefreshCw } from "lucide-react";
+import { toast } from 'sonner'
 
 // Universal FormResponse type
 interface FormResponse {
@@ -31,18 +32,30 @@ export default function FormResponsesPage() {
       setLoading(true);
       setError("");
       try {
+        console.log('Fetching form responses...')
         const res = await fetch("/api/admin/form-responses");
+        console.log('Form responses fetch status:', res.status)
+        
         if (!res.ok) {
           const data = await res.json();
-          setError(data.error || "Failed to fetch responses");
+          const errorMsg = data.error || "Failed to fetch responses"
+          console.error('Form responses fetch error:', data)
+          setError(errorMsg);
           setResponses([]);
+          toast.error(`Failed to load responses: ${errorMsg}`)
         } else {
           const data = await res.json();
+          console.log('Form responses data:', data)
           setResponses(data.responses || []);
+          if (data.responses?.length > 0) {
+            toast.success(`Loaded ${data.responses.length} form responses`)
+          }
         }
-      } catch {
+      } catch (err) {
+        console.error('Form responses fetch exception:', err)
         setError("Failed to fetch responses");
         setResponses([]);
+        toast.error("Failed to load responses. Please try again.")
       } finally {
         setLoading(false);
       }

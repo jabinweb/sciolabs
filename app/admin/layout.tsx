@@ -1,5 +1,6 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
+import { Toaster } from 'sonner'
 import Sidebar from "@/components/admin/sidebar"
 
 interface DashboardLayoutProps {
@@ -9,8 +10,15 @@ interface DashboardLayoutProps {
 export default async function AdminDashboardLayout({ children }: DashboardLayoutProps) {
   const session = await auth()
 
+  console.log('Admin Dashboard Layout - Session:', session);
+  
+
   if (!session) {
     redirect("/auth/signin")
+  }
+
+  if (session.user.role !== "admin") {
+    redirect("/") // Redirect non-admin users to home
   }
 
   return (
@@ -33,6 +41,15 @@ export default async function AdminDashboardLayout({ children }: DashboardLayout
           </main>
         </div>
       </div>
+      
+      <Toaster 
+        position="top-right" 
+        richColors 
+        closeButton
+        toastOptions={{
+          duration: 4000,
+        }}
+      />
     </div>
   )
 }

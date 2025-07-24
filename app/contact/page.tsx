@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import { useState } from "react"
+import { toast } from 'sonner'
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false)
@@ -41,20 +42,31 @@ export default function ContactPage() {
     }
 
     try {
+      console.log('Submitting contact form:', payload)
+      
       const res = await fetch("/api/forms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       })
+      
+      console.log('Form submission response status:', res.status)
       const result = await res.json()
+      console.log('Form submission result:', result)
+      
       if (result.success) {
         setSuccess(true)
         form.reset()
+        toast.success('Thank you! Your message has been sent successfully.')
       } else {
-        setError(result.error || "Failed to send message")
+        const errorMsg = result.error || "Failed to send message"
+        setError(errorMsg)
+        toast.error(`Failed to send message: ${errorMsg}`)
       }
-    } catch {
+    } catch (err) {
+      console.error('Form submission error:', err)
       setError("Failed to send message")
+      toast.error("Failed to send message. Please try again.")
     } finally {
       setLoading(false)
     }

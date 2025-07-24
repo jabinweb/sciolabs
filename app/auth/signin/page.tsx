@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { toast } from 'sonner'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
@@ -21,20 +22,35 @@ export default function SignInPage() {
     setError('')
 
     try {
+      console.log('Attempting sign in with:', { email })
+      
       const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
       })
 
+      console.log('Sign in result:', result)
+
       if (result?.error) {
+        console.error('Sign in error:', result.error)
         setError('Invalid email or password')
+        toast.error('Sign in failed: Invalid email or password')
+      } else if (result?.ok) {
+        console.log('Sign in successful, redirecting...')
+        toast.success('Sign in successful! Redirecting...')
+        
+        // Use window.location for hard redirect to ensure session is properly loaded
+        window.location.href = '/admin'
       } else {
-        router.push('/admin')
-        router.refresh()
+        console.error('Unexpected result:', result)
+        setError('An unexpected error occurred')
+        toast.error('An unexpected error occurred')
       }
-    } catch {
+    } catch (err) {
+      console.error('Sign in exception:', err)
       setError('An error occurred. Please try again.')
+      toast.error('An error occurred. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -105,4 +121,3 @@ export default function SignInPage() {
     </Card>
   )
 }
-  
