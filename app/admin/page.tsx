@@ -1,95 +1,265 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
+'use client'
+
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { 
+  Users, 
+  FileText, 
+  BarChart3, 
+  Settings, 
+  Activity,
+  PlusCircle,
+  Calendar,
+  MessageSquare
+} from 'lucide-react'
 
-export default async function AdminDashboardPage() {
-  const session = await auth()
+interface DashboardStats {
+  totalUsers: number
+  totalPosts: number
+  publishedPosts: number
+  draftPosts: number
+  recentActivity: number
+}
 
-  if (!session) {
-    redirect("/auth/signin")
+export default function AdminDashboard() {
+  const { data: session, status } = useSession()
+  const [stats, setStats] = useState<DashboardStats>({
+    totalUsers: 0,
+    totalPosts: 0,
+    publishedPosts: 0,
+    draftPosts: 0,
+    recentActivity: 0
+  })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // Fetch dashboard statistics
+        const [usersRes, postsRes] = await Promise.all([
+          fetch('/api/admin/users?limit=1'),
+          fetch('/api/admin/blog?limit=1')
+        ])
+
+        const users = await usersRes.json()
+        const posts = await postsRes.json()
+
+        setStats({
+          totalUsers: users.pagination?.total || 0,
+          totalPosts: posts.pagination?.total || 0,
+          publishedPosts: posts.publishedCount || 0,
+          draftPosts: posts.draftCount || 0,
+          recentActivity: users.pagination?.total || 0
+        })
+      } catch (error) {
+        console.error('Error fetching dashboard stats:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (session) {
+      fetchStats()
+    }
+  }, [session])
+
+  if (status === "loading") {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
   }
 
-  const stats = [
-    { label: 'Total Users', value: '1,234', icon: 'fas fa-users', color: 'bg-blue-500' },
-    { label: 'Blog Posts', value: '56', icon: 'fas fa-file-alt', color: 'bg-green-500' },
-    { label: 'Newsletter Subscribers', value: '10,234', icon: 'fas fa-envelope', color: 'bg-orange-500' },
-    { label: 'Page Views', value: '45,678', icon: 'fas fa-eye', color: 'bg-purple-500' }
-  ]
+  if (!session || session.user?.role !== 'admin') {
+    return <div className="flex items-center justify-center min-h-screen">Access denied</div>
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
       <div>
-        <h1 className="font-heading text-3xl text-gray-800 mb-2">
-          Welcome back, {session?.user?.name || session?.user?.email}!
-
+        <h1 className="font-heading text-3xl text-gray-800">
+          Welcome back, {session.user?.name}
         </h1>
-        <p className="font-body text-gray-600">
-          Manage your ScioLabs platform from this admin dashboard.
-        </p>
-      </div>
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-body text-sm text-gray-600 mb-1">{stat.label}</p>
-                  <p className="font-heading text-2xl font-bold text-gray-800">{stat.value}</p>
-                </div>
-                <div className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center`}>
-                  <i className={`${stat.icon} text-white text-lg`}></i>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <p className="text-gray-600 mt-1">Here&apos;s what&apos;s happening with your platform today.</p>
       </div>
 
       {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+          <CardContent className="p-6">
+            <Link href="/admin/blog/new">
+              <div className="flex items-center space-x-4 cursor-pointer group">
+                <div className="w-12 h-12 bg-scio-blue rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <PlusCircle className="text-white w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-heading text-lg font-semibold text-gray-800 group-hover:text-scio-blue transition-colors">
+                    Create New Post
+                  </h3>
+                  <p className="text-gray-600 text-sm">Write a new blog post</p>
+                </div>
+              </div>
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+          <CardContent className="p-6">
+            <Link href="/admin/users">
+              <div className="flex items-center space-x-4 cursor-pointer group">
+                <div className="w-12 h-12 bg-scio-orange rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Users className="text-white w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-heading text-lg font-semibold text-gray-800 group-hover:text-scio-orange transition-colors">
+                    Manage Users
+                  </h3>
+                  <p className="text-gray-600 text-sm">View and edit users</p>
+                </div>
+              </div>
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+          <CardContent className="p-6">
+            <Link href="/admin/content/homepage">
+              <div className="flex items-center space-x-4 cursor-pointer group">
+                <div className="w-12 h-12 bg-scio-green rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Settings className="text-white w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-heading text-lg font-semibold text-gray-800 group-hover:text-scio-green transition-colors">
+                    Site Settings
+                  </h3>
+                  <p className="text-gray-600 text-sm">Configure homepage</p>
+                </div>
+              </div>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
+              <Users className="w-4 h-4 mr-2" />
+              Total Users
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-scio-blue">
+              {loading ? '...' : stats.totalUsers}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
+              <FileText className="w-4 h-4 mr-2" />
+              Total Posts
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-scio-orange">
+              {loading ? '...' : stats.totalPosts}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
+              <Activity className="w-4 h-4 mr-2" />
+              Published
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-scio-green">
+              {loading ? '...' : stats.publishedPosts}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
+              <Calendar className="w-4 h-4 mr-2" />
+              Drafts
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-500">
+              {loading ? '...' : stats.draftPosts}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="border-0 shadow-lg">
           <CardHeader>
-            <CardTitle className="font-heading text-xl text-gray-800">Quick Actions</CardTitle>
+            <CardTitle className="flex items-center">
+              <BarChart3 className="w-5 h-5 mr-2 text-scio-blue" />
+              Recent Activity
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <a href="/admin/blog/new" className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-              <div className="flex items-center space-x-3">
-                <i className="fas fa-plus text-scio-blue"></i>
-                <span className="font-medium">Create New Blog Post</span>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-sm text-gray-600">New user registrations</span>
+                <span className="font-semibold text-scio-blue">{stats.totalUsers}</span>
               </div>
-            </a>
-            <a href="/admin/users" className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-              <div className="flex items-center space-x-3">
-                <i className="fas fa-user-plus text-scio-orange"></i>
-                <span className="font-medium">Manage Users</span>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-sm text-gray-600">Blog posts published</span>
+                <span className="font-semibold text-scio-green">{stats.publishedPosts}</span>
               </div>
-            </a>
-            <a href="/admin/content/homepage" className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-              <div className="flex items-center space-x-3">
-                <i className="fas fa-edit text-green-500"></i>
-                <span className="font-medium">Edit Homepage Content</span>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="text-sm text-gray-600">Draft posts</span>
+                <span className="font-semibold text-gray-500">{stats.draftPosts}</span>
               </div>
-            </a>
+            </div>
           </CardContent>
         </Card>
 
         <Card className="border-0 shadow-lg">
           <CardHeader>
-            <CardTitle className="font-heading text-xl text-gray-800">Recent Activity</CardTitle>
+            <CardTitle className="flex items-center">
+              <MessageSquare className="w-5 h-5 mr-2 text-scio-orange" />
+              Quick Links
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <p className="font-medium text-sm">New user registered</p>
-              <p className="text-xs text-gray-600">2 hours ago</p>
-            </div>
-            <div className="p-3 bg-green-50 rounded-lg">
-              <p className="font-medium text-sm">Blog post published</p>
-              <p className="text-xs text-gray-600">5 hours ago</p>
-            </div>
-            <div className="p-3 bg-orange-50 rounded-lg">
-              <p className="font-medium text-sm">Newsletter sent</p>
-              <p className="text-xs text-gray-600">1 day ago</p>
+          <CardContent>
+            <div className="space-y-3">
+              <Link href="/admin/blog">
+                <Button variant="ghost" className="w-full justify-start">
+                  <FileText className="w-4 h-4 mr-2" />
+                  Manage Blog Posts
+                </Button>
+              </Link>
+              <Link href="/admin/users">
+                <Button variant="ghost" className="w-full justify-start">
+                  <Users className="w-4 h-4 mr-2" />
+                  User Management
+                </Button>
+              </Link>
+              <Link href="/admin/form-responses">
+                <Button variant="ghost" className="w-full justify-start">
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Form Responses
+                </Button>
+              </Link>
+              <Link href="/admin/settings">
+                <Button variant="ghost" className="w-full justify-start">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Settings
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>

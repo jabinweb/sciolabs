@@ -67,37 +67,7 @@ export async function PUT(
 
     const { id } = await params
     const body = await request.json()
-    
-    // Validate only provided fields
-    const updateFields: Record<string, unknown> = {}
-    
-    if (body.name !== undefined) {
-      if (typeof body.name !== 'string' || body.name.length < 2) {
-        return NextResponse.json({ error: "Name must be at least 2 characters" }, { status: 400 })
-      }
-      updateFields.name = body.name
-    }
-    
-    if (body.email !== undefined) {
-      if (typeof body.email !== 'string' || !body.email.includes('@')) {
-        return NextResponse.json({ error: "Valid email is required" }, { status: 400 })
-      }
-      updateFields.email = body.email
-    }
-    
-    if (body.role !== undefined) {
-      if (!['user', 'admin'].includes(body.role)) {
-        return NextResponse.json({ error: "Role must be 'user' or 'admin'" }, { status: 400 })
-      }
-      updateFields.role = body.role
-    }
-    
-    if (body.password !== undefined && body.password !== '') {
-      if (typeof body.password !== 'string' || body.password.length < 6) {
-        return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 })
-      }
-      updateFields.password = await bcrypt.hash(body.password, 12)
-    }
+    const validatedData = updateUserSchema.parse(body)
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
@@ -109,29 +79,46 @@ export async function PUT(
     }
 
     // Check email uniqueness if email is being updated
-    if (updateFields.email && updateFields.email !== existingUser.email) {
+    if (validatedData.email && validatedData.email !== existingUser.email) {
       const emailExists = await prisma.user.findUnique({
-        where: { email: updateFields.email as string }
+        where: { email: validatedData.email }
       })
       if (emailExists) {
         return NextResponse.json({ error: "Email already exists" }, { status: 400 })
       }
     }
 
-    const user = await prisma.user.update({
+    // Hash password if provided
+    let hashedPassword
+    if (validatedData.password) {
+      hashedPassword = await bcrypt.hash(validatedData.password, 12)
+    }
+
+    const updatedUser = await prisma.user.update({
       where: { id },
-      data: updateFields,
+      data: {
+        ...(validatedData.name && { name: validatedData.name }),
+        ...(validatedData.email && { email: validatedData.email }),
+        ...(validatedData.role && { role: validatedData.role }),
+        ...(hashedPassword && { password: hashedPassword }),
+        updatedAt: new Date()
+      },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
+        createdAt: true,
         updatedAt: true
       }
     })
 
-    return NextResponse.json({ user })
+    return NextResponse.json({ user: updatedUser })
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: "Invalid input data", details: error.issues }, { status: 400 })
+    }
+
     console.error("Error updating user:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
@@ -174,3 +161,4 @@ export async function DELETE(
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
+  
