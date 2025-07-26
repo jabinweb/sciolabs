@@ -2,40 +2,74 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Check, Linkedin, Mail } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 export default function AboutPage() {
   const coreValues = [
     {
       title: "Excellence",
-      description: "We strive for the highest standards in everything we do.",
+      description: "We uphold high standards in content, delivery, and learner success.",
       icon: "fas fa-star",
       bgColor: "bg-scio-blue"
     },
     {
-      title: "Empowerment",
-      description: "We believe in equipping people to reach their full potential.",
+      title: "Empowerment", 
+      description: "We equip individuals to take charge of their learning and growth.",
       icon: "fas fa-users",
       bgColor: "bg-scio-orange"
     },
     {
       title: "Integrity",
-      description: "We maintain honesty and transparency in all our endeavors.",
+      description: "We act with transparency, trust, and ethical responsibility.", 
       icon: "fas fa-shield-alt",
       bgColor: "bg-scio-green"
     },
     {
       title: "Innovation",
-      description: "We embrace modern technology and creative approaches to learning.",
+      description: "We embrace creativity and technology to transform learning.",
       icon: "fas fa-lightbulb",
       bgColor: "bg-scio-purple"
     },
     {
       title: "Personalization",
-      description: "We tailor our solutions to the unique needs of each individual.",
+      description: "We tailor learning to fit unique needs and goals.",
       icon: "fas fa-cog",
-      bgColor: "bg-gradient-to-r from-scio-blue to-scio-orange"
+      bgColor: "bg-scio-blue"
+    },
+    {
+      title: "Impact",
+      description: "We focus on real outcomes that improve lives and communities.",
+      icon: "fas fa-chart-line",
+      bgColor: "bg-scio-orange"
     }
+  ];
+
+  const teamMembers = [
+    { 
+      name: "Davis Abraham", 
+      role: "Founder & CEO", 
+      image: "/Davis.webp",
+      description: "Visionary leader driving educational innovation"
+    },
+    { 
+      name: "Emmanuel Davied", 
+      role: "Co-Founder & CFO", 
+      image: "1472099645785-5658abf4ff4e",
+      description: "Strategic financial planning and operations expert"
+    },
+    { 
+      name: "Christa Richie", 
+      role: "Operations Manager", 
+      image: "1494790108755-2616b612b47c",
+      description: "Excellence in program delivery and management"
+    }
+  ];
+
+  const collaborators = [
+    "Sheryl Sam Shiju",
+    "Devansh Singh", 
+    "Gungun Ahuja",
+    "Joshi Sam"
   ];
 
   return (
@@ -51,15 +85,15 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="text-white space-y-8">
               <h1 className="font-heading heading-primary text-2xl md:text-3xl lg:text-4xl mb-6">
-                Empowering Lives Through
+                Upward Equipping.
                 <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent mt-4">
-                  Knowledge and Excellence
+                  One learner at a time.
                 </span>
               </h1>
               <p className="font-body text-body text-lg md:text-lg leading-relaxed text-gray-100 max-w-2xl">
-                At Scio Labs, we believe in transforming lives through education, guidance, and skill development. Our 
-                mission is to equip individuals with the tools they need to achieve their goals and make informed 
-                decisions.
+                At Scio Labs, we blend expert-led guidance, personalized learning, and modern technology to help 
+                individuals succeed in school, work, and life. Join us in shaping a future driven by knowledge, 
+                purpose, and excellence.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-0">
               <Link href="/services">
@@ -104,7 +138,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-4xl md:text-5xl text-scio-blue mb-6">
-              Our Mission & Vision
+              Mission & Vision
             </h2>
             <p className="font-body text-xl text-gray-600 max-w-3xl mx-auto">
               Driven by purpose and guided by vision to create lasting impact in education
@@ -116,12 +150,15 @@ export default function AboutPage() {
             <Card className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
               <CardContent className="p-10">
                 <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-scio-blue rounded-xl flex items-center justify-center mr-4">
+                    <i className="fas fa-bullseye text-white text-xl"></i>
+                  </div>
                   <h3 className="font-heading heading-primary text-3xl text-scio-blue">
                     Our Mission
                   </h3>
                 </div>
                 <p className="font-body text-lg text-gray-700 leading-relaxed">
-                  To provide expert-led, impactful programs that empower individuals to succeed in their educational, 
+                  To deliver expert-led, impactful programs that empower learners to succeed in their educational, 
                   professional, and personal growth journeys.
                 </p>
               </CardContent>
@@ -131,13 +168,16 @@ export default function AboutPage() {
             <Card className="group bg-gradient-to-br from-orange-50 to-yellow-100 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
               <CardContent className="p-10">
                 <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-scio-orange rounded-xl flex items-center justify-center mr-4">
+                    <i className="fas fa-eye text-white text-xl"></i>
+                  </div>
                   <h3 className="font-heading heading-primary text-3xl text-scio-orange">
                     Our Vision
                   </h3>
                 </div>
                 <p className="font-body text-lg text-gray-700 leading-relaxed">
-                  To become India&apos;s most trusted partner in education and career development by delivering innovative 
-                  and accessible solutions that transform lives.
+                  To be India&apos;s most trusted partner in education and career development by offering innovative, 
+                  accessible, and future-ready learning solutions.
                 </p>
               </CardContent>
             </Card>
@@ -159,7 +199,7 @@ export default function AboutPage() {
               Our Core Values
             </h2>
             <p className="font-body text-xl text-gray-600 max-w-3xl mx-auto">
-              The fundamental principles that guide every decision we make and every program we deliver
+              The principles that shape our vision, decisions, and every learning experience we create.
             </p>
           </div>
 
@@ -188,25 +228,21 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-4xl md:text-5xl text-scio-blue mb-6">
-              Our Leadership Team
+              Meet Team ScioLabs
             </h2>
             <p className="font-body text-xl text-gray-600 max-w-3xl mx-auto">
               Meet the visionary leaders driving innovation and excellence in educational transformation
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: "Dr. Sarah Johnson", role: "Chief Executive Officer", expertise: "Educational Leadership" },
-              { name: "Prof. Michael Chen", role: "Chief Academic Officer", expertise: "Curriculum Development" },
-              { name: "Ms. Priya Sharma", role: "Director of Operations", expertise: "Strategic Planning" }
-            ].map((member, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {teamMembers.map((member, index) => (
               <Card key={index} className="group bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
                 <CardContent className="p-8 text-center">
                   <div className="relative mb-6">
                     <div className="w-32 h-32 mx-auto rounded-full overflow-hidden shadow-lg">
                       <Image
-                        src={`https://images.unsplash.com/photo-${index === 0 ? '1494790108755-2616b612b47c' : index === 1 ? '1472099645785-5658abf4ff4e' : '1507003211169-0a1dd7228f2d'}?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`}
+                        src={member.image.startsWith('/') ? member.image : `https://images.unsplash.com/photo-${member.image}?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`}
                         alt={member.name}
                         width={128}
                         height={128}
@@ -224,20 +260,39 @@ export default function AboutPage() {
                     {member.role}
                   </p>
                   <p className="font-body text-gray-600 text-sm mb-4">
-                    Specialist in {member.expertise}
+                    {member.description}
                   </p>
-                  <div className="flex justify-center space-x-3">
+                  {/* <div className="flex justify-center space-x-3">
                     <Button variant="ghost" size="sm" className="w-10 h-10 rounded-full p-0 hover:bg-scio-blue hover:text-white">
                       <Linkedin className="w-4 h-4" />
                     </Button>
                     <Button variant="ghost" size="sm" className="w-10 h-10 rounded-full p-0 hover:bg-scio-orange hover:text-white">
                       <Mail className="w-4 h-4" />
                     </Button>
-                  </div>
+                  </div> */}
                 </CardContent>
               </Card>
             ))}
           </div>
+
+          {/* Collaborators Section */}
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+            <CardContent className="p-8 text-center">
+              <h3 className="font-heading text-2xl font-semibold text-scio-blue mb-4">
+                Our Collaborators
+              </h3>
+              <p className="font-body text-gray-600 mb-6">
+                We also collaborate with a talented group of project-based professionals who contribute to content, design, and delivery across our initiatives.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                {collaborators.map((name, index) => (
+                  <div key={index} className="px-6 py-3 bg-gradient-to-r from-scio-blue to-scio-orange text-scio-blue rounded-full font-medium text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    {name}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -249,40 +304,40 @@ export default function AboutPage() {
               Why Choose Scio Labs?
             </h2>
             <p className="font-body text-xl text-gray-600 max-w-3xl mx-auto">
-              Discover what sets us apart as leaders in educational excellence and innovation
+              Discover what sets us apart as trusted leaders in education, innovation, and learner success.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                icon: "fas fa-graduation-cap", 
-                title: "Expert Faculty", 
-                desc: "PhD holders and industry experts with 10+ years experience",
-                color: "from-blue-500 to-blue-600"
+                icon: "fas fa-cogs", 
+                title: "Custom-Crafted Programs", 
+                desc: "Each course is thoughtfully tailored to meet specific learner needs",
+                bgColor: "bg-scio-blue"
               },
               { 
-                icon: "fas fa-trophy", 
-                title: "Proven Track Record", 
-                desc: "98% success rate with over 2M+ students guided successfully",
-                color: "from-orange-500 to-orange-600"
+                icon: "fas fa-align-left", 
+                title: "Curriculum-Aligned Content", 
+                desc: "Seamlessly integrated with school and professional syllabi",
+                bgColor: "bg-scio-orange"
               },
               { 
-                icon: "fas fa-heart", 
-                title: "Personalized Learning", 
-                desc: "Customized programs tailored to individual learning styles",
-                color: "from-green-500 to-green-600"
+                icon: "fas fa-rocket", 
+                title: "Future-Ready Learning", 
+                desc: "Focused on essential 21st-century skills and career readiness",
+                bgColor: "bg-scio-green"
               },
               { 
-                icon: "fas fa-globe", 
-                title: "Pan-India Presence", 
-                desc: "Serving 1000+ institutions across all major cities in India",
-                color: "from-purple-500 to-purple-600"
+                icon: "fas fa-chart-bar", 
+                title: "Proven Impact", 
+                desc: "72,000+ learning hours delivered with measurable outcomes",
+                bgColor: "bg-scio-purple"
               }
             ].map((feature, index) => (
               <Card key={index} className="group bg-gradient-to-br from-gray-50 to-slate-100 border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
                 <CardContent className="p-8 text-center h-full flex flex-col">
-                  <div className={`w-16 h-16 mx-auto mb-6 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`w-16 h-16 mx-auto mb-6 ${feature.bgColor} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <i className={`${feature.icon} text-white text-xl`}></i>
                   </div>
                   <h3 className="font-heading text-lg font-semibold text-scio-blue mb-4 flex-shrink-0">
