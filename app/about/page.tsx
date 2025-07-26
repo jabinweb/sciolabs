@@ -313,25 +313,25 @@ export default function AboutPage() {
               {
                 icon: "fas fa-cogs", 
                 title: "Custom-Crafted Programs", 
-                desc: "Each course is thoughtfully tailored to meet specific learner needs",
+                desc: "Thoughtfully designed through deep learner insights and tailored to meet real-world educational needs.",
                 bgColor: "bg-scio-blue"
               },
               { 
                 icon: "fas fa-align-left", 
                 title: "Curriculum-Aligned Content", 
-                desc: "Seamlessly integrated with school and professional syllabi",
+                desc: "Carefully built to align with CBSE, ICSE, and vocational education standards, ensuring seamless integration with academic goals.",
                 bgColor: "bg-scio-orange"
               },
               { 
                 icon: "fas fa-rocket", 
                 title: "Future-Ready Learning", 
-                desc: "Focused on essential 21st-century skills and career readiness",
+                desc: "Focused on developing the essential skills and mindsets students need to succeed in a rapidly evolving world.",
                 bgColor: "bg-scio-green"
               },
               { 
                 icon: "fas fa-chart-bar", 
                 title: "Proven Impact", 
-                desc: "72,000+ learning hours delivered with measurable outcomes",
+                desc: "Over 72,000 learning hours delivered across schools, colleges, and skill training centers within just one year.",
                 bgColor: "bg-scio-purple"
               }
             ].map((feature, index) => (
