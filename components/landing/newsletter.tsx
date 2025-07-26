@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '../ui/badge';
 
 export default function NewsletterSection() {
   const [email, setEmail] = useState('');
@@ -39,17 +40,16 @@ export default function NewsletterSection() {
               <div className="p-8 md:p-12 lg:p-16">
                 <div className="space-y-8">
                   {/* Badge */}
-                  <div className="inline-flex items-center space-x-3 bg-scio-blue/10 px-4 py-2 rounded-full">
-                    <i className="fas fa-envelope text-scio-blue text-sm"></i>
+                  <Badge className="" variant={"outline"}>
                     <span className="font-heading text-sm font-semibold text-scio-blue">Stay Updated</span>
-                  </div>
-                  
+                  </Badge>
+
                   {/* Heading */}
                   <div className="space-y-4">
                     <h2 className="font-heading heading-primary text-3xl md:text-4xl text-gray-800 leading-tight">
-                      Stay Informed{' '}<br></br>
+                      Stay Informed.{' '}<br></br>
                       <span className="text-scio-orange">
-                        Stay Equipped
+                        Stay Equipped.
                       </span>
                     </h2>
                     
