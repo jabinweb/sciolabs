@@ -105,7 +105,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/services/thrive" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
+                <Link href="/thrive" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
                   <span className="w-2 h-2 bg-scio-blue rounded-full mr-3 group-hover:scale-125 transition-transform duration-300"></span>
                   ScioThrive
                 </Link>
@@ -117,7 +117,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/services/lingua" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
+                <Link href="/lingua" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
                   <span className="w-2 h-2 bg-scio-blue rounded-full mr-3 group-hover:scale-125 transition-transform duration-300"></span>
                   ScioLingua
                 </Link>

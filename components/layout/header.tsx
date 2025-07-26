@@ -103,7 +103,7 @@ export default function Header() {
                       ScioGuidance
                     </Link>
                     <Link 
-                      href="/services/thrive" 
+                      href="/thrive" 
                       className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-800 hover:text-scio-blue transition-colors font-body"
                       onClick={() => setIsWhatWeDoOpen(false)}
                     >
@@ -122,7 +122,7 @@ export default function Header() {
                       ScioSprints
                     </Link>
                     <Link 
-                      href="/services/lingua" 
+                      href="/lingua" 
                       className="block px-3 py-2 rounded-lg hover:bg-gray-50 text-gray-800 hover:text-scio-blue transition-colors font-body"
                       onClick={() => setIsWhatWeDoOpen(false)}
                     >

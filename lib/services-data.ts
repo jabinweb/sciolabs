@@ -90,7 +90,7 @@ export const servicesData: ServiceData[] = [
       "Teenagers and young adults",
       "Team leaders and managers"
     ],
-    serviceLink: "/services/thrive",
+    serviceLink: "/thrive",
     getStartedLink: "#",
     subserviceLinks: [
       { name: "Educator Training", link: "/services/thrive/educator-training" },
@@ -207,7 +207,7 @@ export const servicesData: ServiceData[] = [
       "Religious communities",
       "Educational institutions"
     ],
-    serviceLink: "/services/lingua",
+    serviceLink: "/lingua",
     getStartedLink: "#",
     subserviceLinks: [
       { name: "TheoLingua", link: "https://theo.sciolabs.in" },
