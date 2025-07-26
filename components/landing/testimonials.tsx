@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
 
 export default function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -15,7 +14,6 @@ export default function TestimonialsSection() {
       quote: "Davis Abraham led an engaging and interactive online session for mid to senior-level officers, using technology effectively. A truly memorable experience.",
       name: "Smt. Aditi Mishra",
       title: "National Productivity Council",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       serviceColor: "text-scio-blue"
     },
     {
@@ -24,7 +22,6 @@ export default function TestimonialsSection() {
       quote: "ScioLabs' BeGin curriculum is research-backed, teacher-friendly, and child-centered—making classroom implementation smooth and impactful.",
       name: "Annie Samuel",
       title: "EmpowerED",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       serviceColor: "text-scio-blue"
     },
     {
@@ -33,7 +30,6 @@ export default function TestimonialsSection() {
       quote: "The English for Nurses curriculum is structured, relevant, and engaging—boosting student confidence and communication skills in real healthcare contexts.",
       name: "Amy Tephilla A",
       title: "CBH College of Nursing",
-      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       serviceColor: "text-scio-blue"
     },
     {
@@ -42,7 +38,6 @@ export default function TestimonialsSection() {
       quote: "The career counseling session was insightful, friendly, and tailored—providing clear direction and practical next steps.",
       name: "Dr. S. Sharma",
       title: "Parent from Lucknow",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       serviceColor: "text-scio-blue"
     }
   ];
@@ -71,7 +66,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Testimonial Content */}
-        <div className="relative max-w-5xl mx-auto">
+        <div className="relative max-w-4xl mx-auto">
           {/* Navigation Arrows */}
           <Button
             variant="outline"
@@ -93,47 +88,30 @@ export default function TestimonialsSection() {
 
           {/* Single Testimonial Card */}
           <Card className="bg-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300">
-            <CardContent className="p-8">
-              <div className="flex flex-col lg:flex-row gap-8">
-                {/* Quote Section */}
-                <div className="flex-1">
-                  {/* Service Badge */}
-                  <Badge variant="outline" className="bg-scio-blue/10 text-scio-blue border-scio-blue mb-6">
-                    {currentTestimonial.service}
-                  </Badge>
+            <CardContent className="p-12 text-center">
+              {/* Service Badge */}
+              <Badge variant="outline" className="bg-scio-blue/10 text-scio-blue border-scio-blue mb-8">
+                {currentTestimonial.service}
+              </Badge>
 
-                  {/* Quote Icon */}
-                  <div className="text-scio-orange mb-6">
-                    <i className="fas fa-quote-left text-5xl"></i>
-                  </div>
-                  
-                  {/* Quote Text */}
-                  <blockquote className="font-body text-xl text-gray-700 mb-8 leading-relaxed">
-                    &ldquo;{currentTestimonial.quote}&rdquo;
-                  </blockquote>
-                  
-                  {/* Author Info */}
-                  <div className="space-y-3">
-                    <h4 className="font-heading text-2xl font-semibold text-scio-blue">
-                      {currentTestimonial.name}
-                    </h4>
-                    <p className="font-body text-lg text-gray-600">
-                      {currentTestimonial.title}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Image Section */}
-                <div className="lg:w-80">
-                  <div className="relative h-80 lg:h-96 rounded-2xl overflow-hidden shadow-lg">
-                    <Image
-                      src={currentTestimonial.image}
-                      alt={currentTestimonial.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
+              {/* Quote Icon */}
+              <div className="text-scio-orange mb-8">
+                <i className="fas fa-quote-left text-6xl"></i>
+              </div>
+              
+              {/* Quote Text */}
+              <blockquote className="font-body text-2xl text-gray-700 mb-10 leading-relaxed max-w-3xl mx-auto">
+                &ldquo;{currentTestimonial.quote}&rdquo;
+              </blockquote>
+              
+              {/* Author Info */}
+              <div className="space-y-2">
+                <h4 className="font-heading text-2xl font-semibold text-scio-blue">
+                  {currentTestimonial.name}
+                </h4>
+                <p className="font-body text-lg text-gray-600">
+                  {currentTestimonial.title}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -155,4 +133,4 @@ export default function TestimonialsSection() {
     </section>
   );
 }
-
+               

@@ -1,6 +1,8 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Check, Linkedin, Mail } from 'lucide-react';
 
 export default function AboutPage() {
   const coreValues = [
@@ -8,31 +10,31 @@ export default function AboutPage() {
       title: "Excellence",
       description: "We strive for the highest standards in everything we do.",
       icon: "fas fa-star",
-      gradient: "from-scio-blue to-scio-blue-light"
+      bgColor: "bg-scio-blue"
     },
     {
       title: "Empowerment",
       description: "We believe in equipping people to reach their full potential.",
       icon: "fas fa-users",
-      gradient: "from-scio-orange to-scio-orange-light"
+      bgColor: "bg-scio-orange"
     },
     {
       title: "Integrity",
       description: "We maintain honesty and transparency in all our endeavors.",
       icon: "fas fa-shield-alt",
-      gradient: "from-green-500 to-green-400"
+      bgColor: "bg-scio-green"
     },
     {
       title: "Innovation",
       description: "We embrace modern technology and creative approaches to learning.",
       icon: "fas fa-lightbulb",
-      gradient: "from-purple-500 to-purple-400"
+      bgColor: "bg-scio-purple"
     },
     {
       title: "Personalization",
       description: "We tailor our solutions to the unique needs of each individual.",
       icon: "fas fa-cog",
-      gradient: "from-scio-blue to-scio-orange"
+      bgColor: "bg-gradient-to-r from-scio-blue to-scio-orange"
     }
   ];
 
@@ -60,19 +62,23 @@ export default function AboutPage() {
                 decisions.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-0">
-              <Button 
-                size="lg" 
-                className="bg-scio-blue hover:bg-scio-blue-dark text-white rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25 border-0"
-              >
-                Discover More
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-2 border-white/30 text-white hover:bg-white hover:text-slate-900 rounded-2xl transition-all duration-300 bg-white/10 backdrop-blur-sm"
-              >
-                Contact Us
-              </Button>
+              <Link href="/services">
+                <Button 
+                  size="lg" 
+                  className="bg-scio-blue hover:bg-scio-blue-dark text-white rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25 border-0"
+                >
+                  Discover More
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="border-2 border-white/30 text-white hover:bg-white hover:text-slate-900 rounded-2xl transition-all duration-300 bg-white/10 backdrop-blur-sm"
+                >
+                  Contact Us
+                </Button>
+              </Link>
               </div>
             </div>
             <div className="relative">
@@ -161,7 +167,7 @@ export default function AboutPage() {
             {coreValues.map((value, index) => (
               <Card key={index} className="group bg-gradient-to-br from-gray-50 to-blue-50 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                 <CardContent className="p-8 text-center h-full">
-                  <div className={`w-20 h-20 mx-auto mb-6 bg-gradient-to-r ${value.gradient} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`w-20 h-20 mx-auto mb-6 ${value.bgColor} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <i className={`${value.icon} text-white text-2xl`}></i>
                   </div>
                   <h3 className="font-heading text-xl font-semibold text-scio-blue mb-4">
@@ -178,7 +184,7 @@ export default function AboutPage() {
       </section>
 
       {/* Enhanced Leadership Section */}
-      {/* <section className="py-24 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <section className="py-24 bg-gradient-to-br from-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-4xl md:text-5xl text-scio-blue mb-6">
@@ -233,7 +239,7 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </section> */}
+      </section>
 
       {/* Enhanced Why Choose Us Section */}
       <section className="py-24 bg-white">
@@ -294,4 +300,3 @@ export default function AboutPage() {
     </main>
   );
 }
-                    
