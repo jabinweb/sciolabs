@@ -87,10 +87,18 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
     const fetchPost = async () => {
       setIsLoading(true)
       try {
+        console.log('Fetching post data for ID:', postId)
         const response = await fetch(`/api/admin/blog/${postId}`)
-        if (!response.ok) throw new Error('Failed to fetch post')
+        console.log('Fetch response status:', response.status)
+        
+        if (!response.ok) {
+          const errorData = await response.json()
+          console.error('Fetch error:', errorData)
+          throw new Error(errorData.error || 'Failed to fetch post')
+        }
         
         const data = await response.json()
+        console.log('Fetched post data:', data)
         const post = data.post
         
         // Parse tags properly
@@ -116,6 +124,13 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
           imageUrl: post.imageUrl || '',
           tags: parsedTags.join(', '),
           categoryId: post.categoryId || '',
+        })
+        
+        console.log('Form data set:', {
+          title: post.title,
+          slug: post.slug,
+          categoryId: post.categoryId,
+          tags: parsedTags.join(', ')
         })
       } catch (error) {
         console.error('Error fetching post:', error)

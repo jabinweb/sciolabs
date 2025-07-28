@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { toast } from 'sonner'
 
 interface BlogPost {
   id: string
@@ -89,6 +90,40 @@ export default function BlogPage() {
   useEffect(() => {
     fetchBlogData()
   }, [fetchBlogData])
+
+  const handleDeletePost = async (postId: string, postTitle: string) => {
+    if (!confirm(`Are you sure you want to delete "${postTitle}"? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/blog/${postId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to delete post')
+      }
+
+      toast.success('Post deleted successfully')
+      
+      // Remove the deleted post from the local state
+      setBlogPosts(prev => prev.filter(post => post.id !== postId))
+      
+      // Update stats
+      if (stats) {
+        setStats(prev => ({
+          ...prev!,
+          totalPosts: prev!.totalPosts - 1,
+          publishedPosts: prev!.publishedPosts - (blogPosts.find(p => p.id === postId)?.isPublished ? 1 : 0)
+        }))
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to delete post')
+    }
+  }
 
   // Safe array access with fallback
   const safeStats = stats || {
@@ -307,7 +342,12 @@ export default function BlogPage() {
                         <Edit className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => handleDeletePost(post.id, post.title)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

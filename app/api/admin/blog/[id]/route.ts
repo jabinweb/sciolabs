@@ -21,10 +21,15 @@ export async function GET(
   const { id } = await params
 
   try {
-    const post = await prisma.blogPost.findFirst({
+    // Check if user is admin for admin routes
+    const session = await auth()
+    if (!session?.user || session.user.role !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const post = await prisma.blogPost.findUnique({
       where: { 
-        id,
-        isPublished: true
+        id
       },
       include: {
         author: {
@@ -158,10 +163,21 @@ export async function DELETE(
 
     const { id: postId } = await params
 
+    // Check if post exists
+    const existingPost = await prisma.blogPost.findUnique({
+      where: { id: postId }
+    })
+
+    if (!existingPost) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 })
+    }
+
+    // Delete the blog post
     await prisma.blogPost.delete({
       where: { id: postId }
     })
 
+    console.log('Blog post deleted successfully:', postId)
     return NextResponse.json({ message: "Post deleted successfully" })
   } catch (error) {
     console.error("Error deleting post:", error)
