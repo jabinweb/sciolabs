@@ -47,6 +47,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   blogPosts     BlogPost[]
+  uploadedFiles MediaFile[]
 }
 
 model VerificationToken {
@@ -98,4 +99,26 @@ model FormResponse {
   source     String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model MediaFile {
+  id          String   @id @default(cuid())
+  filename    String
+  originalName String
+  path        String   @unique // Full file path
+  url         String   @unique // Public URL
+  mimeType    String
+  size        Int
+  alt         String?
+  caption     String?
+  folder      String?  // Directory/category
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  uploader    User     @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+  
+  @@index([folder])
+  @@index([mimeType])
+  @@index([uploadedBy])
 }

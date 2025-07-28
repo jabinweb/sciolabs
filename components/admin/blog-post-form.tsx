@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/dialog'
 import { Loader2, Save, ArrowLeft, Plus, Folder, Hash, Settings, FileText, Image as ImageIcon, Eye } from 'lucide-react'
 import { Editor } from './blog/editor'
+import ImageUpload from './ImageUpload'
 
 interface Category {
   id: string
@@ -427,7 +428,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
                   </CardContent>
                 </Card>
 
-                {/* Featured Image */}
+                {/* Enhanced Featured Image Card */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
@@ -436,24 +437,14 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <Input
-                      placeholder="https://example.com/image.jpg"
+                    <ImageUpload
                       value={formData.imageUrl}
-                      onChange={(e) => setFormData(prev => ({ ...prev, imageUrl: e.target.value }))}
+                      onChange={(url) => setFormData(prev => ({ ...prev, imageUrl: url }))}
+                      onRemove={() => setFormData(prev => ({ ...prev, imageUrl: '' }))}
                     />
-                    {formData.imageUrl && (
-                      <div className="mt-3 relative h-32 rounded-lg overflow-hidden border">
-                        <Image 
-                          src={formData.imageUrl} 
-                          alt="Preview" 
-                          fill
-                          className="object-cover"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none'
-                          }}
-                        />
-                      </div>
-                    )}
+                    <p className="text-sm text-gray-500 mt-2">
+                      This image will be displayed as the main image for your blog post
+                    </p>
                   </CardContent>
                 </Card>
 
