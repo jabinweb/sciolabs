@@ -151,36 +151,40 @@ export async function PUT(
   }
 }
 
+// DELETE /api/admin/blog/[id] - Delete a blog post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await auth()
-    if (!session?.user || session.user.role !== "admin") {
+    
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id: postId } = await params
+    const { id } = params
 
     // Check if post exists
     const existingPost = await prisma.blogPost.findUnique({
-      where: { id: postId }
+      where: { id }
     })
 
     if (!existingPost) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 })
     }
 
-    // Delete the blog post
+    // Delete the post
     await prisma.blogPost.delete({
-      where: { id: postId }
+      where: { id }
     })
 
-    console.log('Blog post deleted successfully:', postId)
     return NextResponse.json({ message: "Post deleted successfully" })
   } catch (error) {
     console.error("Error deleting post:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    )
   }
 }

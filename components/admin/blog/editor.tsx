@@ -17,6 +17,8 @@ import TableCell from '@tiptap/extension-table-cell'
 import Highlight from '@tiptap/extension-highlight'
 import Typography from '@tiptap/extension-typography'
 import Blockquote from '@tiptap/extension-blockquote'
+import Paragraph from '@tiptap/extension-paragraph'
+import HardBreak from '@tiptap/extension-hard-break'
 
 // UI components
 import { Button } from '@/components/ui/button'
@@ -83,11 +85,24 @@ export function Editor({
           keepMarks: true,
           keepAttributes: false,
         },
-        blockquote: false, // Disable the default blockquote from StarterKit
+        blockquote: false,
+        paragraph: false,
+        hardBreak: false,
+      }),
+      Paragraph.configure({
+        HTMLAttributes: {
+          class: 'editor-paragraph',
+        },
+      }),
+      HardBreak.configure({
+        HTMLAttributes: {
+          class: 'hard-break',
+        },
+        keepMarks: false,
       }),
       Blockquote.configure({
         HTMLAttributes: {
-          class: 'border-l-4 border-blue-500 pl-4 italic text-gray-600 my-4',
+          class: 'border-l-4 border-blue-500 pl-4 italic text-gray-600 my-4 bg-blue-50 py-3 rounded-r-md',
         },
       }),
       Placeholder.configure({
@@ -122,12 +137,36 @@ export function Editor({
     content: value,
     editable,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML())
+      const html = editor.getHTML()
+      // Clean and format HTML for better paragraph spacing
+      const processedHtml = html
+        // Ensure proper paragraph structure
+        .replace(/<p class="editor-paragraph"><\/p>/g, '<p class="editor-paragraph"><br></p>')
+        // Maintain proper spacing between elements
+        .replace(/(<\/p>)(\s*)(<p)/g, '$1\n$3')
+        .replace(/(<\/h[1-6]>)(\s*)(<p)/g, '$1\n$3')
+        .replace(/(<\/blockquote>)(\s*)(<p)/g, '$1\n$3')
+        .replace(/(<\/ul>)(\s*)(<p)/g, '$1\n$3')
+        .replace(/(<\/ol>)(\s*)(<p)/g, '$1\n$3')
+      onChange(processedHtml)
+    },
+    parseOptions: {
+      preserveWhitespace: 'full',
     },
     immediatelyRender: false,
     editorProps: {
       attributes: {
         class: 'prose prose-lg max-w-none focus:outline-none min-h-[400px] p-4',
+      },
+      handleKeyDown: (view, event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          return false
+        }
+        if (event.key === 'Enter' && event.shiftKey) {
+          editor?.chain().focus().setHardBreak().run()
+          return true
+        }
+        return false
       },
     },
   }, [isMounted])
@@ -507,9 +546,12 @@ export function Editor({
         </div>
       )}
       
-      {/* Editor Content */}
+      {/* Editor Content with enhanced paragraph styling */}
       <div className="min-h-[400px]">
-        <EditorContent editor={editor} />
+        <EditorContent 
+          editor={editor} 
+          className="[&_.ProseMirror]:outline-none [&_.ProseMirror_.editor-paragraph]:mb-4 [&_.ProseMirror_.editor-paragraph:last-child]:mb-0 [&_.ProseMirror]:leading-relaxed"
+        />
       </div>
     </div>
   )

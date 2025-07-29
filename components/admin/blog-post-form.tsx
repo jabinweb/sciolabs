@@ -26,7 +26,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Loader2, Save, ArrowLeft, Plus, Folder, Hash, Settings, FileText, Image as ImageIcon, Eye } from 'lucide-react'
+import { Loader2, Save, ArrowLeft, Plus, Folder, Hash, Settings, FileText, Image as ImageIcon, Eye, Clock, Share, Trash2 } from 'lucide-react'
 import { Editor } from './blog/editor'
 import ImageUpload from './ImageUpload'
 
@@ -257,10 +257,91 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
     }
   }
 
+  // Handle preview
+  const handlePreview = () => {
+    if (!formData.slug) {
+      toast.error('Please add a URL slug before previewing')
+      return
+    }
+    
+    // Open preview in new tab
+    const previewUrl = `/blog/${formData.slug}${!formData.isPublished ? '?preview=true' : ''}`
+    window.open(previewUrl, '_blank')
+  }
+
+  // Handle delete
+  const handleDelete = async () => {
+    if (!postId) return
+    
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      setIsLoading(true)
+      
+      const response = await fetch(`/api/admin/blog/${postId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to delete post')
+      }
+
+      toast.success('Post deleted successfully')
+      router.push('/admin/blog/posts')
+      router.refresh()
+    } catch (error) {
+      console.error('Error deleting post:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to delete post')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Handle publish/unpublish toggle
+  const handlePublishToggle = async () => {
+    if (!isEditing) return
+    
+    try {
+      setIsLoading(true)
+      const newPublishState = !formData.isPublished
+      
+      const response = await fetch(`/api/admin/blog/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          isPublished: newPublishState,
+          categoryId: formData.categoryId === '' || formData.categoryId === 'none' ? null : formData.categoryId,
+          excerpt: formData.excerpt || null,
+          imageUrl: formData.imageUrl || null,
+          tags: JSON.stringify(formData.tags?.split(',').map(tag => tag.trim()).filter(Boolean) || []),
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update post')
+      }
+
+      setFormData(prev => ({ ...prev, isPublished: newPublishState }))
+      toast.success(newPublishState ? 'Post published successfully' : 'Post moved to draft')
+    } catch (error) {
+      console.error('Error updating post:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to update post')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
+        {/* Header - Simplified */}
         <div className="mb-8">
           <Button
             variant="ghost"
@@ -289,26 +370,15 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
               >
                 Cancel
               </Button>
-              <Button
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="mr-2 h-4 w-4" />
-                )}
-                {isEditing ? 'Update' : 'Publish'}
-              </Button>
             </div>
           </div>
         </div>
 
+        {/* Loading state */}
         {isLoading && !formData.title ? (
-          <div className="flex justify-center py-20">
+          <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-gray-600" />
               <p className="text-gray-600">Loading post...</p>
             </div>
           </div>
@@ -399,7 +469,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
 
               {/* Sidebar */}
               <div className="space-y-6">
-                {/* Publish Settings */}
+                {/* Enhanced Publish Settings with All Buttons */}
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
@@ -407,22 +477,168 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
                       Publish Settings
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                      <Checkbox
-                        id="published"
-                        checked={formData.isPublished}
-                        onCheckedChange={(checked) => 
-                          setFormData(prev => ({ ...prev, isPublished: !!checked }))
-                        }
-                      />
-                      <div>
-                        <Label htmlFor="published" className="font-medium cursor-pointer">
-                          {formData.isPublished ? 'Published' : 'Draft'}
-                        </Label>
-                        <p className="text-sm text-gray-500">
-                          {formData.isPublished ? 'Visible to readers' : 'Save as draft'}
-                        </p>
+                  <CardContent className="space-y-6">
+                    {/* Status Display */}
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-3 h-3 rounded-full ${formData.isPublished ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                        <div>
+                          <Label className="font-medium">
+                            Status: {formData.isPublished ? 'Published' : 'Draft'}
+                          </Label>
+                          <p className="text-sm text-gray-500">
+                            {formData.isPublished ? 'Visible to readers' : 'Saved as draft'}
+                          </p>
+                        </div>
+                      </div>
+                      {isEditing && (
+                        <Checkbox
+                          checked={formData.isPublished}
+                          onCheckedChange={(checked) => 
+                            setFormData(prev => ({ ...prev, isPublished: !!checked }))
+                          }
+                        />
+                      )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="space-y-3">
+                      {/* Preview Button */}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={handlePreview}
+                        disabled={!formData.slug}
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        Preview Post
+                      </Button>
+
+                      {isEditing ? (
+                        <>
+                          {/* Dynamic Publish/Draft Button */}
+                          <Button
+                            type="button"
+                            onClick={handlePublishToggle}
+                            disabled={isLoading}
+                            className={`w-full ${
+                              formData.isPublished 
+                                ? 'bg-yellow-600 hover:bg-yellow-700' 
+                                : 'bg-green-600 hover:bg-green-700'
+                            }`}
+                          >
+                            {isLoading ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <Save className="mr-2 h-4 w-4" />
+                            )}
+                            {isLoading 
+                              ? (formData.isPublished ? 'Moving to Draft...' : 'Publishing...') 
+                              : (formData.isPublished ? 'Move to Draft' : 'Publish Post')
+                            }
+                          </Button>
+
+                          {/* Update Button */}
+                          <Button
+                            onClick={handleSubmit}
+                            disabled={isLoading}
+                            className="w-full bg-blue-600 hover:bg-blue-700"
+                          >
+                            {isLoading ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <Save className="mr-2 h-4 w-4" />
+                            )}
+                            {isLoading ? 'Updating...' : 'Update Post'}
+                          </Button>
+
+                          {/* Delete Button */}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleDelete}
+                            disabled={isLoading}
+                            className="w-full border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete Post
+                          </Button>
+                        </>
+                      ) : (
+                        /* Save as Draft and Publish buttons for new posts */
+                        <>
+                          <Button
+                            type="button"
+                            disabled={isLoading}
+                            variant="outline"
+                            className="w-full border-gray-300"
+                            onClick={() => {
+                              setFormData(prev => ({ ...prev, isPublished: false }))
+                              setTimeout(() => handleSubmit({ preventDefault: () => {} } as React.FormEvent), 0)
+                            }}
+                          >
+                            {isLoading ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <Save className="mr-2 h-4 w-4" />
+                            )}
+                            {isLoading ? 'Saving...' : 'Save as Draft'}
+                          </Button>
+
+                          <Button
+                            type="button"
+                            disabled={isLoading}
+                            className="w-full bg-green-600 hover:bg-green-700"
+                            onClick={() => {
+                              setFormData(prev => ({ ...prev, isPublished: true }))
+                              setTimeout(() => handleSubmit({ preventDefault: () => {} } as React.FormEvent), 0)
+                            }}
+                          >
+                            {isLoading ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <Save className="mr-2 h-4 w-4" />
+                            )}
+                            {isLoading ? 'Publishing...' : 'Publish Post'}
+                          </Button>
+                        </>
+                      )}
+
+                      {/* Additional Actions */}
+                      <div className="pt-2 border-t">
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs"
+                            onClick={() => {
+                              toast.info('Schedule functionality coming soon')
+                            }}
+                          >
+                            <Clock className="mr-1 h-3 w-3" />
+                            Schedule
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs"
+                            onClick={() => {
+                              if (formData.slug) {
+                                const postUrl = `${window.location.origin}/blog/${formData.slug}`
+                                navigator.clipboard.writeText(postUrl)
+                                toast.success('Post URL copied to clipboard')
+                              } else {
+                                toast.error('Please save the post first to get a shareable URL')
+                              }
+                            }}
+                          >
+                            <Share className="mr-1 h-3 w-3" />
+                            Share
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -546,27 +762,6 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
                   </CardContent>
                 </Card>
               </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-end">
-              <Button 
-                type="submit" 
-                disabled={isLoading}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {isEditing ? 'Updating...' : 'Publishing...'}
-                  </>
-                ) : (
-                  <>
-                    <Save className="mr-2 h-4 w-4" />
-                    {isEditing ? 'Update Post' : 'Publish Post'}
-                  </>
-                )}
-              </Button>
             </div>
           </form>
         )}

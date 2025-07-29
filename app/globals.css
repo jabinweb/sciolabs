@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --scio-blue: #2d5296;
   --scio-orange: #f99f1b;
@@ -89,10 +87,10 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
-
+/* 
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 @layer base {
   html {
@@ -146,6 +144,93 @@
     font-family: var(--font-poppins);
     font-weight: 500;
     letter-spacing: 0.01em;
+  }
+
+  /* Enhanced editor paragraph styling */
+  .ProseMirror {
+    outline: none;
+  }
+  
+  .ProseMirror p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
+  .ProseMirror p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .ProseMirror p:empty {
+    margin-bottom: 1rem;
+  }
+  
+  .ProseMirror p:empty::before {
+    content: '';
+    display: inline-block;
+    height: 1em;
+  }
+  
+  /* Better line break handling */
+  .ProseMirror .hard-break::after {
+    content: '\A';
+    white-space: pre;
+  }
+  
+  /* Ensure blockquotes have proper spacing */
+  .ProseMirror blockquote {
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+    border-left: 4px solid #3b82f6;
+    font-style: italic;
+    color: #6b7280;
+  }
+
+  /* Enhanced blog post content styling */
+  .prose p {
+    margin-bottom: 1.5rem !important;
+    line-height: 1.7 !important;
+  }
+  
+  .prose p:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .prose h1:first-child, .prose h2:first-child, .prose h3:first-child,
+  .prose h4:first-child, .prose h5:first-child, .prose h6:first-child {
+    margin-top: 0 !important;
+  }
+  
+  .prose ul, .prose ol {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .prose li {
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .prose blockquote {
+    margin: 1.5rem 0 !important;
+    padding: 1rem 1.5rem !important;
+    border-left: 4px solid var(--scio-blue) !important;
+    background: #f8fafc !important;
+    border-radius: 0 0.5rem 0.5rem 0 !important;
+    font-style: normal !important;
+  }
+  
+  .prose img {
+    margin: 2rem auto !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .prose hr {
+    margin: 2rem 0 !important;
+    border-color: #e2e8f0 !important;
   }
 }
 
@@ -274,11 +359,3 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}

@@ -122,8 +122,26 @@ export default function ServicesSection() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
-            {/* Content Column - Order changes based on image position */}
-            <div className={`space-y-4 sm:space-y-8 ${isImageRight ? 'lg:order-1' : 'lg:order-2'}`}>
+            {/* Image Column - Always first on mobile, desktop order changes based on alternating pattern */}
+            <div className={`relative order-1 ${isImageRight ? 'lg:order-2' : 'lg:order-1'}`}>
+              <div className="relative h-[250px] sm:h-[350px] lg:h-[500px] overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl group">
+                <Image 
+                  src={section.imageUrl}
+                  alt={section.imageAlt}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  priority={index < 2} // Load first two images with priority
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 to-transparent"></div>
+              </div>
+              {/* Floating elements - Position changes based on image side */}
+              <div className={`absolute -top-4 sm:-top-6 ${isImageRight ? '-right-4 sm:-right-6' : '-left-4 sm:-left-6'} w-16 sm:w-24 h-16 sm:h-24 ${floatingColor1} rounded-xl sm:rounded-2xl opacity-80 animate-pulse`}></div>
+              <div className={`absolute -bottom-4 sm:-bottom-6 ${isImageRight ? '-left-4 sm:-left-6' : '-right-4 sm:right-6'} w-20 sm:w-32 h-20 sm:h-32 ${floatingColor2} rounded-2xl sm:rounded-3xl opacity-60 animate-pulse delay-1000`}></div>
+            </div>
+
+            {/* Content Column - Always second on mobile, desktop order changes based on image position */}
+            <div className={`space-y-4 sm:space-y-8 order-2 ${isImageRight ? 'lg:order-1' : 'lg:order-2'}`}>
               {section.features.map(service => renderServiceCard(service, section.primaryColor, section.borderColor))}
 
               {/* Know More Button */}
@@ -140,24 +158,6 @@ export default function ServicesSection() {
                   </Button>
                 </Link>
               </div>
-            </div>
-
-            {/* Image Column - Order changes based on alternating pattern */}
-            <div className={`relative ${isImageRight ? 'lg:order-2' : 'lg:order-1'}`}>
-              <div className="relative h-[250px] sm:h-[350px] lg:h-[500px] overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl group">
-                <Image 
-                  src={section.imageUrl}
-                  alt={section.imageAlt}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  priority={index < 2} // Load first two images with priority
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 to-transparent"></div>
-              </div>
-              {/* Floating elements - Position changes based on image side */}
-              <div className={`absolute -top-4 sm:-top-6 ${isImageRight ? '-right-4 sm:-right-6' : '-left-4 sm:-left-6'} w-16 sm:w-24 h-16 sm:h-24 ${floatingColor1} rounded-xl sm:rounded-2xl opacity-80 animate-pulse`}></div>
-              <div className={`absolute -bottom-4 sm:-bottom-6 ${isImageRight ? '-left-4 sm:-left-6' : '-right-4 sm:right-6'} w-20 sm:w-32 h-20 sm:h-32 ${floatingColor2} rounded-2xl sm:rounded-3xl opacity-60 animate-pulse delay-1000`}></div>
             </div>
           </div>
 

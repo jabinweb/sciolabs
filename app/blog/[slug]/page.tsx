@@ -4,58 +4,90 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Calendar, User, Tag, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
 
-interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  excerpt?: string;
-  author: { name: string | null; email: string; image?: string | null };
-  publishDate?: string;
-  category?: { name: string };
-  imageUrl?: string;
-  tags?: string[];
-  slug: string;
-}
-
-async function getPost(slug: string): Promise<BlogPost | null> {
-  const baseUrl =
-    typeof window === "undefined"
-      ? process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-      : "";
-  const res = await fetch(`${baseUrl}/api/blog/${slug}`, { cache: 'no-store' });
-  if (!res.ok) return null;
-  const data = await res.json();
-  return data.post || null;
-}
-
-export default async function BlogSinglePage({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }> 
-}) {
-  const { slug } = await params
-  const post = await getPost(slug);
+async function getPost(slug: string, isPreview = false) {
+  const post = await prisma.blogPost.findUnique({
+    where: { slug },
+    include: {
+      author: {
+        select: {
+          name: true,
+          email: true
+        }
+      },
+      category: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
+    }
+  })
 
   if (!post) {
-    notFound();
+    return null
   }
 
-  // Parse tags if they're stored as JSON string
-  let parsedTags: string[] = []
-  try {
-    if (typeof post.tags === 'string') {
-      parsedTags = JSON.parse(post.tags)
-    } else if (Array.isArray(post.tags)) {
-      parsedTags = post.tags
+  // If post is not published and not in preview mode, return null
+  if (!post.isPublished && !isPreview) {
+    return null
+  }
+
+  return post
+}
+
+interface PageProps {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ preview?: string }>
+}
+
+export default async function BlogPostPage({ params, searchParams }: PageProps) {
+  const { slug } = await params
+  const { preview } = await searchParams
+  const isPreview = preview === 'true'
+  
+  // Check if user is authenticated for preview mode
+  if (isPreview) {
+    const session = await auth()
+    if (!session?.user) {
+      notFound()
     }
-  } catch (error) {
-    console.error('Error parsing tags:', error)
-    parsedTags = []
+  }
+
+  const post = await getPost(slug, isPreview)
+
+  if (!post) {
+    notFound()
+  }
+
+  // Increment view count only if not in preview mode
+  if (!isPreview) {
+    await prisma.blogPost.update({
+      where: { id: post.id },
+      data: { views: { increment: 1 } }
+    })
+  }
+
+  // Parse tags
+  let tags: string[] = []
+  try {
+    tags = typeof post.tags === 'string' ? JSON.parse(post.tags) : []
+  } catch {
+    tags = []
   }
 
   return (
     <main className="min-h-screen bg-gray-50">
+      {/* Preview Banner */}
+      {isPreview && (
+        <div className="bg-yellow-500 text-black py-2 px-6 text-center font-medium">
+          <i className="fas fa-eye mr-2"></i>
+          Preview Mode - This post is not published yet
+        </div>
+      )}
+      
       {/* Dark Hero Section */}
       <section className="relative bg-gray-900 text-white">
         {/* Background Pattern */}
@@ -99,22 +131,22 @@ export default async function BlogSinglePage({
           </div>
 
           {/* Title */}
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
             {post.title}
           </h1>
 
           {/* Excerpt */}
-          {post.excerpt && (
+          {/* {post.excerpt && (
             <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mb-8">
               {post.excerpt}
             </p>
-          )}
+          )} */}
 
           {/* Tags */}
-          {parsedTags.length > 0 && (
+          {tags.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap">
               <Tag className="w-4 h-4 text-gray-400" />
-              {parsedTags.map((tag, index) => (
+              {tags.map((tag, index) => (
                 <span 
                   key={index}
                   className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-sm border border-gray-700"
@@ -134,12 +166,12 @@ export default async function BlogSinglePage({
             <CardContent className="p-0">
               {/* Featured Image */}
               {post.imageUrl && (
-                <div className="relative h-96 md:h-[500px] overflow-hidden rounded-t-lg">
+                <div className="relative h-96 md:h-[400px] overflow-hidden rounded-t-lg">
                   <Image
                     src={post.imageUrl}
                     alt={post.title}
                     fill
-                    className="object-cover"
+                    className="object-cover aspect-video"
                     priority
                   />
                 </div>
@@ -149,16 +181,28 @@ export default async function BlogSinglePage({
               <div className="p-8 md:p-12">
                 <div 
                   className="prose prose-lg prose-gray max-w-none
-                    prose-headings:font-heading prose-headings:text-gray-900
+                    prose-headings:font-heading prose-headings:text-gray-900 prose-headings:mb-6 prose-headings:mt-8 prose-headings:first:mt-0
                     prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
-                    prose-p:text-gray-700 prose-p:leading-relaxed
-                    prose-a:text-scio-blue prose-a:no-underline hover:prose-a:underline
+                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-base
+                    prose-a:text-scio-blue prose-a:no-underline hover:prose-a:underline prose-a:font-medium
                     prose-strong:text-gray-900 prose-strong:font-semibold
-                    prose-ul:text-gray-700 prose-ol:text-gray-700
-                    prose-li:text-gray-700 prose-li:leading-relaxed
-                    prose-blockquote:border-l-scio-blue prose-blockquote:bg-gray-50 prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:rounded-r
-                    prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-scio-blue
-                    prose-img:rounded-lg prose-img:shadow-lg"
+                    prose-ul:text-gray-700 prose-ul:mb-6 prose-ol:text-gray-700 prose-ol:mb-6
+                    prose-li:text-gray-700 prose-li:leading-relaxed prose-li:mb-2
+                    prose-blockquote:border-l-4 prose-blockquote:border-scio-blue prose-blockquote:bg-gray-50 prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:rounded-r prose-blockquote:my-6 prose-blockquote:not-italic
+                    prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-scio-blue prose-code:text-sm
+                    prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:my-6
+                    prose-img:rounded-lg prose-img:shadow-lg prose-img:my-8 prose-img:mx-auto
+                    prose-hr:border-gray-300 prose-hr:my-8
+                    prose-table:w-full prose-table:border-collapse prose-table:my-6
+                    prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:p-3 prose-th:text-left prose-th:font-semibold
+                    prose-td:border prose-td:border-gray-300 prose-td:p-3
+                    [&>*:first-child]:mt-0 [&>*:last-child]:mb-0
+                    [&_p]:mb-6 [&_p:last-child]:mb-0
+                    [&_h1]:mt-8 [&_h1]:mb-6 [&_h1:first-child]:mt-0
+                    [&_h2]:mt-8 [&_h2]:mb-6 [&_h2:first-child]:mt-0  
+                    [&_h3]:mt-6 [&_h3]:mb-4 [&_h3:first-child]:mt-0
+                    [&_ul]:mb-6 [&_ol]:mb-6
+                    [&_blockquote]:my-6"
                   dangerouslySetInnerHTML={{ __html: post.content }} 
                 />
 
@@ -202,3 +246,5 @@ export default async function BlogSinglePage({
     </main>
   )
 }
+
+// ...existing generateMetadata function...
