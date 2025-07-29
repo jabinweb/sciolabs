@@ -69,7 +69,9 @@ export default function AboutPage() {
     "Sheryl Sam Shiju",
     "Devansh Singh", 
     "Gungun Ahuja",
-    "Joshi Sam"
+    "Joshi Sam",
+    "Grace Jennie",
+    "Aaron Samuel"
   ];
 
   return (
