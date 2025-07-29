@@ -18,24 +18,21 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params
-
   try {
-    // Check if user is admin for admin routes
     const session = await auth()
-    if (!session?.user || session.user.role !== "admin") {
+    
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const { id } = await params
+
     const post = await prisma.blogPost.findUnique({
-      where: { 
-        id
-      },
+      where: { id },
       include: {
         author: {
           select: {
             name: true,
-            image: true,
             email: true
           }
         },
@@ -49,13 +46,16 @@ export async function GET(
     })
 
     if (!post) {
-      return NextResponse.json({ error: 'Blog post not found' }, { status: 404 })
+      return NextResponse.json({ error: "Post not found" }, { status: 404 })
     }
 
     return NextResponse.json({ post })
   } catch (error) {
-    console.error('Error fetching blog post:', error)
-    return NextResponse.json({ error: 'Failed to fetch blog post' }, { status: 500 })
+    console.error("Error fetching post:", error)
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    )
   }
 }
 
@@ -65,20 +65,19 @@ export async function PUT(
 ) {
   try {
     const session = await auth()
-    if (!session?.user || session.user.role !== "admin") {
+    
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id: postId } = await params
+    const { id } = await params
     const body = await request.json()
-    console.log('Updating post with data:', body)
-    
+
     const validatedData = updateBlogPostSchema.parse(body)
-    console.log('Validated update data:', validatedData)
 
     // Check if post exists
     const existingPost = await prisma.blogPost.findUnique({
-      where: { id: postId }
+      where: { id }
     })
 
     if (!existingPost) {
@@ -110,8 +109,8 @@ export async function PUT(
       }
     }
 
-    const updatedPost = await prisma.blogPost.update({
-      where: { id: postId },
+    const post = await prisma.blogPost.update({
+      where: { id },
       data: {
         ...(validatedData.title && { title: validatedData.title }),
         ...(validatedData.content && { content: validatedData.content }),
@@ -130,16 +129,19 @@ export async function PUT(
         author: {
           select: {
             name: true,
-            email: true,
-            image: true
+            email: true
           }
         },
-        category: true
+        category: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
       }
     })
 
-    console.log('Updated blog post:', updatedPost)
-    return NextResponse.json({ post: updatedPost })
+    return NextResponse.json({ post })
   } catch (error) {
     console.error("Error updating post:", error)
     
@@ -154,7 +156,7 @@ export async function PUT(
 // DELETE /api/admin/blog/[id] - Delete a blog post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth()
@@ -163,7 +165,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id } = params
+    const { id } = await params
 
     // Check if post exists
     const existingPost = await prisma.blogPost.findUnique({
