@@ -48,19 +48,19 @@ export default function AboutPage() {
     { 
       name: "Davis Abraham", 
       role: "Founder & CEO", 
-      image: "/Davis.webp",
+      image: "/Davis.png",
       description: "Visionary leader driving educational innovation"
     },
     { 
       name: "Emmanuel Davied", 
       role: "Co-Founder & CFO", 
-      image: "1472099645785-5658abf4ff4e",
+      image: "/Emmanuel.JPG",
       description: "Strategic financial planning and operations expert"
     },
     { 
       name: "Christa Richie", 
       role: "Operations Manager", 
-      image: "1494790108755-2616b612b47c",
+      image: "/Christa.jpg",
       description: "Excellence in program delivery and management"
     }
   ];
