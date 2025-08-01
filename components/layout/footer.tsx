@@ -79,12 +79,12 @@ export default function Footer() {
                   About Us
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/services" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
                   <span className="w-2 h-2 bg-scio-orange rounded-full mr-3 group-hover:scale-125 transition-transform duration-300"></span>
                   Services
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/contact" className="font-body text-gray-300 hover:text-white transition-colors duration-300 flex items-center group">
                   <span className="w-2 h-2 bg-scio-orange rounded-full mr-3 group-hover:scale-125 transition-transform duration-300"></span>

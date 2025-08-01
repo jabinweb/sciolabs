@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { toast } from 'sonner'
+import { Copy, RefreshCw } from 'lucide-react'
 
 interface User {
   id: string
@@ -52,6 +53,14 @@ export default function UsersPage() {
     password: ''
   })
   const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    email: '',
+    role: 'user',
+    password: ''
+  })
+  const [creatingUser, setCreatingUser] = useState(false)
 
   const fetchUsers = useCallback(async (page = 1, searchTerm = search, role = roleFilter) => {
     try {
@@ -175,6 +184,85 @@ export default function UsersPage() {
     }
   }
 
+  // Generate random password
+  const generatePassword = () => {
+    const length = 12
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*"
+    let password = ""
+    for (let i = 0; i < length; i++) {
+      password += charset.charAt(Math.floor(Math.random() * charset.length))
+    }
+    setCreateForm(prev => ({ ...prev, password }))
+  }
+
+  // Copy password to clipboard
+  const copyPassword = async () => {
+    try {
+      await navigator.clipboard.writeText(createForm.password)
+      toast.success('Password copied to clipboard')
+    } catch (error) {
+      toast.error('Failed to copy password')
+    }
+  }
+
+  // Create new user
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!createForm.name.trim() || !createForm.email.trim() || !createForm.password.trim()) {
+      toast.error('Please fill in all required fields')
+      return
+    }
+
+    setCreatingUser(true)
+    try {
+      console.log('Creating new user:', createForm)
+      
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: createForm.name.trim(),
+          email: createForm.email.trim(),
+          role: createForm.role,
+          password: createForm.password
+        })
+      })
+
+      console.log('Create user response status:', response.status)
+
+      if (!response.ok) {
+        const error = await response.json()
+        console.error('Create user error:', error)
+        throw new Error(error.error || 'Failed to create user')
+      }
+
+      const data = await response.json()
+      console.log('User created successfully:', data)
+
+      toast.success('User created successfully')
+      setCreateDialogOpen(false)
+      setCreateForm({ name: '', email: '', role: 'user', password: '' })
+      
+      // Refresh users list
+      fetchUsers(1)
+    } catch (err) {
+      console.error('Create user exception:', err)
+      const errorMsg = err instanceof Error ? err.message : 'Failed to create user'
+      toast.error(`Failed to create user: ${errorMsg}`)
+    } finally {
+      setCreatingUser(false)
+    }
+  }
+
+  // Open create dialog and generate initial password
+  const openCreateDialog = () => {
+    setCreateForm({ name: '', email: '', role: 'user', password: '' })
+    generatePassword()
+    setCreateDialogOpen(true)
+  }
+
   useEffect(() => {
     fetchUsers()
   }, [fetchUsers])
@@ -216,10 +304,124 @@ export default function UsersPage() {
           <h1 className="font-heading text-3xl text-gray-800">User Management</h1>
           <p className="text-gray-600 mt-1">Manage users and their permissions</p>
         </div>
-        <Button className="bg-scio-blue hover:bg-scio-blue-dark text-white">
-          <i className="fas fa-plus mr-2"></i>
-          Add New User
-        </Button>
+        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              className="bg-scio-blue hover:bg-scio-blue-dark text-white"
+              onClick={openCreateDialog}
+            >
+              <i className="fas fa-plus mr-2"></i>
+              Add New User
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Create New User</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="create-name">Name *</Label>
+                <Input
+                  id="create-name"
+                  value={createForm.name}
+                  onChange={(e) => setCreateForm(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Enter full name"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="create-email">Email *</Label>
+                <Input
+                  id="create-email"
+                  type="email"
+                  value={createForm.email}
+                  onChange={(e) => setCreateForm(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="Enter email address"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="create-role">Role</Label>
+                <Select value={createForm.role} onValueChange={(value) => setCreateForm(prev => ({ ...prev, role: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="create-password">Auto-Generated Password</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="create-password"
+                    type="text"
+                    value={createForm.password}
+                    onChange={(e) => setCreateForm(prev => ({ ...prev, password: e.target.value }))}
+                    placeholder="Password will be auto-generated"
+                    className="font-mono text-sm"
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={generatePassword}
+                    title="Generate new password"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={copyPassword}
+                    title="Copy password"
+                    disabled={!createForm.password}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-sm text-gray-500">
+                  Save this password securely. The user will need it to log in.
+                </p>
+              </div>
+              
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setCreateDialogOpen(false)}
+                  disabled={creatingUser}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  className="bg-scio-blue hover:bg-scio-blue-dark"
+                  disabled={creatingUser || !createForm.name.trim() || !createForm.email.trim() || !createForm.password.trim()}
+                >
+                  {creatingUser ? (
+                    <>
+                      <i className="fas fa-spinner fa-spin mr-2"></i>
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-plus mr-2"></i>
+                      Create User
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Filters */}

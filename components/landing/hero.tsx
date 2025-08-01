@@ -61,12 +61,12 @@ export default function HeroSection() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-6 sm:pt-8 opacity-0 animate-slide-up-delay-3">
-              <Link href="/#services" className="w-full sm:w-auto">
+              <Link href="/#explore" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
                   className="w-full sm:w-auto bg-scio-orange hover:bg-scio-orange-dark text-white px-6 sm:px-10 py-4 sm:py-6 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg sm:shadow-2xl hover:shadow-orange-500/25 border-0"
                 >
-                  Explore Services
+                  Explore ScioLabs
                 </Button>
               </Link>
               <Link href="/contact" className="w-full sm:w-auto">

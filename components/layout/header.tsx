@@ -8,9 +8,14 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isWhatWeDoOpen, setIsWhatWeDoOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const whatWeDoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Set mounted flag and check initial scroll position
+    setIsMounted(true);
+    setIsScrolled(window.scrollY > 100);
+
     const handleScroll = () => {
       // Change header style when scrolled past a smaller threshold for better visibility
       setIsScrolled(window.scrollY > 100);
@@ -33,6 +38,29 @@ export default function Header() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // Don't render until mounted to prevent hydration mismatch
+  if (!isMounted) {
+    return (
+      <nav className="fixed top-0 left-0 right-0 bg-transparent backdrop-blur-sm border-b border-white/10 z-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between h-20">
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="relative w-12 h-12 transition-transform duration-300 group-hover:scale-105">
+                <Image
+                  src="/scioLabs_light.png"
+                  alt="Scio Labs Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   const headerClass = isScrolled 
     ? "fixed top-0 left-0 right-0 bg-white/98 backdrop-blur-md border-b border-gray-200 z-50 shadow-lg" 
@@ -134,17 +162,6 @@ export default function Header() {
                       onClick={() => setIsWhatWeDoOpen(false)}
                     >
                       ScioCare
-                    </Link>
-                  </div>
-
-                  {/* View All Link */}
-                  <div className="mt-3 pt-3 border-t border-gray-100">
-                    <Link 
-                      href="/services" 
-                      className="block px-3 py-2 rounded-lg bg-gray-50 text-scio-blue font-medium text-center transition-colors hover:bg-gray-100 font-body"
-                      onClick={() => setIsWhatWeDoOpen(false)}
-                    >
-                      View All Services
                     </Link>
                   </div>
                 </div>

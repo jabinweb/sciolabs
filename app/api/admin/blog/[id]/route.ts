@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 
 const updateBlogPostSchema = z.object({
   title: z.string().min(1, "Title is required").optional(),
@@ -10,8 +11,9 @@ const updateBlogPostSchema = z.object({
   slug: z.string().min(1, "Slug is required").optional(),
   isPublished: z.boolean().optional(),
   imageUrl: z.string().optional().nullable(),
-  tags: z.string().optional(), // JSON string
+  tags: z.string().optional(),
   categoryId: z.string().optional().nullable(),
+  authorId: z.string().optional().nullable(), // Add authorId to update schema
 })
 
 export async function GET(
@@ -94,6 +96,16 @@ export async function PUT(
       }
     }
 
+    // Verify author exists if authorId is being updated
+    if (validatedData.authorId) {
+      const authorExists = await prisma.user.findUnique({
+        where: { id: validatedData.authorId }
+      })
+      if (!authorExists) {
+        return NextResponse.json({ error: "Selected author does not exist" }, { status: 400 })
+      }
+    }
+
     // Process tags if provided
     let tagsString = validatedData.tags
     if (tagsString !== undefined) {
@@ -105,26 +117,44 @@ export async function PUT(
         tagsString = JSON.stringify(parsedTags)
       } catch (error) {
         console.error('Invalid tags JSON:', error)
-        tagsString = existingPost.tags // Keep existing tags if invalid
+        tagsString = existingPost.tags
       }
+    }
+
+    // Build update data object using Prisma types
+    const updateData: Prisma.BlogPostUpdateInput = {
+      updatedAt: new Date()
+    }
+
+    if (validatedData.title !== undefined) updateData.title = validatedData.title
+    if (validatedData.content !== undefined) updateData.content = validatedData.content
+    if (validatedData.excerpt !== undefined) updateData.excerpt = validatedData.excerpt
+    if (validatedData.slug !== undefined) updateData.slug = validatedData.slug
+    if (validatedData.imageUrl !== undefined) updateData.imageUrl = validatedData.imageUrl
+    if (tagsString !== undefined) updateData.tags = tagsString
+    
+    // Handle nullable fields properly
+    if (validatedData.categoryId !== undefined) {
+      updateData.category = validatedData.categoryId 
+        ? { connect: { id: validatedData.categoryId } }
+        : { disconnect: true }
+    }
+    
+    if (validatedData.authorId !== undefined) {
+      if (validatedData.authorId) {
+        updateData.author = { connect: { id: validatedData.authorId } }
+      }
+      // Note: We don't disconnect author as it's required field
+    }
+
+    if (validatedData.isPublished !== undefined) {
+      updateData.isPublished = validatedData.isPublished
+      updateData.publishDate = validatedData.isPublished ? new Date() : null
     }
 
     const post = await prisma.blogPost.update({
       where: { id },
-      data: {
-        ...(validatedData.title && { title: validatedData.title }),
-        ...(validatedData.content && { content: validatedData.content }),
-        ...(validatedData.excerpt !== undefined && { excerpt: validatedData.excerpt }),
-        ...(validatedData.slug && { slug: validatedData.slug }),
-        ...(validatedData.isPublished !== undefined && { 
-          isPublished: validatedData.isPublished,
-          publishDate: validatedData.isPublished ? new Date() : null
-        }),
-        ...(validatedData.imageUrl !== undefined && { imageUrl: validatedData.imageUrl }),
-        ...(tagsString !== undefined && { tags: tagsString }),
-        ...(validatedData.categoryId !== undefined && { categoryId: validatedData.categoryId }),
-        updatedAt: new Date()
-      },
+      data: updateData,
       include: {
         author: {
           select: {

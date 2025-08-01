@@ -10,8 +10,9 @@ const createBlogPostSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
   isPublished: z.boolean().default(false),
   imageUrl: z.string().optional().nullable(),
-  tags: z.string().default("[]"), // Expecting JSON string
+  tags: z.string().optional(),
   categoryId: z.string().optional().nullable(),
+  authorId: z.string().optional().nullable(), // Add authorId to schema
 })
 
 // GET /api/admin/blog - Get blog posts or stats
@@ -152,15 +153,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth()
-    if (!session?.user || session.user.role !== "admin") {
+    
+    if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const body = await request.json()
-    console.log('Received blog post data:', body)
-    
     const validatedData = createBlogPostSchema.parse(body)
-    console.log('Validated data:', validatedData)
 
     // Check if slug already exists
     const existingPost = await prisma.blogPost.findUnique({
@@ -171,21 +170,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "A post with this slug already exists" }, { status: 400 })
     }
 
-    // Validate tags JSON string
-    let tagsString = validatedData.tags
-    try {
-      const parsedTags = JSON.parse(tagsString)
-      if (!Array.isArray(parsedTags)) {
-        throw new Error('Tags must be an array')
+    // Use provided authorId or fallback to current user
+    const finalAuthorId = validatedData.authorId || session.user.id
+
+    // Verify the author exists
+    if (validatedData.authorId) {
+      const authorExists = await prisma.user.findUnique({
+        where: { id: validatedData.authorId }
+      })
+      if (!authorExists) {
+        return NextResponse.json({ error: "Selected author does not exist" }, { status: 400 })
       }
-      // Re-stringify to ensure clean JSON
-      tagsString = JSON.stringify(parsedTags)
-    } catch (error) {
-      console.error('Invalid tags JSON:', error)
-      tagsString = "[]" // Default to empty array
     }
 
-    const blogPost = await prisma.blogPost.create({
+    const post = await prisma.blogPost.create({
       data: {
         title: validatedData.title,
         content: validatedData.content,
@@ -194,9 +192,9 @@ export async function POST(request: NextRequest) {
         isPublished: validatedData.isPublished,
         publishDate: validatedData.isPublished ? new Date() : null,
         imageUrl: validatedData.imageUrl,
-        tags: tagsString, // Store as JSON string
-        authorId: session.user.id,
+        tags: validatedData.tags || "[]",
         categoryId: validatedData.categoryId,
+        authorId: finalAuthorId, // Use the determined author ID
       },
       include: {
         author: {
@@ -207,16 +205,16 @@ export async function POST(request: NextRequest) {
         },
         category: {
           select: {
+            id: true,
             name: true
           }
         }
       }
     })
 
-    console.log('Created blog post:', blogPost)
-    return NextResponse.json({ post: blogPost }, { status: 201 })
+    return NextResponse.json({ post }, { status: 201 })
   } catch (error) {
-    console.error("Error creating blog post:", error)
+    console.error("Error creating post:", error)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid input data", details: error.issues }, { status: 400 })
@@ -225,4 +223,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
-
+ 

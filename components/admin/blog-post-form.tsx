@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -35,6 +34,12 @@ interface Category {
   name: string
 }
 
+interface User {
+  id: string
+  name: string | null
+  email: string
+}
+
 interface BlogPostFormProps {
   postId?: string
 }
@@ -43,7 +48,9 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [isLoadingCategories, setIsLoadingCategories] = useState(true)
+  const [isLoadingUsers, setIsLoadingUsers] = useState(true)
   const [newCategoryName, setNewCategoryName] = useState('')
   const [isAddingCategory, setIsAddingCategory] = useState(false)
   const [showCategoryDialog, setShowCategoryDialog] = useState(false)
@@ -58,6 +65,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
     imageUrl: '',
     tags: '',
     categoryId: '',
+    authorId: '', // Add authorId to form data
   })
 
   // Fetch categories on component mount
@@ -78,6 +86,26 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
     }
 
     fetchCategories()
+  }, [])
+
+  // Fetch users for author selection
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/api/admin/users?limit=100') // Get more users for selection
+        if (response.ok) {
+          const data = await response.json()
+          setUsers(data.users || [])
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error)
+        toast.error('Failed to load users')
+      } finally {
+        setIsLoadingUsers(false)
+      }
+    }
+
+    fetchUsers()
   }, [])
 
   // If postId is provided, fetch the post data
@@ -124,6 +152,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
           imageUrl: post.imageUrl || '',
           tags: parsedTags.join(', '),
           categoryId: post.categoryId || '',
+          authorId: post.authorId || '', // Set the author ID
         })
         
         console.log('Form data set:', {
@@ -161,6 +190,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
         categoryId: formData.categoryId === '' || formData.categoryId === 'none' ? null : formData.categoryId,
         excerpt: formData.excerpt || null,
         imageUrl: formData.imageUrl || null,
+        authorId: formData.authorId || null, // Include authorId in submission
         // Convert tags to JSON string to match schema
         tags: JSON.stringify(formData.tags?.split(',').map(tag => tag.trim()).filter(Boolean) || []),
       }
@@ -641,6 +671,41 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
                         </div>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+
+                {/* Author Selection */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <i className="fas fa-user mr-2 h-5 w-5"></i>
+                      Author
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Select 
+                      value={formData.authorId} 
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, authorId: value }))
+                      }
+                      disabled={isLoadingUsers}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={isLoadingUsers ? "Loading users..." : "Select author"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {users.map((user) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            <div className="flex items-center gap-2">
+                              <span>{user.name || 'Unnamed User'}</span>
+                              <span className="text-xs text-gray-500">({user.email})</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="mt-2 text-sm text-gray-500">
+                      Select the author for this blog post
+                    </p>
                   </CardContent>
                 </Card>
 

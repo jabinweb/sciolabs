@@ -39,9 +39,9 @@ interface MediaFile {
 }
 
 interface MediaSelectorProps {
-  onSelect: (file: MediaFile) => void
+  onSelect: (file: MediaFile | null) => void
   selectedUrl?: string
-  allowedTypes?: string[] // e.g., ['image/*', 'video/*']
+  allowedTypes?: string[]
   children: React.ReactNode
 }
 
@@ -151,6 +151,11 @@ export default function MediaSelector({
       setSelectedFile(null)
       setPreviewUrl(null)
     }
+  }
+
+  const handleRemoveSelection = () => {
+    onSelect(null)
+    setIsOpen(false)
   }
 
   const navigateUp = () => {
@@ -366,7 +371,7 @@ export default function MediaSelector({
                   </Badge>
                 </div>
                 
-                <div className="space-y-2 mt-auto flex items-center justify-between gap-2">
+                <div className="space-y-2 mt-auto flex flex-col gap-2">
                   <Button 
                     onClick={handleConfirmSelection}
                     className="w-full text-sm"
@@ -378,11 +383,8 @@ export default function MediaSelector({
                   {selectedUrl && (
                     <Button 
                       variant="outline"
-                      onClick={() => {
-                        onSelect({ url: '', name: '', id: '', type: 'file', path: '', createdAt: '', uploadedBy: { id: '', name: '' } })
-                        setIsOpen(false)
-                      }}
-                      className="w-full text-sm !m-0"
+                      onClick={handleRemoveSelection}
+                      className="w-full text-sm"
                     >
                       <X className="h-4 w-4 mr-2" />
                       Remove Current
