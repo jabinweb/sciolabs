@@ -200,7 +200,7 @@ export default function UsersPage() {
     try {
       await navigator.clipboard.writeText(createForm.password)
       toast.success('Password copied to clipboard')
-    } catch (error) {
+    } catch {
       toast.error('Failed to copy password')
     }
   }

@@ -1,11 +1,11 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { servicesData } from '@/lib/services-data';
-import { CheckCircle, Users, Award, Target, Play } from 'lucide-react';
+import { CheckCircle, Users, Award, Play } from 'lucide-react';
 
 export default function LinguaPage() {
   const service = servicesData.find((s) => s.id === 'lingua')!;
@@ -325,4 +325,5 @@ export async function generateMetadata() {
     description: 'Custom English programs designed to build confidence and communication in diverse learning contexts, integrating faith-based learning with foundational English education.',
   }
 }
+
   

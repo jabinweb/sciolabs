@@ -7,11 +7,11 @@ export default function OfflinePage() {
         </div>
         
         <h1 className="font-heading text-2xl font-bold text-gray-900 mb-4">
-          You're Offline
+          You&apos;re Offline
         </h1>
         
         <p className="text-gray-600 mb-6">
-          It looks like you're not connected to the internet. Some features may not be available.
+          It looks like you&apos;re not connected to the internet. Some features may not be available.
         </p>
         
         <button 
