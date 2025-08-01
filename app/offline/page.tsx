@@ -1,4 +1,12 @@
+'use client'
+
 export default function OfflinePage() {
+  const handleTryAgain = () => {
+    if (typeof window !== 'undefined') {
+      window.location.reload()
+    }
+  }
+
   return (
     <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
       <div className="max-w-md mx-auto text-center">
@@ -15,7 +23,7 @@ export default function OfflinePage() {
         </p>
         
         <button 
-          onClick={() => window.location.reload()}
+          onClick={handleTryAgain}
           className="bg-scio-blue hover:bg-scio-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
         >
           Try Again
