@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { servicesData } from '@/lib/services-data';
@@ -106,102 +105,120 @@ export default function ThrivePage() {
       {/* Service Overview */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="font-heading heading-primary text-4xl text-gray-800 mb-6">
-              About ScioThrive
-            </h2>
-            <p className="font-body text-body text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-              Designed to accelerate professional growth through modern teaching strategies, corporate training, and specialized programs for educators, professionals, and teenagers.
-            </p>
-          </div>
 
-          {/* Service Categories Accordion */}
+          {/* Service Categories Sections */}
           <div className="mb-20">
-            <h3 className="font-heading heading-secondary text-3xl text-gray-800 mb-8 text-center">
-              Our Training Programs
-            </h3>
-            <Accordion type="single" collapsible className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="font-heading heading-primary text-4xl text-gray-800 mb-6">
+                Our Training Programs
+              </h2>
+              <p className="font-body text-lg text-gray-600 max-w-3xl mx-auto">
+                Comprehensive skill-building programs designed to accelerate growth and unlock potential
+              </p>
+            </div>
+
+            <div className="flex flex-col space-y-24">
               {service.features.map((feature, index) => (
-                <AccordionItem key={feature.id} value={`item-${index}`}>
-                  <AccordionTrigger className="text-left">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-scio-blue to-scio-blue-light rounded-xl flex items-center justify-center">
-                        <i className={`${feature.icon} text-white text-lg`}></i>
+                <div key={feature.id} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                  {/* Content Column */}
+                  <div className={`space-y-6 ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
+                    <div className="flex items-center space-x-4 mb-6">
+                      <div 
+                        className="w-16 h-16 rounded-xl flex items-center justify-center"
+                        style={{
+                          background: 'linear-gradient(to right, var(--scio-blue), var(--scio-blue-light))'
+                        }}
+                      >
+                        <i className={`${feature.icon} text-white text-2xl`}></i>
                       </div>
                       <div>
-                        <h4 className="font-heading text-xl font-semibold text-gray-800">
+                        <h3 className="font-heading heading-secondary text-2xl text-gray-800">
                           {feature.title}
-                        </h4>
-                        <p className="font-body text-gray-600 text-sm">
+                        </h3>
+                        <p className="font-body text-gray-600">
                           {feature.description}
                         </p>
                       </div>
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="pt-6 pl-16">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h5 className="font-heading font-semibold text-gray-800 mb-3">Training Focus:</h5>
-                          <ul className="space-y-2">
-                            {feature.title === 'Educator Training' ? [
-                              'Modern teaching methodologies',
-                              'Ed-tech tool integration',
-                              'Student engagement strategies'
-                            ] : feature.title === 'Corporate Training' ? [
-                              'Team productivity enhancement',
-                              'Communication skills',
-                              'Leadership development'
-                            ] : [
-                              'Life skills development',
-                              'Communication mastery',
-                              'Career readiness'
-                            ].map((detail, idx) => (
-                              <li key={idx} className="flex items-center space-x-2">
-                                <CheckCircle className="w-4 h-4 text-green-500" />
-                                <span className="text-gray-600">{detail}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h5 className="font-heading font-semibold text-gray-800 mb-3">Key Outcomes:</h5>
-                          <ul className="space-y-2">
-                            {feature.title === 'Educator Training' ? [
-                              'Enhanced teaching effectiveness',
-                              'Improved student outcomes',
-                              'Technology integration confidence'
-                            ] : feature.title === 'Corporate Training' ? [
-                              'Increased team productivity',
-                              'Better workplace communication',
-                              'Stronger leadership skills'
-                            ] : [
-                              'Future-ready mindset',
-                              'Confidence in communication',
-                              'Essential life skills mastery'
-                            ].map((benefit, idx) => (
-                              <li key={idx} className="flex items-center space-x-2">
-                                <Award className="w-4 h-4 text-blue-500" />
-                                <span className="text-gray-600">{benefit}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h5 className="font-heading font-semibold text-gray-800 mb-3">Training Focus:</h5>
+                        <ul className="space-y-2">
+                          {feature.title === 'Educator Training' ? [
+                            'Modern teaching methodologies',
+                            'Ed-tech tool integration',
+                            'Student engagement strategies'
+                          ] : feature.title === 'Corporate Training' ? [
+                            'Team productivity enhancement',
+                            'Communication skills',
+                            'Leadership development'
+                          ] : [
+                            'Life skills development',
+                            'Communication mastery',
+                            'Career readiness'
+                          ].map((detail, idx) => (
+                            <li key={idx} className="flex items-center space-x-2">
+                              <CheckCircle className="w-4 h-4 text-green-500" />
+                              <span className="text-gray-600">{detail}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      {feature.link && (
-                        <div className="mt-6">
-                          <Link href={feature.link}>
-                            <Button className="bg-scio-blue hover:opacity-90">
-                              Learn More About {feature.title}
-                            </Button>
-                          </Link>
-                        </div>
-                      )}
+                      <div>
+                        <h5 className="font-heading font-semibold text-gray-800 mb-3">Key Outcomes:</h5>
+                        <ul className="space-y-2">
+                          {feature.title === 'Educator Training' ? [
+                            'Enhanced teaching effectiveness',
+                            'Improved student outcomes',
+                            'Technology integration confidence'
+                          ] : feature.title === 'Corporate Training' ? [
+                            'Increased team productivity',
+                            'Better workplace communication',
+                            'Stronger leadership skills'
+                          ] : [
+                            'Future-ready mindset',
+                            'Confidence in communication',
+                            'Essential life skills mastery'
+                          ].map((benefit, idx) => (
+                            <li key={idx} className="flex items-center space-x-2">
+                              <Award className="w-4 h-4 text-blue-500" />
+                              <span className="text-gray-600">{benefit}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
+
+                    {feature.link && (
+                      <div className="mt-6">
+                        <Link href={feature.link}>
+                          <Button className="bg-scio-blue hover:opacity-90">
+                            Learn More About {feature.title}
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Image Column */}
+                  <div className={`relative ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
+                    <div className="relative h-80 overflow-hidden rounded-2xl shadow-xl group">
+                      <Image
+                        src="/1.jpg"
+                        alt={`${feature.title} program`}
+                        fill
+                        className="object-cover aspect-video group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-scio-blue/30 to-transparent"></div>
+                    </div>
+                    {/* Floating elements */}
+                    <div className={`absolute -top-4 ${index % 2 === 1 ? '-left-4' : '-right-4'} w-16 h-16 bg-scio-blue rounded-xl opacity-80 animate-pulse`}></div>
+                    <div className={`absolute -bottom-4 ${index % 2 === 1 ? '-right-4' : '-left-4'} w-20 h-20 bg-scio-orange rounded-2xl opacity-60 animate-pulse delay-1000`}></div>
+                  </div>
+                </div>
               ))}
-            </Accordion>
+            </div>
           </div>
         </div>
       </section>
@@ -212,7 +229,7 @@ export default function ThrivePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className={`${stat.icon} text-2xl text-white`}></i>
                 </div>
                 <div className="text-4xl font-bold mb-2 text-white">{stat.number}</div>
@@ -332,4 +349,3 @@ export async function generateMetadata() {
     description: 'Skill-building programs to accelerate growth and unlock potential in academic and professional settings. Educator training, corporate development, and GenZ programs.',
   }
 }
-  

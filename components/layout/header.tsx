@@ -228,7 +228,7 @@ export default function Header() {
                     <div className="space-y-2">
                     <h4 className="font-heading text-sm font-bold text-gray-400 uppercase tracking-wider">Services</h4>
                     <Link 
-                      href="/services/guidance" 
+                      href="https://guidance.sciolabs.in" 
                       className={`block font-body ${textClass} ${hoverTextClass} transition-colors`}
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -246,7 +246,7 @@ export default function Header() {
                   <div className="space-y-2">
                     <h4 className="font-heading text-sm font-bold text-gray-400 uppercase tracking-wider">Products</h4>
                     <Link 
-                      href="/services/sprints" 
+                      href="https://sprints.sciolabs.in" 
                       className={`block font-body ${textClass} ${hoverTextClass} transition-colors`}
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -260,7 +260,7 @@ export default function Header() {
                       ScioLingua
                     </Link>
                     <Link 
-                      href="/services/care" 
+                      href="https://care.sciolabs.in" 
                       className={`block font-body ${textClass} ${hoverTextClass} transition-colors`}
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -268,13 +268,13 @@ export default function Header() {
                     </Link>
                   </div>
                   
-                  <Link 
+                  {/* <Link 
                     href="/services" 
                     className={`block font-body ${textClass} font-medium ${hoverTextClass} transition-colors`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     View All Services
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
               
