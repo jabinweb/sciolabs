@@ -1,21 +1,19 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Image from 'next/image';
 import Link from 'next/link';
-
 import { servicesData } from '@/lib/services-data';
-import { CheckCircle, Users, Award, Play } from 'lucide-react';
+import { Users, Award, Play } from 'lucide-react';
 
 export default function LinguaPage() {
   const service = servicesData.find((s) => s.id === 'lingua')!;
 
   // Sample stats data
   const stats = [
-    { number: "500+", label: "Students Trained", icon: "fas fa-graduation-cap" },
-    { number: "25+", label: "Educational Partners", icon: "fas fa-school" },
-    { number: "98%", label: "Course Completion", icon: "fas fa-chart-line" },
-    { number: "3", label: "Language Levels", icon: "fas fa-layer-group" }
+    { number: "1500+", label: "Students Served", icon: "fas fa-users" },
+    { number: "50+", label: "Institutions", icon: "fas fa-school" },
+    { number: "95%", label: "Success Rate", icon: "fas fa-chart-line" },
+    { number: "30+", label: "Educational Partners", icon: "fas fa-handshake" }
   ];
 
   // Sample clients data
@@ -30,21 +28,21 @@ export default function LinguaPage() {
   // Sample testimonials
   const testimonials = [
     {
-      quote: "TheoLingua has revolutionized how we teach English in our seminary. Students are more engaged and confident.",
-      author: "Rev. Michael Thompson",
-      role: "Dean, Faith Seminary",
+      quote: "TheoLingua has transformed how our students engage with theological texts. Their confidence in English has grown tremendously.",
+      author: "Rev. Dr. Michael Thompson",
+      role: "Dean, Seminary College",
       rating: 5
     },
     {
-      quote: "rootED provided an excellent foundation for our young learners. The curriculum is age-appropriate and effective.",
+      quote: "rootED provided exactly what our young learners needed. The foundational English skills program is exceptional.",
       author: "Sister Mary Catherine",
-      role: "Elementary School Principal",
+      role: "Principal, St. Joseph's School",
       rating: 5
     },
     {
-      quote: "The integration of faith and language learning is seamless. Our students love the program.",
-      author: "Pastor David Kim",
-      role: "Youth Ministry Director",
+      quote: "The integration of faith and language learning is beautifully done. Our students are more engaged than ever.",
+      author: "Pastor David Lee",
+      role: "Educational Director",
       rating: 5
     }
   ];
@@ -76,9 +74,9 @@ export default function LinguaPage() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="https://theo.sciolabs.in" target="_blank">
+                <Link href="/contact">
                   <Button size="lg" className="bg-scio-blue hover:opacity-90 text-white px-8 py-4 rounded-xl font-heading font-semibold text-lg">
-                    Explore TheoLingua
+                    Get Started
                   </Button>
                 </Link>
                 <Link href="/contact">
@@ -107,94 +105,90 @@ export default function LinguaPage() {
       {/* Service Overview */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="font-heading heading-primary text-4xl text-gray-800 mb-6">
-              About ScioLingua
-            </h2>
-            <p className="font-body text-body text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
-              Innovative language programs that integrate faith-based learning with foundational English education, designed for diverse educational needs and spiritual growth.
-            </p>
-          </div>
 
-          {/* Service Categories Accordion */}
+          {/* Service Categories Sections */}
           <div className="mb-20">
-            <h3 className="font-heading heading-secondary text-3xl text-gray-800 mb-8 text-center">
-              Our Programs
-            </h3>
-            <Accordion type="single" collapsible className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="font-heading heading-primary text-4xl text-gray-800 mb-6">
+                Our Language Programs
+              </h2>
+              <p className="font-body text-lg text-gray-600 max-w-3xl mx-auto">
+                Innovative language programs that integrate faith-based learning with foundational English education
+              </p>
+            </div>
+
+            <div className="flex flex-col space-y-24">
               {service.features.map((feature, index) => (
-                <AccordionItem key={feature.id} value={`item-${index}`}>
-                  <AccordionTrigger className="text-left">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-scio-blue to-scio-blue-light rounded-xl flex items-center justify-center">
-                        <i className={`${feature.icon} text-white text-lg`}></i>
+                <div key={feature.id} className="">
+                  {/* Content Column */}
+                    <div className="bg-gradient-to-br from-blue-50 to-slate-50 p-8 rounded-2xl border border-blue-100 shadow-sm grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                      {/* Image Column - First on mobile, alternates on desktop */}
+                      <div className={`relative order-1 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
+                        <div className="relative h-80 overflow-hidden rounded-2xl shadow-xl group">
+                          <Image
+                            src="/5.jpg"
+                            alt={`${feature.title} program`}
+                            fill
+                            className="object-cover aspect-video group-hover:scale-105 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-scio-blue/30 to-transparent"></div>
+                        </div>
+                        {/* Floating elements */}
+                        <div className={`absolute -top-4 ${index % 2 === 1 ? '-left-4' : '-right-4'} w-16 h-16 bg-scio-blue rounded-xl opacity-80 animate-pulse`}></div>
+                        <div className={`absolute -bottom-4 ${index % 2 === 1 ? '-right-4' : '-left-4'} w-20 h-20 bg-scio-orange rounded-2xl opacity-60 animate-pulse delay-1000`}></div>
                       </div>
-                      <div>
-                        <h4 className="font-heading text-xl font-semibold text-gray-800">
-                          {feature.title}
-                        </h4>
-                        <p className="font-body text-gray-600 text-sm">
-                          {feature.description}
-                        </p>
+
+                      {/* Content - Second on mobile, alternates on desktop */}
+                      <div className={`order-2 ${index % 2 === 1 ? 'lg:order-1' : 'lg:order-2'}`}>
+                        <div className="flex items-center space-x-4 mb-6">
+                          <div 
+                            className="w-16 h-16 rounded-xl flex items-center justify-center"
+                            style={{
+                              background: 'linear-gradient(to right, var(--scio-blue), var(--scio-blue-light))'
+                            }}
+                          >
+                            <i className={`${feature.icon} text-white text-2xl`}></i>
+                          </div>
+                          <div>
+                            <h3 className="font-heading heading-secondary text-2xl lg:text-3xl text-gray-800">
+                              {feature.title}
+                            </h3>
+                            <p className="font-body text-gray-600 text-lg">
+                              {feature.description}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="gap-6">
+                          <div>
+                            <h5 className="font-heading font-semibold text-gray-800 mb-4 text-lg">Key Features:</h5>
+                            <ul className="space-y-3">
+                              {(feature.title === 'TheoLingua' ? [
+                                'Bible-based ESL curriculum design.',
+                                'Theological vocabulary development.',
+                                'Reading comprehension for religious texts.',
+                                'Communication skills for ministry.',
+                                'Cultural and spiritual integration.'
+                              ] : [
+                                'Age-appropriate foundational English.',
+                                'Interactive learning activities.',
+                                'Progressive skill development.',
+                                'Creative expression opportunities.',
+                                'Supportive learning environment.'
+                              ]).map((benefit, idx) => (
+                                <li key={idx} className="flex items-center space-x-3">
+                                  <Award className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                                  <span className="text-gray-700 text-base">{benefit}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="pt-6 pl-16">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h5 className="font-heading font-semibold text-gray-800 mb-3">Program Features:</h5>
-                          <ul className="space-y-2">
-                            {feature.title === 'TheoLingua' ? [
-                              'Bible-based ESL curriculum',
-                              'Theological vocabulary building',
-                              'Reading comprehension skills'
-                            ] : [
-                              'Foundational literacy skills',
-                              'Age-appropriate content',
-                              'Interactive learning methods'
-                            ].map((detail, idx) => (
-                              <li key={idx} className="flex items-center space-x-2">
-                                <CheckCircle className="w-4 h-4 text-green-500" />
-                                <span className="text-gray-600">{detail}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h5 className="font-heading font-semibold text-gray-800 mb-3">Key Benefits:</h5>
-                          <ul className="space-y-2">
-                            {feature.title === 'TheoLingua' ? [
-                              'Strengthened theological reading',
-                              'Enhanced communication skills',
-                              'Cultural and spiritual growth'
-                            ] : [
-                              'Strong English foundation',
-                              'Confidence building',
-                              'Improved literacy rates'
-                            ].map((benefit, idx) => (
-                              <li key={idx} className="flex items-center space-x-2">
-                                <Award className="w-4 h-4 text-blue-500" />
-                                <span className="text-gray-600">{benefit}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                      {feature.link && (
-                        <div className="mt-6">
-                          <Link href={feature.link} target={feature.title === 'TheoLingua' ? '_blank' : undefined}>
-                            <Button className="bg-scio-blue hover:opacity-90">
-                              Learn More About {feature.title}
-                            </Button>
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
+                </div>
               ))}
-            </Accordion>
+            </div>
           </div>
         </div>
       </section>
@@ -224,7 +218,7 @@ export default function LinguaPage() {
               See ScioLingua in Action
             </h2>
             <p className="font-body text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover how our faith-integrated language programs are transforming English education and building stronger communication skills.
+              Discover how our innovative language programs are transforming English education through faith-based learning approaches.
             </p>
           </div>
           
@@ -251,10 +245,10 @@ export default function LinguaPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-3xl text-gray-800 mb-4">
-              Trusted by Educational Partners
+              Trusted Educational Partners
             </h2>
             <p className="font-body text-gray-600">
-              Faith-based institutions worldwide trust ScioLingua for quality English education
+              Faith-based institutions and schools trust ScioLingua for comprehensive English language education
             </p>
           </div>
           
@@ -284,7 +278,7 @@ export default function LinguaPage() {
               What Our Partners Say
             </h2>
             <p className="font-body text-lg text-gray-600 max-w-2xl mx-auto">
-              Hear from educational institutions and faith communities that have experienced transformation through ScioLingua.
+              Hear from educational leaders who have experienced the transformative impact of ScioLingua programs.
             </p>
           </div>
           
@@ -298,7 +292,7 @@ export default function LinguaPage() {
                     ))}
                   </div>
                   <blockquote className="text-gray-700 mb-6 italic">
-                    &ldquo;{testimonial.quote}&rdquo;
+                    &quot;{testimonial.quote}&quot;
                   </blockquote>
                   <div className="flex items-center">
                     <div className="w-12 h-12 bg-gradient-to-r from-scio-blue to-scio-orange rounded-full flex items-center justify-center mr-4">
@@ -321,9 +315,7 @@ export default function LinguaPage() {
 
 export async function generateMetadata() {
   return {
-    title: 'ScioLingua - Faith-Based English Language Programs | ScioLabs',
-    description: 'Custom English programs designed to build confidence and communication in diverse learning contexts, integrating faith-based learning with foundational English education.',
+    title: 'ScioLingua - Custom English Programs | ScioLabs',
+    description: 'Custom English programs designed to build confidence and communication in diverse learning contexts. Faith-based language learning solutions.',
   }
 }
-
-  

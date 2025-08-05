@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { servicesData } from '@/lib/services-data';
-import { CheckCircle, Users, Award, Play } from 'lucide-react';
+import { Users, Award, Play } from 'lucide-react';
 
 export default function ThrivePage() {
   const service = servicesData.find((s) => s.id === 'thrive')!;

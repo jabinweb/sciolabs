@@ -48,6 +48,7 @@ model User {
   sessions      Session[]
   blogPosts     BlogPost[]
   uploadedFiles MediaFile[]
+  jobs          Job[]
 }
 
 model VerificationToken {
@@ -121,4 +122,43 @@ model MediaFile {
   @@index([folder])
   @@index([mimeType])
   @@index([uploadedBy])
+}
+
+model JobCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  icon        String?  // Icon class for UI
+  color       String?  // Color scheme for UI
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  jobs        Job[]
+}
+
+model Job {
+  id                  String      @id @default(cuid())
+  title               String
+  slug                String      @unique
+  description         String
+  qualifications      Json        // Array of strings
+  location            String
+  workHours           String
+  payOut              String
+  department          String
+  type                String      // Full-time, Part-time, Contract
+  experience          String
+  isActive            Boolean     @default(true)
+  applicationDeadline DateTime?
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  createdBy           String
+  categoryId          String?
+  
+  creator             User        @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  category            JobCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  
+  @@index([isActive])
+  @@index([department])
+  @@index([type])
+  @@index([categoryId])
 }

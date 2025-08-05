@@ -27,6 +27,17 @@ const sidebarItems: SidebarItem[] = [
     href: '/admin/users'
   },
   {
+    id: 'jobs',
+    label: 'Jobs Management',
+    icon: 'fas fa-briefcase',
+    href: '/admin/jobs',
+    children: [
+      { id: 'all-jobs', label: 'All Jobs', icon: 'fas fa-list', href: '/admin/jobs' },
+      { id: 'job-categories', label: 'Job Categories', icon: 'fas fa-tags', href: '/admin/jobs/categories' },
+      { id: 'new-job', label: 'New Job', icon: 'fas fa-plus', href: '/admin/jobs/new' }
+    ]
+  },
+  {
     id: 'blog',
     label: 'Blog Management',
     icon: 'fas fa-blog',
@@ -145,4 +156,4 @@ export default function Sidebar() {
     </div>
   )
 }
-         
+
