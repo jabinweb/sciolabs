@@ -1,56 +1,61 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
+import { auth } from "@/auth"
 import { z } from "zod"
 
-const createJobSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
-  qualifications: z.array(z.string()),
-  location: z.string().min(1),
-  workHours: z.string().min(1),
-  payOut: z.string().min(1),
-  type: z.enum(["Full-time", "Part-time", "Contract"]),
-  experience: z.string().min(1),
-  categoryId: z.string().optional(),
-  applicationDeadline: z.string().optional(),
-})
-
-// GET /api/admin/jobs - Get all jobs
+// GET /api/admin/jobs - Get all jobs (public endpoint for job listings)
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth()
+    console.log('Fetching jobs from database...')
     
-    if (!session?.user || session.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const { searchParams } = new URL(request.url)
-    const includeInactive = searchParams.get("includeInactive") === "true"
-
-    const jobs = await prisma.job.findMany({
-      where: includeInactive ? {} : { isActive: true },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+    const page = parseInt(searchParams.get("page") || "1")
+    const limit = parseInt(searchParams.get("limit") || "50")
+    const activeOnly = searchParams.get("activeOnly") !== "false" // Default to true
+    
+    const skip = (page - 1) * limit
+    
+    // Build where clause
+    const where = activeOnly ? { isActive: true } : {}
+    
+    // Get jobs with pagination
+    const [jobs, total] = await Promise.all([
+      prisma.job.findMany({
+        where,
+        include: {
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          },
+          category: {
+            select: {
+              id: true,
+              name: true,
+              description: true
+            }
           }
         },
-        category: {
-          select: {
-            id: true,
-            name: true,
-            icon: true,
-            color: true,
-          }
-        }
-      },
-      orderBy: { createdAt: "desc" }
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit
+      }),
+      prisma.job.count({ where })
+    ])
+    
+    console.log(`Found ${jobs.length} jobs in database`)
+    
+    return NextResponse.json({
+      jobs,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
     })
-
-    return NextResponse.json({ jobs })
   } catch (error) {
     console.error("Error fetching jobs:", error)
     return NextResponse.json(
@@ -60,7 +65,23 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/admin/jobs - Create new job
+const createJobSchema = z.object({
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  description: z.string().min(1),
+  qualifications: z.array(z.string()),
+  location: z.string().min(1),
+  workHours: z.string().min(1),
+  payOut: z.string().min(1),
+  department: z.string().min(1),
+  type: z.string().min(1),
+  experience: z.string().min(1),
+  isActive: z.boolean().default(true),
+  applicationDeadline: z.string().datetime().optional(),
+  categoryId: z.string().optional()
+})
+
+// POST /api/admin/jobs - Create new job (admin only)
 export async function POST(request: NextRequest) {
   try {
     const session = await auth()
@@ -68,78 +89,49 @@ export async function POST(request: NextRequest) {
     if (!session?.user || session.user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
-
+    
     const body = await request.json()
     const validatedData = createJobSchema.parse(body)
-
-    // Generate slug from title
-    const slug = validatedData.title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-+|-+$/g, '')
-
+    
     // Check if slug already exists
     const existingJob = await prisma.job.findUnique({
-      where: { slug }
+      where: { slug: validatedData.slug }
     })
-
+    
     if (existingJob) {
       return NextResponse.json(
-        { error: "A job with this title already exists" },
+        { error: "A job with this slug already exists" },
         { status: 400 }
       )
     }
-
-    // Get department from category
-    let department = 'General'
-    if (validatedData.categoryId) {
-      const category = await prisma.jobCategory.findUnique({
-        where: { id: validatedData.categoryId }
-      })
-      if (category) {
-        department = category.name
-      }
-    }
-
+    
     const job = await prisma.job.create({
       data: {
-        title: validatedData.title,
-        slug,
-        description: validatedData.description,
+        ...validatedData,
         qualifications: validatedData.qualifications,
-        location: validatedData.location,
-        workHours: validatedData.workHours,
-        payOut: validatedData.payOut,
-        department, // Use category name as department
-        type: validatedData.type,
-        experience: validatedData.experience,
-        categoryId: validatedData.categoryId || null,
         applicationDeadline: validatedData.applicationDeadline 
           ? new Date(validatedData.applicationDeadline) 
           : null,
-        createdBy: session.user.id!,
+        createdBy: session.user.id
       },
       include: {
         creator: {
           select: {
             id: true,
             name: true,
-            email: true,
+            email: true
           }
         },
         category: {
           select: {
             id: true,
             name: true,
-            icon: true,
-            color: true,
+            description: true
           }
         }
       }
     })
-
+    
     return NextResponse.json({ job }, { status: 201 })
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -148,7 +140,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
-
+    
     console.error("Error creating job:", error)
     return NextResponse.json(
       { error: "Internal server error" },

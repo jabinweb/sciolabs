@@ -29,17 +29,32 @@ interface Job {
 
 export default function WorkWithUsPage() {
   const [dynamicJobs, setDynamicJobs] = useState<Job[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
+        console.log('Fetching jobs from API...')
         const response = await fetch('/api/admin/jobs')
+        console.log('Jobs fetch response status:', response.status)
+        
         if (response.ok) {
           const data = await response.json()
-          setDynamicJobs(data.jobs.filter((job: Job) => job.isActive))
+          console.log('Jobs data received:', data)
+          const activeJobs = data.jobs.filter((job: Job) => job.isActive)
+          console.log('Active jobs:', activeJobs)
+          setDynamicJobs(activeJobs)
+        } else {
+          const errorData = await response.json()
+          console.error('Jobs fetch error:', errorData)
+          setError('Failed to load jobs')
         }
       } catch (error) {
         console.error('Error fetching jobs:', error)
+        setError('Failed to load jobs')
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -151,10 +166,22 @@ export default function WorkWithUsPage() {
           </div>
 
           <div className="space-y-16">
-            {dynamicJobs.length > 0 ? (
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-scio-blue mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading positions...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <p className="text-red-600 mb-4">{error}</p>
+                <Button onClick={() => window.location.reload()} variant="outline">
+                  Try Again
+                </Button>
+              </div>
+            ) : dynamicJobs.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {dynamicJobs.map((job, index) => (
-                  <Card key={index} className="group bg-white hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+                  <Card key={job.id} className="group bg-white hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <h4 className="font-heading text-lg font-semibold text-gray-800 group-hover:text-scio-blue transition-colors">
@@ -176,11 +203,11 @@ export default function WorkWithUsPage() {
                         </div>
                       </div>
                       
-                      <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                      <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3">
                         {job.description}
                       </p>
                       
-                      <Link href={`/work-with-us/${job.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}>
+                      <Link href={`/work-with-us/${job.slug}`}>
                         <Button 
                           variant="outline" 
                           size="sm"
@@ -196,9 +223,25 @@ export default function WorkWithUsPage() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="font-body text-gray-600 text-lg">
-                  No open positions available at the moment. Please check back later.
+                <div className="mb-4">
+                  <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                </div>
+                <h3 className="font-heading text-xl text-gray-700 mb-2">No Open Positions</h3>
+                <p className="font-body text-gray-600 text-lg mb-6">
+                  We don&apos;t have any open positions at the moment, but we&apos;re always looking for talented people.
                 </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <Link href="/contact">
+                    <Button variant="outline" size="lg">
+                      Get in Touch
+                    </Button>
+                  </Link>
+                  <Button variant="outline" size="lg" asChild>
+                    <a href="mailto:careers@sciolabs.in">
+                      Send Your Resume
+                    </a>
+                  </Button>
+                </div>
               </div>
             )}
           </div>
