@@ -83,6 +83,12 @@ const sidebarItems: SidebarItem[] = [
     label: 'Settings',
     icon: 'fas fa-cog',
     href: '/admin/settings'
+  },
+  {
+    id: 'files',
+    label: 'File Management',
+    icon: 'fas fa-folder',
+    href: '/admin/files'
   }
 ]
 

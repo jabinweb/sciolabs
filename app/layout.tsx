@@ -102,7 +102,7 @@ export default function RootLayout({
           <CTASection />
           <NewsletterSection />
           <Footer />
-          <PWAInstallPrompt />
+          {/* <PWAInstallPrompt /> */}
           <Toaster 
             position="top-right" 
             richColors 

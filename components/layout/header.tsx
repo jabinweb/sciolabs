@@ -44,7 +44,7 @@ export default function Header() {
   // Don't render until mounted to prevent hydration mismatch
   if (!isMounted) {
     return (
-      <nav className="fixed top-0 left-0 right-0 bg-transparent backdrop-blur-sm border-b border-white/10 z-50">
+      <nav className="fixed top-0 left-0 right-0 bg-white/98 backdrop-blur-md border-b border-gray-200 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex items-center space-x-3 group">
@@ -64,23 +64,21 @@ export default function Header() {
     );
   }
 
-  // Improved header class with better background transitions
-  const headerClass = isScrolled 
+  // Improved header class with better background transitions and mobile menu handling
+  const headerClass = (isScrolled || isMenuOpen)
     ? "fixed top-0 left-0 right-0 bg-white/98 backdrop-blur-md border-b border-gray-200 z-50 shadow-lg" 
     : "fixed top-0 left-0 right-0 bg-transparent backdrop-blur-sm border-b border-white/10 z-50";
 
-  const textClass = isScrolled ? "text-gray-800" : "text-white";
-  const hoverTextClass = isScrolled ? "hover:text-scio-blue" : "hover:text-scio-orange";
-  const underlineClass = isScrolled ? "bg-scio-blue" : "bg-scio-orange";
-  const mobileButtonClass = isScrolled ? "text-gray-800 hover:text-scio-blue" : "text-white hover:text-scio-orange";
-  const logoSrc = isScrolled ? "/sciolabs_logo.png" : "/scioLabs_light.png";
+  const textClass = (isScrolled || isMenuOpen) ? "text-gray-800" : "text-white";
+  const hoverTextClass = (isScrolled || isMenuOpen) ? "hover:text-scio-blue" : "hover:text-scio-orange";
+  const underlineClass = (isScrolled || isMenuOpen) ? "bg-scio-blue" : "bg-scio-orange";
+  const mobileButtonClass = (isScrolled || isMenuOpen) ? "text-gray-800 hover:text-scio-blue" : "text-white hover:text-scio-orange";
+  const logoSrc = (isScrolled || isMenuOpen) ? "/sciolabs_logo.png" : "/scioLabs_light.png";
 
   const navItems = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
-    { name: 'Services', href: '/#services' },
     { name: 'Blog', href: '/blog' },
-    { name: 'Work with Us', href: '/work-with-us' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -103,18 +101,23 @@ export default function Header() {
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link 
-                key={item.name}
-                href={item.href} 
-                className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
-              >
-                {item.name}
-                <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${underlineClass} transition-all duration-300 group-hover:w-full`}></span>
-              </Link>
-            ))}
+            <Link 
+              href="/"
+              className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
+            >
+              Home
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${underlineClass} transition-all duration-300 group-hover:w-full`}></span>
+            </Link>
 
-            {/* What We Do Dropdown */}
+            <Link 
+              href="/about"
+              className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
+            >
+              About
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${underlineClass} transition-all duration-300 group-hover:w-full`}></span>
+            </Link>
+
+            {/* What We Do Dropdown - moved after About */}
             <div className="relative group" ref={whatWeDoRef}>
               <button 
                 className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2 flex items-center`}
@@ -175,6 +178,22 @@ export default function Header() {
                 </div>
               </div>
             </div>
+
+            <Link 
+              href="/blog"
+              className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
+            >
+              Blog
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${underlineClass} transition-all duration-300 group-hover:w-full`}></span>
+            </Link>
+
+            <Link 
+              href="/contact"
+              className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
+            >
+              Contact
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${underlineClass} transition-all duration-300 group-hover:w-full`}></span>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -193,20 +212,25 @@ export default function Header() {
 
         {/* Mobile Menu */}
         <div className={`lg:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className={`border-t ${isScrolled ? 'border-gray-200/50' : 'border-white/20'} pt-6 pb-6`}>
+          <div className={`border-t ${(isScrolled || isMenuOpen) ? 'border-gray-200/50' : 'border-white/20'} pt-6 pb-6`}>
             <div className="flex flex-col space-y-6">
-              {navItems.map((item) => (
-                <Link 
-                  key={item.name}
-                  href={item.href} 
-                  className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium text-lg hover:translate-x-2`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              <Link 
+                href="/"
+                className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium text-lg hover:translate-x-2`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Home
+              </Link>
 
-              {/* Mobile What We Do submenu */}
+              <Link 
+                href="/about"
+                className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium text-lg hover:translate-x-2`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About
+              </Link>
+
+              {/* Mobile What We Do submenu - moved after About */}
               <div className="space-y-3">
                 <h3 className={`font-body ${textClass} font-medium text-lg`}>What We Do</h3>
                 
@@ -256,6 +280,22 @@ export default function Header() {
                   </div>
                 </div>
               </div>
+
+              <Link 
+                href="/blog"
+                className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium text-lg hover:translate-x-2`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Blog
+              </Link>
+
+              <Link 
+                href="/contact"
+                className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium text-lg hover:translate-x-2`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact
+              </Link>
             </div>
           </div>
         </div>

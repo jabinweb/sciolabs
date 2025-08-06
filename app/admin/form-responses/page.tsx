@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ClipboardList, Filter, RefreshCw } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ClipboardList, Filter, RefreshCw, Eye, User, Mail, Phone, Calendar, Tag, MapPin, FileText, Briefcase, School, Heart, Code } from "lucide-react";
 import { toast } from 'sonner'
 
 // Universal FormResponse type
@@ -26,6 +27,8 @@ export default function FormResponsesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState<string>("all");
+  const [selectedResponse, setSelectedResponse] = useState<FormResponse | null>(null);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchResponses = async () => {
@@ -70,6 +73,68 @@ export default function FormResponsesPage() {
 
   // Get unique form names for filter dropdown
   const formNames = Array.from(new Set(responses.map(r => r.formName)));
+
+  const handleViewResponse = (response: FormResponse) => {
+    setSelectedResponse(response);
+    setViewDialogOpen(true);
+  };
+
+  const formatFieldValue = (key: string, value: unknown): string => {
+    if (value === null || value === undefined || value === '') {
+      return 'Not provided';
+    }
+    
+    if (typeof value === 'boolean') {
+      return value ? 'Yes' : 'No';
+    }
+    
+    if (typeof value === 'object') {
+      return JSON.stringify(value, null, 2);
+    }
+    
+    return String(value);
+  };
+
+  const getFieldIcon = (key: string) => {
+    const lowerKey = key.toLowerCase();
+    
+    if (lowerKey.includes('name')) return <User className="w-4 h-4 text-blue-500" />;
+    if (lowerKey.includes('email')) return <Mail className="w-4 h-4 text-green-500" />;
+    if (lowerKey.includes('phone')) return <Phone className="w-4 h-4 text-orange-500" />;
+    if (lowerKey.includes('message') || lowerKey.includes('comment')) return <FileText className="w-4 h-4 text-purple-500" />;
+    if (lowerKey.includes('service')) return <Briefcase className="w-4 h-4 text-scio-blue" />;
+    if (lowerKey.includes('position') || lowerKey.includes('job')) return <Briefcase className="w-4 h-4 text-scio-blue" />;
+    if (lowerKey.includes('experience')) return <School className="w-4 h-4 text-indigo-500" />;
+    if (lowerKey.includes('location') || lowerKey.includes('address')) return <MapPin className="w-4 h-4 text-red-500" />;
+    if (lowerKey.includes('resume') || lowerKey.includes('cv')) return <FileText className="w-4 h-4 text-gray-500" />;
+    if (lowerKey.includes('date')) return <Calendar className="w-4 h-4 text-teal-500" />;
+    
+    return <Tag className="w-4 h-4 text-gray-400" />;
+  };
+
+  const getFormTypeIcon = (formName: string) => {
+    switch (formName.toLowerCase()) {
+      case 'contact':
+        return <Mail className="w-5 h-5 text-blue-500" />;
+      case 'job-application':
+        return <Briefcase className="w-5 h-5 text-scio-blue" />;
+      case 'newsletter':
+        return <FileText className="w-5 h-5 text-green-500" />;
+      case 'consultation':
+        return <Heart className="w-5 h-5 text-red-500" />;
+      default:
+        return <ClipboardList className="w-5 h-5 text-gray-500" />;
+    }
+  };
+
+  const formatFieldName = (key: string): string => {
+    return key
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase())
+      .replace(/id$/i, 'ID')
+      .replace(/url$/i, 'URL')
+      .replace(/cv$/i, 'CV');
+  };
 
   return (
     <div className="space-y-8">
@@ -135,7 +200,7 @@ export default function FormResponsesPage() {
                     <th className="p-3 text-left font-heading">Status</th>
                     <th className="p-3 text-left font-heading">Source</th>
                     <th className="p-3 text-left font-heading">Date</th>
-                    <th className="p-3 text-left font-heading">Fields</th>
+                    <th className="p-3 text-left font-heading">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -151,11 +216,16 @@ export default function FormResponsesPage() {
                       </td>
                       <td className="p-3">{r.source || "-"}</td>
                       <td className="p-3 text-xs text-gray-500">{new Date(r.createdAt).toLocaleString()}</td>
-                      <td className="p-3 max-w-xs break-words">
-                        <details>
-                          <summary className="cursor-pointer text-scio-blue underline">View</summary>
-                          <pre className="whitespace-pre-wrap text-xs mt-2 bg-gray-50 p-2 rounded">{JSON.stringify(r.data, null, 2)}</pre>
-                        </details>
+                      <td className="p-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewResponse(r)}
+                          className="flex items-center gap-1 hover:bg-scio-blue hover:text-white transition-colors"
+                        >
+                          <Eye className="w-3 h-3" />
+                          View
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -165,6 +235,205 @@ export default function FormResponsesPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Enhanced View Response Dialog with Proper Scrolling */}
+      <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
+        <DialogContent className="max-w-5xl w-[95vw] h-[90vh] flex flex-col p-0">
+          <DialogHeader className="px-6 py-4 border-b border-gray-200 flex-shrink-0">
+            <DialogTitle className="flex items-center gap-3 text-xl">
+              {selectedResponse && getFormTypeIcon(selectedResponse.formName)}
+              <span>Form Response Details</span>
+              {selectedResponse && (
+                <Badge variant="outline" className="ml-auto">
+                  {selectedResponse.formName}
+                </Badge>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedResponse && (
+            <div className="flex-1 overflow-y-auto px-6 py-4">
+              <div className="space-y-6 pb-4">
+                {/* Response Meta Information */}
+                <Card className="bg-gray-50 border-gray-200">
+                  <CardContent className="p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-gray-500" />
+                        <div>
+                          <span className="font-medium text-gray-700">Submitted:</span>
+                          <p className="text-gray-600">{new Date(selectedResponse.createdAt).toLocaleString()}</p>
+                        </div>
+                      </div>
+                      
+                      {selectedResponse.source && (
+                        <div className="flex items-center gap-2">
+                          <Tag className="w-4 h-4 text-gray-500" />
+                          <div>
+                            <span className="font-medium text-gray-700">Source:</span>
+                            <p className="text-gray-600">{selectedResponse.source}</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center gap-2">
+                        <ClipboardList className="w-4 h-4 text-gray-500" />
+                        <div>
+                          <span className="font-medium text-gray-700">Status:</span>
+                          <Badge variant="secondary" className="ml-2">
+                            {selectedResponse.status || "new"}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Contact Information (if available) */}
+                {(selectedResponse.email || selectedResponse.phone) && (
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <User className="w-5 h-5 text-scio-blue" />
+                        Contact Information
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {selectedResponse.email && (
+                        <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                          <Mail className="w-4 h-4 text-blue-500" />
+                          <div>
+                            <span className="font-medium text-gray-700">Email:</span>
+                            <p className="text-blue-600">
+                              <a href={`mailto:${selectedResponse.email}`} className="hover:underline">
+                                {selectedResponse.email}
+                              </a>
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {selectedResponse.phone && (
+                        <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                          <Phone className="w-4 h-4 text-green-500" />
+                          <div>
+                            <span className="font-medium text-gray-700">Phone:</span>
+                            <p className="text-green-600">
+                              <a href={`tel:${selectedResponse.phone}`} className="hover:underline">
+                                {selectedResponse.phone}
+                              </a>
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Form Fields */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-scio-blue" />
+                      Form Fields
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {Object.entries(selectedResponse.data).map(([key, value]) => (
+                        <div key={key} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                          <div className="flex items-start gap-3">
+                            {getFieldIcon(key)}
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-gray-900 mb-1">
+                                {formatFieldName(key)}
+                              </div>
+                              <div className="text-gray-700 break-words">
+                                {key.toLowerCase().includes('url') && value && typeof value === 'string' ? (
+                                  <a
+                                    href={value}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 underline break-all"
+                                  >
+                                    {value}
+                                  </a>
+                                ) : key.toLowerCase().includes('email') && value && typeof value === 'string' ? (
+                                  <a
+                                    href={`mailto:${value}`}
+                                    className="text-blue-600 hover:text-blue-800 underline"
+                                  >
+                                    {value}
+                                  </a>
+                                ) : key.toLowerCase().includes('phone') && value && typeof value === 'string' ? (
+                                  <a
+                                    href={`tel:${value}`}
+                                    className="text-blue-600 hover:text-blue-800 underline"
+                                  >
+                                    {value}
+                                  </a>
+                                ) : key.toLowerCase().includes('message') || key.toLowerCase().includes('comment') ? (
+                                  <div className="bg-gray-100 p-3 rounded-md whitespace-pre-wrap max-h-40 overflow-y-auto">
+                                    {formatFieldValue(key, value)}
+                                  </div>
+                                ) : (
+                                  <span className="font-mono text-sm break-all">
+                                    {formatFieldValue(key, value)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Additional Tags (if available) */}
+                {selectedResponse.tags && (
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Tag className="w-5 h-5 text-scio-blue" />
+                        Tags
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="bg-gray-100 p-3 rounded-md">
+                        <span className="text-gray-700">{selectedResponse.tags}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Raw Data (Collapsible) */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Code className="w-5 h-5 text-scio-blue" />
+                      Raw Data
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <details className="group">
+                      <summary className="cursor-pointer text-scio-blue hover:text-scio-blue-dark font-medium flex items-center gap-2 mb-3">
+                        <span>View JSON Data</span>
+                        <i className="fas fa-chevron-down group-open:rotate-180 transition-transform"></i>
+                      </summary>
+                      <div className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-auto max-h-96">
+                        <pre className="text-xs whitespace-pre-wrap">
+                          {JSON.stringify(selectedResponse.data, null, 2)}
+                        </pre>
+                      </div>
+                    </details>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
