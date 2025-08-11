@@ -162,3 +162,14 @@ model Job {
   @@index([type])
   @@index([categoryId])
 }
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON string for complex values
+  category  String   // general, email, seo, maintenance, features, security
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([category])
+}
