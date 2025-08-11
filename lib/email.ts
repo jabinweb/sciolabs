@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import type SMTPTransport from 'nodemailer/lib/smtp-transport'
 import { getSetting } from './settings'
 
 interface EmailData {
@@ -26,27 +27,31 @@ const createTransporter = async () => {
     const smtpUser = await getSetting('email.smtpUser')
     const smtpPassword = await getSetting('email.smtpPassword')
     
-    return nodemailer.createTransport({
-      host: smtpHost || process.env.SMTP_HOST,
-      port: parseInt(smtpPort || process.env.SMTP_PORT || '587'),
-      secure: (smtpPort || process.env.SMTP_PORT) === '465',
+    const smtpConfig: SMTPTransport.Options = {
+      host: (smtpHost as string) || process.env.SMTP_HOST || 'localhost',
+      port: parseInt((smtpPort as string) || process.env.SMTP_PORT || '587'),
+      secure: ((smtpPort as string) || process.env.SMTP_PORT) === '465',
       auth: {
-        user: smtpUser || process.env.SMTP_USER,
-        pass: smtpPassword || process.env.SMTP_PASSWORD,
+        user: (smtpUser as string) || process.env.SMTP_USER || '',
+        pass: (smtpPassword as string) || process.env.SMTP_PASSWORD || '',
       },
-    })
+    }
+    
+    return nodemailer.createTransport(smtpConfig)
   } catch (error) {
     console.error('Error creating transporter with database settings, falling back to env:', error)
     // Fallback to environment variables
-    return nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
+    const fallbackConfig: SMTPTransport.Options = {
+      host: process.env.SMTP_HOST || 'localhost',
       port: parseInt(process.env.SMTP_PORT || '587'),
       secure: process.env.SMTP_SECURE === 'true',
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
+        user: process.env.SMTP_USER || '',
+        pass: process.env.SMTP_PASSWORD || '',
       },
-    })
+    }
+    
+    return nodemailer.createTransport(fallbackConfig)
   }
 }
 
@@ -60,7 +65,7 @@ export async function sendEmail({ to, subject, html, text }: EmailData) {
     const smtpFromEmail = await getSetting('email.smtpFromEmail')
     
     const mailOptions = {
-      from: `"${smtpFromName || process.env.SMTP_FROM_NAME || 'ScioLabs'}" <${smtpFromEmail || process.env.SMTP_FROM_EMAIL}>`,
+      from: `"${(smtpFromName as string) || process.env.SMTP_FROM_NAME || 'ScioLabs'}" <${(smtpFromEmail as string) || process.env.SMTP_FROM_EMAIL}>`,
       to,
       subject,
       html,
@@ -241,8 +246,19 @@ function formatFieldValue(key: string, value: unknown): string {
 export async function sendFormSubmissionNotification(formData: FormSubmissionData) {
   try {
     // Get admin emails from database
-    const adminEmails = await getSetting('email.adminEmails')
-    const emailList = adminEmails || process.env.ADMIN_NOTIFICATION_EMAILS?.split(',').map((email: string) => email.trim()) || ['info@sciolabs.in']
+    const adminEmailsFromDb = await getSetting('email.adminEmails')
+    
+    let emailList: string[] = []
+    
+    if (Array.isArray(adminEmailsFromDb)) {
+      emailList = adminEmailsFromDb as string[]
+    } else if (typeof adminEmailsFromDb === 'string') {
+      emailList = [adminEmailsFromDb]
+    } else if (process.env.ADMIN_NOTIFICATION_EMAILS) {
+      emailList = process.env.ADMIN_NOTIFICATION_EMAILS.split(',').map((email: string) => email.trim())
+    } else {
+      emailList = ['info@sciolabs.in']
+    }
     
     const subject = `New ${formData.formName} Submission - ScioLabs`
     const html = generateFormSubmissionHTML(formData)
