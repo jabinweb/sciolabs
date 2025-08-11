@@ -9,7 +9,7 @@ const createCategorySchema = z.object({
 })
 
 // GET /api/admin/settings/categories
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await auth()
     

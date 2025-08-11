@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/auth"
-import { getSettings, updateSettings, updateMultipleSettings, initializeSettings } from "@/lib/settings"
+import { getSettings, updateMultipleSettings, initializeSettings } from "@/lib/settings"
 
 // GET /api/admin/settings
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await auth()
     
