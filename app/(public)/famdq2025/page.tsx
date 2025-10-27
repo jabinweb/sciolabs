@@ -196,12 +196,12 @@ export default function FAMDQ2025Page() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-md sm:max-w-none mx-auto">
             {services.map((service, index) => (
               <Link href={service.link} key={index} target="_blank" rel="noopener noreferrer">
                 <Card className="group bg-white hover:shadow-2xl transition-all duration-300 border-0 shadow-lg h-full cursor-pointer">
-                  <CardContent className="p-6 sm:p-8">
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform`}>
+                  <CardContent className="text-center sm:text-left">
+                    <div className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform mx-auto sm:mx-0`}>
                       <div className="text-white">{service.icon}</div>
                     </div>
                     
@@ -213,7 +213,7 @@ export default function FAMDQ2025Page() {
                       {service.description}
                     </p>
 
-                    <div className="flex items-center text-scio-blue font-semibold text-xs sm:text-sm group-hover:translate-x-2 transition-transform">
+                    <div className="flex items-center justify-center sm:justify-start text-scio-blue font-semibold text-xs sm:text-sm group-hover:translate-x-2 transition-transform">
                       Learn More
                       <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
