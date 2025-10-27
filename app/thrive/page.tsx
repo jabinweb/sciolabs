@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { servicesData } from '@/lib/services-data';
-import { Users, Award, Play } from 'lucide-react';
+import { Users, Award, Play, Download } from 'lucide-react';
 
 export default function ThrivePage() {
   const service = servicesData.find((s) => s.id === 'thrive')!;
@@ -126,7 +126,13 @@ export default function ThrivePage() {
                       <div className={`relative order-1 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
                         <div className="relative h-80 overflow-hidden rounded-2xl shadow-xl group">
                           <Image
-                            src="/1.jpg"
+                            src={
+                              feature.title === 'Educator Training'
+                                ? 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80'
+                                : feature.title === 'Corporate Training'
+                                ? 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80'
+                                : 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80'
+                            }
                             alt={`${feature.title} program`}
                             fill
                             className="object-cover aspect-video group-hover:scale-105 transition-transform duration-700"
@@ -188,6 +194,29 @@ export default function ThrivePage() {
                                 </li>
                               ))}
                             </ul>
+                            
+                            {/* Download Brochure Button */}
+                            <div className="mt-6">
+                              <a 
+                                href={
+                                  feature.title === 'Educator Training' 
+                                    ? '/ScioThrive/brochure/School_Teachers_Training.pdf'
+                                    : feature.title === 'Corporate Training'
+                                    ? '/ScioThrive/brochure/ScioLabs_Corporate_Training_Topics.pdf'
+                                    : '/ScioThrive/brochure/ScioLabs_Teens_Workshops.pdf'
+                                }
+                                download
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button 
+                                  className="bg-scio-blue hover:opacity-90 text-white rounded-lg font-heading font-semibold"
+                                >
+                                  <Download className="w-4 h-4 mr-2" />
+                                  Download Brochure
+                                </Button>
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -217,7 +246,7 @@ export default function ThrivePage() {
       </section>
 
       {/* Video Section */}
-      <section className="py-24 bg-gray-50">
+      {/* <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-4xl text-gray-800 mb-6">
@@ -244,10 +273,10 @@ export default function ThrivePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Clients Carousel */}
-      <section className="py-20 bg-white">
+      {/* <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-3xl text-gray-800 mb-4">
@@ -274,10 +303,10 @@ export default function ThrivePage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Testimonials */}
-      <section className="py-24 bg-gradient-to-br from-blue-50 to-indigo-50">
+      {/* <section className="py-24 bg-gradient-to-br from-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-4xl text-gray-800 mb-6">
@@ -314,7 +343,7 @@ export default function ThrivePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }

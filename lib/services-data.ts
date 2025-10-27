@@ -43,7 +43,7 @@ export const servicesData: ServiceData[] = [
         title: "Educator Training",
         description: "Equip teachers with modern pedagogy and practical ed-tech tools.",
         featured: false,
-        link: "/services/thrive/educator-training"
+        link: "/thrive#educator-training"
       },
       {
         id: 2,
@@ -51,7 +51,7 @@ export const servicesData: ServiceData[] = [
         title: "Corporate Training",
         description: "Boost team productivity and communication with targeted skill-building sessions.",
         featured: false,
-        link: "/services/thrive/corporate-training"
+        link: "/thrive#corporate-training"
       },
       {
         id: 3,
@@ -59,7 +59,7 @@ export const servicesData: ServiceData[] = [
         title: "GenZ Training",
         description: "Empowering teens and young adults with essential life skills and effective communication.",
         featured: false,
-        link: "/services/thrive/teens-training"
+        link: "/thrive#teens-training"
       }
     ],
     primaryColor: "scio-blue",
@@ -91,11 +91,11 @@ export const servicesData: ServiceData[] = [
       "Team leaders and managers"
     ],
     serviceLink: "/thrive",
-    getStartedLink: "#",
+    getStartedLink: "/thrive#get-started",
     subserviceLinks: [
-      { name: "Educator Training", link: "/services/thrive/educator-training" },
-      { name: "Corporate Training", link: "/services/thrive/corporate-training" },
-      { name: "Teens Training", link: "/services/thrive/teens-training" }
+      { name: "Educator Training", link: "/thrive#educator-training" },
+      { name: "Corporate Training", link: "/thrive#corporate-training" },
+      { name: "Teens Training", link: "/thrive#teens-training" }
     ]
   },
   {
@@ -110,7 +110,7 @@ export const servicesData: ServiceData[] = [
         title: "Standard CBSE Portal",
         description: "Curriculum-aligned gamified revision for middle school CBSE students — for schools and individual learners.",
         featured: false,
-        link: "/services/sprints/cbse"
+        link: "https://sprints.sciolabs.in"
       },
       {
         id: 2,
@@ -118,7 +118,7 @@ export const servicesData: ServiceData[] = [
         title: "Custom School Portals",
         description: "Personalized revision platforms tailored to your school's curriculum and branding.",
         featured: false,
-        link: "/services/sprints/custom-portals"
+        link: "https://sprints.sciolabs.in"
       }
     ],
     primaryColor: "scio-blue",
@@ -150,10 +150,10 @@ export const servicesData: ServiceData[] = [
       "Educational technology teams"
     ],
     serviceLink: "https://sprints.sciolabs.in",
-    getStartedLink: "https://sprints.sciolabs.in/",
+    getStartedLink: "https://sprints.sciolabs.in",
     subserviceLinks: [
-      { name: "CBSE (4–8)", link: "/services/sprints/cbse" },
-      { name: "Custom School Portals", link: "/services/sprints/custom-portals" }
+      { name: "CBSE (4–8)", link: "https://sprints.sciolabs.in" },
+      { name: "Custom School Portals", link: "https://sprints.sciolabs.in" }
     ]
   },
   {
@@ -176,7 +176,7 @@ export const servicesData: ServiceData[] = [
         title: "rootED",
         description: "A foundational English program to build literacy and communication skills for early learners and ESL students.",
         featured: false,
-        link: "/services/lingua/rooted"
+        link: "/lingua#rooted"
       }
     ],
     primaryColor: "scio-blue",
@@ -208,10 +208,10 @@ export const servicesData: ServiceData[] = [
       "Educational institutions"
     ],
     serviceLink: "/lingua",
-    getStartedLink: "#",
+    getStartedLink: "/lingua#get-started",
     subserviceLinks: [
       { name: "TheoLingua", link: "https://theo.sciolabs.in" },
-      { name: "rootED", link: "/services/lingua/rooted" }
+      { name: "rootED", link: "/lingua#rooted" }
     ]
   },
   {
@@ -226,7 +226,7 @@ export const servicesData: ServiceData[] = [
         title: "CareBridge English",
         description: "Empowering caregivers with role-specific English and workplace communication skills.",
         featured: false,
-        link: "/services/care/carebridge-english"
+        link: "https://care.sciolabs.in#carebridge"
       },
       {
         id: 2,
@@ -234,7 +234,7 @@ export const servicesData: ServiceData[] = [
         title: "CareSteps",
         description: "Foundational soft skills training for freshers entering caregiving professions.",
         featured: false,
-        link: "/services/care/carelaunch"
+        link: "https://care.sciolabs.in#caresteps"
       },
       {
         id: 3,
@@ -242,7 +242,7 @@ export const servicesData: ServiceData[] = [
         title: "Pathways360°",
         description: "Finishing school program for healthcare professionals for personal, social, and professional readiness.",
         featured: false,
-        link: "/services/care/pathways360"
+        link: "https://care.sciolabs.in#pathways360"
       }
     ],
     primaryColor: "scio-blue",
@@ -274,11 +274,11 @@ export const servicesData: ServiceData[] = [
       "Community service providers"
     ],
     serviceLink: "https://care.sciolabs.in",
-    getStartedLink: "#",
+    getStartedLink: "https://care.sciolabs.in",
     subserviceLinks: [
-      { name: "CareBridge English", link: "/services/care/carebridge-english" },
-      { name: "CareLaunch", link: "/services/care/carelaunch" },
-      { name: "Pathways360°", link: "/services/care/pathways360" }
+      { name: "CareBridge English", link: "https://care.sciolabs.in#carebridge" },
+      { name: "CareSteps", link: "https://care.sciolabs.in#caresteps" },
+      { name: "Pathways360°", link: "https://care.sciolabs.in#pathways360" }
     ]
   },
   {
@@ -293,7 +293,7 @@ export const servicesData: ServiceData[] = [
         title: "One-on-One Counseling",
         description: "Personalized guidance and assessments to clarify career paths and choices.",
         featured: false,
-        link: "/services/guidance/counseling"
+        link: "https://guidance.sciolabs.in#counseling"
       },
       {
         id: 2,
@@ -301,7 +301,7 @@ export const servicesData: ServiceData[] = [
         title: "Career Workshops",
         description: "Interactive sessions that introduce students to diverse career opportunities.",
         featured: false,
-        link: "/services/guidance/workshops"
+        link: "https://guidance.sciolabs.in#workshops"
       },
       {
         id: 3,
@@ -309,7 +309,7 @@ export const servicesData: ServiceData[] = [
         title: "Career Portal",
         description: "Explore careers digitally with tools for planning, discovery, and growth.",
         featured: false,
-        link: "/services/guidance/portal"
+        link: "https://guidance.sciolabs.in"
       }
     ],
     primaryColor: "scio-blue",
@@ -341,11 +341,11 @@ export const servicesData: ServiceData[] = [
       "Career changers"
     ],
     serviceLink: "https://guidance.sciolabs.in",
-    getStartedLink: "https://guidance.sciolabs.in/",
+    getStartedLink: "https://guidance.sciolabs.in",
     subserviceLinks: [
-      { name: "One-on-One Counseling", link: "/services/guidance/counseling" },
-      { name: "Career Workshops", link: "/services/guidance/workshops" },
-      { name: "Career Portal", link: "/services/guidance/portal" }
+      { name: "One-on-One Counseling", link: "https://guidance.sciolabs.in#counseling" },
+      { name: "Career Workshops", link: "https://guidance.sciolabs.in#workshops" },
+      { name: "Career Portal", link: "https://guidance.sciolabs.in" }
     ]
   }
 ];

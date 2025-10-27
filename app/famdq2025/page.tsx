@@ -2,30 +2,41 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BookOpen, MessageSquare, Target, Lightbulb, Rocket, TrendingUp } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { BookOpen, MessageSquare, Target, Rocket, TrendingUp, Play, Award, Brain } from 'lucide-react';
 import Link from 'next/link';
 
 export default function FAMDQ2025Page() {
+  // Debate keywords
+  const debateKeywords = [
+    'Innovation',
+    'Ethics',
+    'Future',
+    'Technology',
+    'Human Values',
+    'Progress'
+  ];
+
   // Services tiles
   const services = [
     {
       icon: <Target className="w-8 h-8" />,
       title: 'ScioGuidance',
-      description: 'Expert guidance and mentorship for your academic and career journey',
+      description: 'Get personalised career guidance to navigate your career journey with clarity and confidence',
       color: 'from-blue-500 to-blue-600',
       link: 'https://guidance.sciolabs.in/'
     },
     {
       icon: <Rocket className="w-8 h-8" />,
       title: 'ScioSprints',
-      description: 'Intensive skill-building workshops and bootcamps',
+      description: 'Play curriculum-aligned games, compete with peers, and climb leaderboards — making revisions fun and rewarding',
       color: 'from-orange-500 to-orange-600',
       link: 'https://sprints.sciolabs.in/'
     },
     {
       icon: <TrendingUp className="w-8 h-8" />,
       title: 'ScioThrive',
-      description: 'Comprehensive programs for long-term growth and success',
+      description: 'Experience customised training designed to help professionals, educators, and Gen Z learners excel in both work and life',
       color: 'from-purple-500 to-purple-600',
       link: '/thrive'
     }
@@ -44,10 +55,13 @@ export default function FAMDQ2025Page() {
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center text-white">
             <h1 className="font-heading heading-primary text-4xl md:text-5xl mb-6">
-              FAMDQ <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">&apos;25</span>
+              FAMDQ <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">2025</span>
             </h1>
-            <p className="font-body text-body text-lg md:text-xl text-gray-100 max-w-3xl mx-auto leading-relaxed">
-              Test your knowledge, challenge your peers, and showcase your skills in the most anticipated quiz and debate competition of the year.
+            <p className="font-body text-body text-lg md:text-xl text-gray-100 max-w-4xl mx-auto leading-relaxed mb-4">
+              The <strong>Farida Abraham Memorial Debate and Quiz (FAMDQ)</strong> is an annual gathering of some of the brightest young minds from schools across the country and beyond — a platform to exchange ideas, debate perspectives, and explore topics that shape the future.
+            </p>
+            <p className="font-body text-body text-lg md:text-xl text-gray-100 max-w-4xl mx-auto leading-relaxed">
+              ScioLabs was honoured to host the <strong>FAMDQ Quiz 2025</strong> for the second consecutive year, bringing together curiosity, critical thinking, and collaboration in a celebration of learning.
             </p>
           </div>
         </div>
@@ -64,31 +78,32 @@ export default function FAMDQ2025Page() {
                   <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                 </div>
                 <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
-                  FAMDQ &apos;25 Quiz
+                  Quiz 2025
                 </h2>
               </div>
               
-              <p className="font-body text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
-                Challenge yourself with our comprehensive quiz covering diverse topics. Test your knowledge, 
-                compete with the best minds, and win exciting prizes.
+              <p className="font-body text-gray-600 text-base sm:text-lg mb-6 leading-relaxed">
+                An exhilarating round of quizzing saw <strong>eight sharp school teams</strong> compete for the FAMDQ trophy, showcasing speed, accuracy, and insight.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <div className="flex items-start sm:items-center text-gray-600 text-sm sm:text-base">
-                  <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-blue-500 flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <span>Multiple rounds with increasing difficulty</span>
-                </div>
-                <div className="flex items-start sm:items-center text-gray-600 text-sm sm:text-base">
-                  <Target className="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-blue-500 flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <span>Topics from various academic domains</span>
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded mb-6">
+                <div className="flex items-start gap-3">
+                  <Award className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">Play the Self-Paced Quiz!</p>
+                    <p className="text-sm text-gray-600">
+                      Test your knowledge and see how you score against the participating teams.
+                    </p>
+                  </div>
                 </div>
               </div>
 
               <Button 
                 size="lg"
-                className="w-full md:w-auto bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white group-hover:shadow-lg transition-all px-8 sm:px-12 py-5 sm:py-6"
+                className="w-full md:w-auto bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white group-hover:shadow-lg transition-all px-8 sm:px-12 py-5 sm:py-6 flex items-center justify-center gap-2"
               >
-                Register for Quiz
+                <Play className="w-5 h-5" />
+                Play Quiz Now
               </Button>
             </CardContent>
           </Card>
@@ -106,34 +121,60 @@ export default function FAMDQ2025Page() {
                   <MessageSquare className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                 </div>
                 <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
-                  FAMDQ &apos;25 Debate
+                  Debate 2025
                 </h2>
               </div>
               
+              <div className="mb-6 p-4 bg-orange-50 border-l-4 border-orange-500 rounded">
+                <p className="font-semibold text-gray-800 mb-2">Debate Topic:</p>
+                <p className="text-gray-600 italic">&quot;Insert Debate Topic Here&quot;</p>
+              </div>
+
               <p className="font-body text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
-                Sharpen your critical thinking and public speaking skills. Engage in thought-provoking 
-                debates on contemporary issues and showcase your argumentative prowess.
+                This year&apos;s debate invited participants to reflect on the balance between technological progress and human values in shaping our shared future.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <div className="flex items-start sm:items-center text-gray-600 text-sm sm:text-base">
-                  <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-orange-500 flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <span>Parliamentary debate format</span>
-                </div>
-                <div className="flex items-start sm:items-center text-gray-600 text-sm sm:text-base">
-                  <Target className="w-5 h-5 sm:w-6 sm:h-6 mr-3 text-orange-500 flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <span>Current affairs and social topics</span>
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <Brain className="w-5 h-5 mr-2 text-orange-500" />
+                  Key Words
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {debateKeywords.map((keyword, index) => (
+                    <Badge key={index} variant="secondary" className="bg-orange-100 text-orange-700 hover:bg-orange-200">
+                      {keyword}
+                    </Badge>
+                  ))}
                 </div>
               </div>
 
-              <Button 
-                size="lg"
-                className="w-full md:w-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white group-hover:shadow-lg transition-all px-8 sm:px-12 py-5 sm:py-6"
-              >
-                Register for Debate
-              </Button>
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-sm text-gray-500 mb-2">Related Resources:</p>
+                <p className="text-sm text-gray-400 italic">Resources will be added here</p>
+              </div>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      {/* Discover ScioLabs Section */}
+      <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 sm:mb-6">
+            Discover ScioLabs
+          </h2>
+          <p className="font-body text-gray-600 text-base sm:text-lg md:text-xl mb-8 sm:mb-12 max-w-2xl mx-auto">
+            Find out how ScioLabs can help you learn better, grow faster, and achieve your academic and career goals.
+          </p>
+          
+          <div className="relative w-full aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-xl">
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
+                <Play className="w-10 h-10 text-white ml-1" />
+              </div>
+              <p className="text-gray-500 font-medium text-lg">Coming Soon</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -142,7 +183,7 @@ export default function FAMDQ2025Page() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="font-heading heading-primary text-2xl sm:text-3xl md:text-4xl text-scio-blue mb-3 sm:mb-4">
-              Explore Our <span className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">Services</span>
+              Our Signature <span className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">Programs</span>
             </h2>
             <p className="font-body text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Discover how ScioLabs can help you achieve your academic and career goals
@@ -181,7 +222,7 @@ export default function FAMDQ2025Page() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-r from-scio-blue to-scio-blue-light relative overflow-hidden">
+      {/* <section className="py-12 md:py-20 bg-gradient-to-r from-scio-blue to-scio-blue-light relative overflow-hidden">
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-1/4 w-32 h-32 sm:w-64 sm:h-64 bg-white rounded-full blur-3xl"></div>
@@ -190,28 +231,28 @@ export default function FAMDQ2025Page() {
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-white font-bold mb-4 sm:mb-6 drop-shadow-lg">
-            Ready to Join FAMDQ &apos;25?
+            Stay Connected with FAMDQ
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-white font-medium mb-6 sm:mb-8 drop-shadow-md px-4">
-            Don&apos;t miss this opportunity to showcase your talent and win amazing prizes
+            Get updates about upcoming events, resources, and opportunities
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <Button 
               size="lg" 
               className="bg-white text-scio-blue hover:bg-gray-100 font-semibold px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg shadow-xl w-full sm:w-auto"
             >
-              Register Now
+              Subscribe to Updates
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
               className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-scio-blue font-semibold px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg shadow-xl w-full sm:w-auto"
             >
-              View Schedule
+              View Past Events
             </Button>
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }
