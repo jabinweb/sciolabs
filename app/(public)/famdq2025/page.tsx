@@ -141,7 +141,7 @@ export default function FAMDQ2025Page() {
               </div>
 
               {/* Quiz Embed */}
-              <div className="w-full mb-6">
+              {/* <div className="w-full mb-6">
                 <div className="relative w-full" style={{ paddingBottom: '56.25%', paddingTop: 0, height: 0 }}>
                   <iframe 
                     title="FAMDQ 2025 Quiz" 
@@ -154,7 +154,7 @@ export default function FAMDQ2025Page() {
                     className="rounded-lg"
                   />
                 </div>
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </div>
