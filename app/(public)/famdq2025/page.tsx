@@ -82,6 +82,36 @@ export default function FAMDQ2025Page() {
                 <p className="text-gray-700 italic">&quot;This House Would Prioritize Zoonotic Disease Surveillance Over All Other Public Health Initiatives.&quot;</p>
               </div>
 
+              {/* Zoonotic Disease Explanation */}
+              <div className="mb-6 p-5 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 className="font-semibold text-gray-800 mb-3 text-base sm:text-lg flex items-center">
+                  <span className="text-blue-500 mr-2">ℹ️</span>
+                  What is a Zoonotic Disease?
+                </h3>
+                <p className="text-sm sm:text-base text-gray-700 mb-3 leading-relaxed">
+                  A <strong>zoonotic disease (or zoonosis)</strong> is an infectious disease that can be transmitted between animals and humans—through bites, scratches, contact with animal waste, or consuming contaminated products.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                  <div className="text-sm text-gray-700">
+                    <p className="font-semibold mb-1">Common Examples:</p>
+                    <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm">
+                      <li>COVID-19 (wildlife origin)</li>
+                      <li>Rabies (dogs, bats)</li>
+                      <li>Bird flu (poultry)</li>
+                      <li>Lyme disease (ticks)</li>
+                    </ul>
+                  </div>
+                  <div className="text-sm text-gray-700">
+                    <p className="font-semibold mb-1">Key Facts:</p>
+                    <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm">
+                      <li>60% of human infections are zoonotic</li>
+                      <li>75% of emerging diseases are zoonotic</li>
+                      <li>High risk for animal workers</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
               <p className="font-body text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
                 This year&apos;s debate challenged participants to weigh pandemic prevention against immediate public health needs—exploring the balance between preparing for catastrophic threats and addressing ongoing health crises.
               </p>
