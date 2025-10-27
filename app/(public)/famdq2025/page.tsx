@@ -8,12 +8,12 @@ import Link from 'next/link';
 export default function FAMDQ2025Page() {
   // Debate keywords
   const debateKeywords = [
-    'Innovation',
-    'Ethics',
-    'Future',
-    'Technology',
-    'Human Values',
-    'Progress'
+    'Pandemic Prevention',
+    'Public Health',
+    'Zoonotic Diseases',
+    'Surveillance',
+    'Global Health',
+    'Resource Allocation'
   ];
 
   // Services tiles
@@ -79,12 +79,89 @@ export default function FAMDQ2025Page() {
               
               <div className="mb-6 p-4 bg-orange-50 border-l-4 border-orange-500 rounded">
                 <p className="font-semibold text-gray-800 mb-2">Debate Topic:</p>
-                <p className="text-gray-600 italic uppercase">This House Would Prioritize Zoonotic Disease Surveillance Over All Other Public Health Initiatives.</p>
+                <p className="text-gray-700 italic">&quot;This House Would Prioritize Zoonotic Disease Surveillance Over All Other Public Health Initiatives.&quot;</p>
               </div>
 
               <p className="font-body text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
-                This year&apos;s debate invited participants to reflect on the balance between technological progress and human values in shaping our shared future.
+                This year&apos;s debate challenged participants to weigh pandemic prevention against immediate public health needs—exploring the balance between preparing for catastrophic threats and addressing ongoing health crises.
               </p>
+
+              {/* Arguments Section */}
+              <div className="space-y-6 mb-8">
+                {/* For the Motion */}
+                <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-lg">
+                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                    For the Motion
+                  </h3>
+                  <ul className="space-y-3 text-sm sm:text-base text-gray-700">
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>Prevention of Catastrophic Pandemics:</strong> Zoonotic diseases cause ~75% of emerging infectious diseases. COVID-19 alone killed 7M+ people and cost trillions—robust surveillance could detect threats before they become catastrophes.
+                      </div>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>Cost-Effectiveness:</strong> $3.4B annually in prevention could save $500B+ in outbreak costs (World Bank)—far cheaper to monitor and detect early than manage full-blown pandemics.
+                      </div>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>Existential Risk Management:</strong> Future pandemics could be deadlier with climate change and habitat encroachment accelerating spillover risk—an existential threat that dwarfs other concerns.
+                      </div>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>Multiplier Effect:</strong> Surveillance infrastructure strengthens all public health capacity—laboratory networks, epidemiological expertise, and rapid response benefit all initiatives.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Against the Motion */}
+                <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded">
+                  <h3 className="font-semibold text-gray-800 mb-3 flex items-center text-lg">
+                    <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                    Against the Motion
+                  </h3>
+                  <ul className="space-y-3 text-sm sm:text-base text-gray-700">
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>Ongoing Crises Demand Attention:</strong> Chronic diseases kill 40M+ annually, malnutrition affects 800M—deprioritizing proven interventions abandons people suffering now for hypothetical threats.
+                      </div>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>Diminishing Returns:</strong> We can&apos;t predict pandemics despite surveillance—even sophisticated systems failed to prevent COVID-19, while diverted funds cause guaranteed preventable deaths today.
+                      </div>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>Inequitable Allocation:</strong> Wealthy nations&apos; pandemic fears would monopolize resources while low-income countries struggle with treatable conditions—reflects privilege over global health equity.
+                      </div>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>Infrastructure Without Foundation:</strong> Surveillance requires functional healthcare systems—build comprehensive primary care that addresses immediate needs while creating pandemic preparedness.
+                      </div>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-semibold min-w-fit">•</span>
+                      <div>
+                        <strong>False Binary Thinking:</strong> Public health needs integrated approaches—vaccination, primary care, and education all contribute to pandemic resilience while serving immediate needs.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
               <div className="mb-6">
                 <h3 className="font-semibold text-gray-800 mb-3 flex items-center">
