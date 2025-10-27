@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 export default function IntroVideoSection() {
   return (
     <section className="py-24 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 relative overflow-hidden" id='explore'>
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="font-heading heading-primary text-4xl md:text-5xl text-white mb-6">
             Discover ScioLabs
