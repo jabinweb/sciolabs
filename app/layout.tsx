@@ -100,7 +100,7 @@ export default function RootLayout({
           <Header />
           {children}
           <CTASection />
-          <NewsletterSection />
+          {/* <NewsletterSection /> */}
           <Footer />
           {/* <PWAInstallPrompt /> */}
           <Toaster 

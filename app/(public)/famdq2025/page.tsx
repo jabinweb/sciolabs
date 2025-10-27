@@ -1,9 +1,8 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, MessageSquare, Target, Rocket, TrendingUp, Play, Award, Brain } from 'lucide-react';
+import { BookOpen, MessageSquare, Target, Rocket, TrendingUp, Award, Brain } from 'lucide-react';
 import Link from 'next/link';
 
 export default function FAMDQ2025Page() {
