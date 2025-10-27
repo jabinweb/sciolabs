@@ -50,45 +50,45 @@ export default function ThrivePage() {
   return (
     <main>
       {/* Hero Section */}
-      <section className="py-24 pt-32 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden flex items-center">
+      <section className="py-12 sm:py-16 md:py-20 lg:py-24 pt-24 sm:pt-28 md:pt-32 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 relative overflow-hidden flex items-center min-h-[600px] sm:min-h-[700px]">
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-20 w-64 h-64 bg-scio-blue rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-scio-orange rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-32 sm:w-64 h-32 sm:h-64 bg-scio-blue rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 w-48 sm:w-96 h-48 sm:h-96 bg-scio-orange rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
         
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="text-white space-y-8">
-              <div className="inline-flex items-center space-x-4 px-6 py-3 bg-gradient-to-r from-scio-blue to-scio-blue-light rounded-full text-white">
-                <i className="fas fa-rocket text-xl"></i>
-                <span className="font-heading heading-secondary text-lg font-semibold">ScioThrive</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+            <div className="text-white space-y-4 sm:space-y-6 lg:space-y-8">
+              <div className="inline-flex items-center space-x-3 sm:space-x-4 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-scio-blue to-scio-blue-light rounded-full text-white text-sm sm:text-base">
+                <i className="fas fa-rocket text-lg sm:text-xl"></i>
+                <span className="font-heading heading-secondary font-semibold">ScioThrive</span>
               </div>
               
-              <h1 className="font-heading heading-primary text-5xl md:text-7xl text-white mb-6">
+              <h1 className="font-heading heading-primary text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white leading-tight">
                 ScioThrive
               </h1>
               
-              <p className="font-body text-body text-xl md:text-2xl text-gray-300 leading-relaxed">
+              <p className="font-body text-body text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 leading-relaxed">
                 Skill-building programs to accelerate growth and unlock potential in academic and professional settings
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/contact">
-                  <Button size="lg" className="bg-scio-blue hover:opacity-90 text-white px-8 py-4 rounded-xl font-heading font-semibold text-lg">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <Link href="/contact" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto bg-scio-blue hover:opacity-90 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-heading font-semibold text-base sm:text-lg">
                     Get Started
                   </Button>
                 </Link>
-                <Link href="/contact">
-                  <Button variant="outline" size="lg" className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-gray-800 px-8 py-4 rounded-xl font-heading font-semibold text-lg">
+                <Link href="/contact" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto border-2 border-white text-white bg-transparent hover:bg-white hover:text-gray-800 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-heading font-semibold text-base sm:text-lg">
                     Contact Us
                   </Button>
                 </Link>
               </div>
             </div>
             
-            <div className="relative">
-              <div className="relative h-96 lg:h-[350px] overflow-hidden rounded-3xl shadow-2xl group">
+            <div className="relative mt-8 lg:mt-0">
+              <div className="relative h-64 sm:h-80 md:h-96 lg:h-[350px] overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl group">
                 <Image
                   src="/1.jpg"
                   alt="Professional training and education"
@@ -103,28 +103,28 @@ export default function ThrivePage() {
       </section>
 
       {/* Service Overview */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Service Categories Sections */}
-          <div className="mb-20">
-            <div className="text-center mb-16">
-              <h2 className="font-heading heading-primary text-4xl text-gray-800 mb-6">
+          <div className="mb-12 sm:mb-16 lg:mb-20">
+            <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+              <h2 className="font-heading heading-primary text-2xl sm:text-3xl md:text-4xl lg:text-4xl text-gray-800 mb-4 sm:mb-6">
                 Our Training Programs
               </h2>
-              <p className="font-body text-lg text-gray-600 max-w-3xl mx-auto">
+              <p className="font-body text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4">
                 Comprehensive skill-building programs designed to accelerate growth and unlock potential
               </p>
             </div>
 
-            <div className="flex flex-col space-y-24">
+            <div className="flex flex-col space-y-12 sm:space-y-16 lg:space-y-24">
               {service.features.map((feature, index) => (
                 <div key={feature.id} className="">
                   {/* Content Column */}
-                    <div className="bg-gradient-to-br from-blue-50 to-slate-50 p-8 rounded-2xl border border-blue-100 shadow-sm grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div className="bg-gradient-to-br from-blue-50 to-slate-50 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-blue-100 shadow-sm grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
                       {/* Image Column - First on mobile, alternates on desktop */}
                       <div className={`relative order-1 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
-                        <div className="relative h-80 overflow-hidden rounded-2xl shadow-xl group">
+                        <div className="relative h-48 sm:h-64 md:h-72 lg:h-80 overflow-hidden rounded-xl sm:rounded-2xl shadow-xl group">
                           <Image
                             src={
                               feature.title === 'Educator Training'
@@ -140,26 +140,26 @@ export default function ThrivePage() {
                           <div className="absolute inset-0 bg-gradient-to-t from-scio-blue/30 to-transparent"></div>
                         </div>
                         {/* Floating elements */}
-                        <div className={`absolute -top-4 ${index % 2 === 1 ? '-left-4' : '-right-4'} w-16 h-16 bg-scio-blue rounded-xl opacity-80 animate-pulse`}></div>
-                        <div className={`absolute -bottom-4 ${index % 2 === 1 ? '-right-4' : '-left-4'} w-20 h-20 bg-scio-orange rounded-2xl opacity-60 animate-pulse delay-1000`}></div>
+                        <div className={`absolute -top-2 sm:-top-4 ${index % 2 === 1 ? '-left-2 sm:-left-4' : '-right-2 sm:-right-4'} w-12 sm:w-16 h-12 sm:h-16 bg-scio-blue rounded-lg sm:rounded-xl opacity-80 animate-pulse`}></div>
+                        <div className={`absolute -bottom-2 sm:-bottom-4 ${index % 2 === 1 ? '-right-2 sm:-right-4' : '-left-2 sm:-left-4'} w-16 sm:w-20 h-16 sm:h-20 bg-scio-orange rounded-xl sm:rounded-2xl opacity-60 animate-pulse delay-1000`}></div>
                       </div>
 
                       {/* Content - Second on mobile, alternates on desktop */}
                       <div className={`order-2 ${index % 2 === 1 ? 'lg:order-1' : 'lg:order-2'}`}>
-                        <div className="flex items-center space-x-4 mb-6">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4 sm:mb-6">
                           <div 
-                            className="w-16 h-16 rounded-xl flex items-center justify-center"
+                            className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0"
                             style={{
                               background: 'linear-gradient(to right, var(--scio-blue), var(--scio-blue-light))'
                             }}
                           >
-                            <i className={`${feature.icon} text-white text-2xl`}></i>
+                            <i className={`${feature.icon} text-white text-xl sm:text-2xl`}></i>
                           </div>
                           <div>
-                            <h3 className="font-heading heading-secondary text-2xl lg:text-3xl text-gray-800">
+                            <h3 className="font-heading heading-secondary text-xl sm:text-2xl lg:text-3xl text-gray-800 mb-1 sm:mb-2">
                               {feature.title}
                             </h3>
-                            <p className="font-body text-gray-600 text-lg">
+                            <p className="font-body text-gray-600 text-sm sm:text-base lg:text-lg">
                               {feature.description}
                             </p>
                           </div>
@@ -167,8 +167,8 @@ export default function ThrivePage() {
 
                         <div className="gap-6">
                           <div>
-                            <h5 className="font-heading font-semibold text-gray-800 mb-4 text-lg">Key Features:</h5>
-                            <ul className="space-y-3">
+                            <h5 className="font-heading font-semibold text-gray-800 mb-3 sm:mb-4 text-base sm:text-lg">Key Features:</h5>
+                            <ul className="space-y-2 sm:space-y-3">
                               {(feature.title === 'Educator Training' ? [
                                 'Practical & actionable strategies for classrooms.',
                                 'Covers pedagogy, tools, and mindset.',
@@ -188,15 +188,15 @@ export default function ThrivePage() {
                                 'Builds confidence and communication.',
                                 'Perfect for schools & youth groups.'
                               ]).map((benefit, idx) => (
-                                <li key={idx} className="flex items-center space-x-3">
-                                  <Award className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                                  <span className="text-gray-700 text-base">{benefit}</span>
+                                <li key={idx} className="flex items-start sm:items-center space-x-2 sm:space-x-3">
+                                  <Award className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0 mt-0.5 sm:mt-0" />
+                                  <span className="text-gray-700 text-sm sm:text-base">{benefit}</span>
                                 </li>
                               ))}
                             </ul>
                             
                             {/* Download Brochure Button */}
-                            <div className="mt-6">
+                            <div className="mt-4 sm:mt-6">
                               <a 
                                 href={
                                   feature.title === 'Educator Training' 
@@ -208,9 +208,10 @@ export default function ThrivePage() {
                                 download
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                className="inline-block w-full sm:w-auto"
                               >
                                 <Button 
-                                  className="bg-scio-blue hover:opacity-90 text-white rounded-lg font-heading font-semibold"
+                                  className="w-full sm:w-auto bg-scio-blue hover:opacity-90 text-white rounded-lg font-heading font-semibold text-sm sm:text-base"
                                 >
                                   <Download className="w-4 h-4 mr-2" />
                                   Download Brochure
@@ -229,16 +230,16 @@ export default function ThrivePage() {
       </section>
 
       {/* Stats Counter Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-800">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-blue-600 to-blue-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className={`${stat.icon} text-2xl text-white`}></i>
+                <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 lg:mb-4">
+                  <i className={`${stat.icon} text-lg sm:text-xl lg:text-2xl text-white`}></i>
                 </div>
-                <div className="text-4xl font-bold mb-2 text-white">{stat.number}</div>
-                <div className="text-lg font-medium text-white">{stat.label}</div>
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 text-white">{stat.number}</div>
+                <div className="text-xs sm:text-sm lg:text-base xl:text-lg font-medium text-white px-2">{stat.label}</div>
               </div>
             ))}
           </div>
