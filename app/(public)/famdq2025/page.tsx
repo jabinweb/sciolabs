@@ -143,8 +143,8 @@ export default function FAMDQ2025Page() {
 
               {/* Quiz Embed */}
               <div className="w-full mb-6">
-                <div className="relative w-full" style={{ paddingBottom: '56.25%', paddingTop: 0, height: 0 }}>
-                  {/* <iframe 
+                {/* <div className="relative w-full" style={{ paddingBottom: '56.25%', paddingTop: 0, height: 0 }}>
+                  <iframe 
                     title="FAMDQ 2025 Quiz" 
                     frameBorder="0" 
                     width="1200" 
@@ -153,8 +153,8 @@ export default function FAMDQ2025Page() {
                     src="https://view.genially.com/68ec8ab3d95d9983f9ee790d" 
                     allowFullScreen
                     className="rounded-lg"
-                  /> */}
-                </div>
+                  />
+                </div> */}
               </div>
             </CardContent>
           </Card>
