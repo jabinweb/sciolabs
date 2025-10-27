@@ -175,12 +175,6 @@ export default function TestimonialsSection() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Swipe Hint - Visible only on mobile */}
-          <div className="lg:hidden text-center mt-4 text-gray-400 text-sm">
-            <i className="fas fa-hand-pointer mr-2"></i>
-            Swipe to navigate
-          </div>
         </div>
 
         {/* Navigation Dots */}

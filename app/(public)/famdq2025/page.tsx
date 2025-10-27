@@ -79,7 +79,7 @@ export default function FAMDQ2025Page() {
               
               <div className="mb-6 p-4 bg-orange-50 border-l-4 border-orange-500 rounded">
                 <p className="font-semibold text-gray-800 mb-2">Debate Topic:</p>
-                <p className="text-gray-600 italic">&quot;Insert Debate Topic Here&quot;</p>
+                <p className="text-gray-600 italic uppercase">This House Would Prioritize Zoonotic Disease Surveillance Over All Other Public Health Initiatives.</p>
               </div>
 
               <p className="font-body text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
@@ -100,10 +100,10 @@ export default function FAMDQ2025Page() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-gray-200">
+              {/* <div className="pt-4 border-t border-gray-200">
                 <p className="text-sm text-gray-500 mb-2">Related Resources:</p>
                 <p className="text-sm text-gray-400 italic">Resources will be added here</p>
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </div>
@@ -142,7 +142,7 @@ export default function FAMDQ2025Page() {
 
               {/* Quiz Embed */}
               <div className="w-full mb-6">
-                {/* <div className="relative w-full" style={{ paddingBottom: '56.25%', paddingTop: 0, height: 0 }}>
+                <div className="relative w-full" style={{ paddingBottom: '56.25%', paddingTop: 0, height: 0 }}>
                   <iframe 
                     title="FAMDQ 2025 Quiz" 
                     frameBorder="0" 
@@ -153,7 +153,7 @@ export default function FAMDQ2025Page() {
                     allowFullScreen
                     className="rounded-lg"
                   />
-                </div> */}
+                </div>
               </div>
             </CardContent>
           </Card>
