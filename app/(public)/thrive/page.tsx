@@ -123,7 +123,8 @@ export default function ThrivePage() {
                   {/* Content Column */}
                     <div className="bg-gradient-to-br from-blue-50 to-slate-50 p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-blue-100 shadow-sm grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
                       {/* Image Column - First on mobile, alternates on desktop */}
-                      <div className={`relative order-1 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
+                      <div className={`relative order-1 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`} id={feature.title.toLowerCase().replace(/\s+/g, '-')}
+>
                         <div className="relative h-48 sm:h-64 md:h-72 lg:h-80 overflow-hidden rounded-xl sm:rounded-2xl shadow-xl group">
                           <Image
                             src={

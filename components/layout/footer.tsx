@@ -47,7 +47,7 @@ export default function Footer() {
             </div> */}
 
             {/* Social Links */}
-            <div className="flex space-x-4 mt-6">
+            {/* <div className="flex space-x-4 mt-6">
               <Link href="#" className="w-10 h-10 bg-scio-blue/20 hover:bg-scio-blue rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
                 <i className="fab fa-facebook-f text-white"></i>
               </Link>
@@ -60,7 +60,7 @@ export default function Footer() {
               <Link href="#" className="w-10 h-10 bg-scio-blue/20 hover:bg-scio-blue rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
                 <i className="fab fa-instagram text-white"></i>
               </Link>
-            </div>
+            </div> */}
           </div>
 
           {/* Quick Links */}
@@ -136,7 +136,7 @@ export default function Footer() {
         <div className="border-t border-gray-700/50 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="font-body text-gray-400 text-sm">
-              © 2024 Scio Labs. All rights reserved.
+              © 2024 Scio Labs. All rights reserved. 
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/privacy" className="font-body text-gray-400 hover:text-white text-sm transition-colors duration-300">

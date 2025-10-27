@@ -76,11 +76,7 @@ export default function ContactPage() {
     <main>
       {/* Hero Section */}
       <section className="py-20 pt-28 bg-gradient-to-br from-scio-blue via-scio-blue-light to-scio-orange relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/50"></div>
-        <div className="absolute inset-0 opacity-40">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-2xl animate-pulse"></div>
-          <div className="absolute bottom-10 right-10 w-48 h-48 bg-white rounded-full blur-3xl animate-pulse delay-1000"></div>
-        </div>
+        <div className="absolute inset-0 bg-black/60"></div>
         
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center text-white">

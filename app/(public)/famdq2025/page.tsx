@@ -46,12 +46,8 @@ export default function FAMDQ2025Page() {
     <main>
       {/* Hero Section */}
       <section className="py-20 pt-28 bg-gradient-to-br from-scio-blue via-scio-blue-light to-scio-orange relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/50"></div>
-        <div className="absolute inset-0 opacity-40">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-2xl animate-pulse"></div>
-          <div className="absolute bottom-10 right-10 w-48 h-48 bg-white rounded-full blur-3xl animate-pulse delay-1000"></div>
-        </div>
-        
+        <div className="absolute inset-0 bg-black/60"></div>
+         
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center text-white">
             <h1 className="font-heading heading-primary text-4xl md:text-5xl mb-6">
@@ -64,49 +60,6 @@ export default function FAMDQ2025Page() {
               ScioLabs was honoured to host the <strong>FAMDQ Quiz 2025</strong> for the second consecutive year, bringing together curiosity, critical thinking, and collaboration in a celebration of learning.
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* Quiz Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <Card className="group bg-white hover:shadow-2xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
-            <div className="h-2 bg-gradient-to-r from-blue-500 to-blue-600"></div>
-            <CardContent className="p-6 sm:p-8 md:p-10">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 gap-4">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                  <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                </div>
-                <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
-                  Quiz 2025
-                </h2>
-              </div>
-              
-              <p className="font-body text-gray-600 text-base sm:text-lg mb-6 leading-relaxed">
-                An exhilarating round of quizzing saw <strong>eight sharp school teams</strong> compete for the FAMDQ trophy, showcasing speed, accuracy, and insight.
-              </p>
-
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded mb-6">
-                <div className="flex items-start gap-3">
-                  <Award className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Play the Self-Paced Quiz!</p>
-                    <p className="text-sm text-gray-600">
-                      Test your knowledge and see how you score against the participating teams.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <Button 
-                size="lg"
-                className="w-full md:w-auto bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white group-hover:shadow-lg transition-all px-8 sm:px-12 py-5 sm:py-6 flex items-center justify-center gap-2"
-              >
-                <Play className="w-5 h-5" />
-                Play Quiz Now
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </section>
 
@@ -157,23 +110,76 @@ export default function FAMDQ2025Page() {
         </div>
       </section>
 
-      {/* Discover ScioLabs Section */}
+      {/* Quiz Section */}
+      <section className="py-12 md:py-20 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <Card className="group bg-white hover:shadow-2xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
+            <div className="h-2 bg-gradient-to-r from-blue-500 to-blue-600"></div>
+            <CardContent className="p-6 sm:p-8 md:p-10">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 gap-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                  <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                </div>
+                <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
+                  Quiz 2025
+                </h2>
+              </div>
+              
+              <p className="font-body text-gray-600 text-base sm:text-lg mb-6 leading-relaxed">
+                An exhilarating round of quizzing saw <strong>eight sharp school teams</strong> compete for the FAMDQ trophy, showcasing speed, accuracy, and insight.
+              </p>
+
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded mb-6">
+                <div className="flex items-start gap-3">
+                  <Award className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">Play the Self-Paced Quiz!</p>
+                    <p className="text-sm text-gray-600">
+                      Test your knowledge and see how you score against the participating teams.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quiz Embed */}
+              <div className="w-full mb-6">
+                <div className="relative w-full" style={{ paddingBottom: '56.25%', paddingTop: 0, height: 0 }}>
+                  <iframe 
+                    title="FAMDQ 2025 Quiz" 
+                    frameBorder="0" 
+                    width="1200" 
+                    height="675" 
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                    src="https://view.genially.com/68ec8ab3d95d9983f9ee790d" 
+                    allowFullScreen
+                    className="rounded-lg"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Discover ScioLabs Video Section */}
       <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 sm:mb-6">
             Discover ScioLabs
           </h2>
-          <p className="font-body text-gray-600 text-base sm:text-lg md:text-xl mb-8 sm:mb-12 max-w-2xl mx-auto">
-            Find out how ScioLabs can help you learn better, grow faster, and achieve your academic and career goals.
+          <p className="font-body text-gray-600 text-base sm:text-lg md:text-xl mb-8 sm:mb-12 max-w-3xl mx-auto">
+            Find out how ScioLabs can help you learn better, grow faster, and achieve <br />your academic and career goals.
           </p>
           
           <div className="relative w-full aspect-video bg-gray-100 rounded-2xl overflow-hidden shadow-xl">
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
-                <Play className="w-10 h-10 text-white ml-1" />
-              </div>
-              <p className="text-gray-500 font-medium text-lg">Coming Soon</p>
-            </div>
+            <iframe 
+              className="w-full h-full"
+              src="https://videos.sproutvideo.com/embed/aa9bdab31811e9c620/4f8448e43829ea5f" 
+              frameBorder="0" 
+              allowFullScreen 
+              referrerPolicy="no-referrer-when-downgrade" 
+              title="ScioLabs Introduction Video"
+            />
           </div>
         </div>
       </section>
