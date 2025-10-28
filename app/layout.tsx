@@ -8,6 +8,8 @@ import NewsletterSection from "@/components/landing/newsletter";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from 'sonner'
 import PWAInstallPrompt from "@/components/layout/PWAInstallPrompt";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { getSettings } from "@/lib/settings";
 
 
 const inter = Inter({
@@ -45,12 +47,14 @@ export const metadata: Metadata = {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const buildTime = Date.now(); // Simple cache buster
+  const settings = await getSettings();
+  const googleAnalyticsId = settings.seo.googleAnalyticsId;
 
   return (
     <html lang="en">
@@ -96,6 +100,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${poppins.variable} antialiased`}>
+        {googleAnalyticsId && <GoogleAnalytics measurementId={googleAnalyticsId} />}
         <SessionProvider>
           <Header />
           {children}

@@ -80,7 +80,7 @@ const defaultSettings: SiteSettings = {
     metaTitle: 'ScioLabs - Upward Equipping',
     metaDescription: 'Transforming careers and lives through personalized guidance and innovative training programs.',
     metaKeywords: 'education,training,career guidance,professional development',
-    googleAnalyticsId: '',
+    googleAnalyticsId: 'G-2SFQVP82SD',
     googleSiteVerification: ''
   },
   maintenance: {
