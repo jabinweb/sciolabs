@@ -10,10 +10,10 @@ export default function LinguaPage() {
 
   // Sample stats data
   const stats = [
-    { number: "1500+", label: "Students Served", icon: "fas fa-users" },
-    { number: "50+", label: "Institutions", icon: "fas fa-school" },
-    { number: "95%", label: "Success Rate", icon: "fas fa-chart-line" },
-    { number: "30+", label: "Educational Partners", icon: "fas fa-handshake" }
+    { number: "1500+", label: "Students Served", icon: "fas fa-user-graduate" },
+    { number: "50+", label: "Institutions", icon: "fas fa-university" },
+    { number: "95%", label: "Success Rate", icon: "fas fa-star" },
+    { number: "30+", label: "Educational Partners", icon: "fas fa-hands-helping" }
   ];
 
   // Sample clients data
@@ -126,7 +126,11 @@ export default function LinguaPage() {
                       <div className={`relative order-1 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
                         <div className="relative h-80 overflow-hidden rounded-2xl shadow-xl group">
                           <Image
-                            src="/5.jpg"
+                            src={
+                              feature.title === 'TheoLingua'
+                                ? 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=80'
+                                : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80'
+                            }
                             alt={`${feature.title} program`}
                             fill
                             className="object-cover aspect-video group-hover:scale-105 transition-transform duration-700"
@@ -142,7 +146,7 @@ export default function LinguaPage() {
                       <div className={`order-2 ${index % 2 === 1 ? 'lg:order-1' : 'lg:order-2'}`}>
                         <div className="flex items-center space-x-4 mb-6">
                           <div 
-                            className="w-16 h-16 rounded-xl flex items-center justify-center"
+                            className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0"
                             style={{
                               background: 'linear-gradient(to right, var(--scio-blue), var(--scio-blue-light))'
                             }}
@@ -199,8 +203,8 @@ export default function LinguaPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className={`${stat.icon} text-2xl text-white`}></i>
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className={`${stat.icon} text-2xl text-blue-600`}></i>
                 </div>
                 <div className="text-4xl font-bold mb-2 text-white">{stat.number}</div>
                 <div className="text-lg font-medium text-white">{stat.label}</div>
@@ -211,7 +215,7 @@ export default function LinguaPage() {
       </section>
 
       {/* Video Section */}
-      <section className="py-24 bg-gray-50">
+      {/* <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-4xl text-gray-800 mb-6">
@@ -238,10 +242,10 @@ export default function LinguaPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Clients Carousel */}
-      <section className="py-20 bg-white">
+      {/* <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading heading-primary text-3xl text-gray-800 mb-4">
@@ -268,7 +272,7 @@ export default function LinguaPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Testimonials */}
       <section className="py-24 bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -285,7 +289,7 @@ export default function LinguaPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-8">
+                <CardContent className="">
                   <div className="flex mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <i key={i} className="fas fa-star text-yellow-400"></i>
@@ -295,9 +299,9 @@ export default function LinguaPage() {
                     &quot;{testimonial.quote}&quot;
                   </blockquote>
                   <div className="flex items-center">
-                    <div className="w-12 h-12 bg-gradient-to-r from-scio-blue to-scio-orange rounded-full flex items-center justify-center mr-4">
+                    {/* <div className="w-12 h-12 bg-gradient-to-r from-scio-blue to-scio-orange rounded-full flex items-center justify-center mr-4">
                       <Users className="w-6 h-6 text-white" />
-                    </div>
+                    </div> */}
                     <div>
                       <div className="font-semibold text-gray-800">{testimonial.author}</div>
                       <div className="text-sm text-gray-600">{testimonial.role}</div>
