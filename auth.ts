@@ -11,6 +11,7 @@ const loginSchema = z.object({
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
       name: "credentials",
@@ -62,6 +63,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'authjs.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -82,15 +95,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async redirect({ url, baseUrl }) {
       console.log('Redirect callback - url:', url, 'baseUrl:', baseUrl)
-      // If trying to access sign-in page after successful auth, redirect to admin
-      if (url.includes('/auth/signin') && url !== baseUrl + '/auth/signin') {
-        return baseUrl + '/admin'
+      // After successful login, redirect to admin
+      if (url === baseUrl || url === '/') {
+        return '/admin'
       }
-      // Allow same-origin redirects
-      if (url.startsWith("/")) return baseUrl + url
+      // Allow relative callback URLs
+      if (url.startsWith('/')) {
+        return url
+      }
       // Allow callback URLs on same origin
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl + '/admin'
+      if (url.startsWith(baseUrl)) {
+        return url
+      }
+      return baseUrl
     }
   },
   debug: process.env.NODE_ENV === 'development',
