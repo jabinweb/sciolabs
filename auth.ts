@@ -14,48 +14,46 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
-      name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        email: {},
+        password: {},
       },
-      async authorize(credentials) {
-        try {
-          console.log('Auth attempt for:', credentials?.email)
-          
-          const { email, password } = loginSchema.parse(credentials)
-
-          const user = await prisma.user.findUnique({
-            where: { email }
-          })
-
-          console.log('User found:', user ? { id: user.id, email: user.email, role: user.role } : 'null')
-
-          if (!user || !user.password) {
-            console.log('User not found or no password')
-            return null
-          }
-
-          const isPasswordValid = await bcrypt.compare(password, user.password)
-          console.log('Password valid:', isPasswordValid)
-
-          if (!isPasswordValid) {
-            console.log('Invalid password')
-            return null
-          }
-
-          console.log('Auth successful for user:', user.email)
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-          }
-        } catch (error) {
-          console.error('Auth error:', error)
-          return null
+      authorize: async (credentials) => {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Missing credentials")
         }
-      }
+
+        console.log('Auth attempt for:', credentials.email)
+        
+        const { email, password } = loginSchema.parse(credentials)
+
+        const user = await prisma.user.findUnique({
+          where: { email }
+        })
+
+        console.log('User found:', user ? { id: user.id, email: user.email, role: user.role } : 'null')
+
+        if (!user || !user.password) {
+          console.log('User not found or no password')
+          throw new Error("Invalid credentials")
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        console.log('Password valid:', isPasswordValid)
+
+        if (!isPasswordValid) {
+          console.log('Invalid password')
+          throw new Error("Invalid credentials")
+        }
+
+        console.log('Auth successful for user:', user.email)
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        }
+      },
     })
   ],
   pages: {
