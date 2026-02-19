@@ -46,7 +46,6 @@ interface JobFormProps {
 
 export default function JobForm({ initialData, onSubmit, submitLabel, loading }: JobFormProps) {
   const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
-  const [content, setContent] = useState('');
   
   const [formData, setFormData] = useState<JobFormData>({
     title: initialData?.title || '',
@@ -57,7 +56,9 @@ export default function JobForm({ initialData, onSubmit, submitLabel, loading }:
     payOut: initialData?.payOut || '',
     type: initialData?.type || 'Full-time',
     experience: initialData?.experience || '',
-    applicationDeadline: initialData?.applicationDeadline || '',
+    applicationDeadline: initialData?.applicationDeadline
+  ? new Date(initialData.applicationDeadline).toISOString().split('T')[0]
+  : '',
     categoryId: initialData?.categoryId || ''
   })
 
@@ -81,7 +82,15 @@ export default function JobForm({ initialData, onSubmit, submitLabel, loading }:
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await onSubmit(formData)
+
+    const payload = {
+      ...formData,
+      applicationDeadline: formData.applicationDeadline
+        ? new Date(formData.applicationDeadline).toISOString()
+        : null
+    }
+
+    await onSubmit(payload as JobFormData)
   }
 
   const addQualification = () => {

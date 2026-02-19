@@ -203,9 +203,11 @@ export default function WorkWithUsPage() {
                         </div>
                       </div>
                       
-                      <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3">
-                        {job.description}
-                      </p>
+                      <div
+                          className="prose text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3"
+                          dangerouslySetInnerHTML={{ __html: job.description }}
+                        />
+
                       
                       <Link href={`/work-with-us/${job.slug}`}>
                         <Button 
