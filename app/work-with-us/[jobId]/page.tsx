@@ -330,10 +330,56 @@ export default function JobPage({ params }: { params: Promise<{ jobId: string }>
                 </div>
                 About This Role
               </h2>
-              <div
-                className="prose prose-lg max-w-none text-gray-700"
-                dangerouslySetInnerHTML={{ __html: jobData.description }}
-              />
+<div className="job-content prose prose-lg max-w-none text-gray-700">
+  <style>{`
+    .job-content ul {
+      padding-left: 1.5rem !important;
+    }
+
+    .job-content ol {
+      padding-left: 1.5rem !important;
+    }
+
+    .job-content li {
+      position: relative !important;
+      padding-left: 0.75rem !important;
+    }
+
+    /* Draw bullets manually (Tailwind v4 safe) */
+    .job-content ul > li::before {
+      content: "•";
+      position: absolute;
+      left: -1rem;
+      top: 0.15em;
+      font-size: 1.2em;
+      color: #374151;
+    }
+
+    /* Numbers */
+    .job-content ol {
+      counter-reset: list;
+    }
+
+    .job-content ol > li {
+      counter-increment: list;
+    }
+
+    .job-content ol > li::before {
+      content: counter(list) ".";
+      position: absolute;
+      left: -1.5rem;
+      font-weight: 600;
+    }
+
+    /* Fix Tiptap <p> inside li */
+    .job-content li > p {
+      display: inline !important;
+      margin: 0 !important;
+    }
+  `}</style>
+
+  <div dangerouslySetInnerHTML={{ __html: jobData.description }} />
+</div>
 
             </div>
 
@@ -372,8 +418,8 @@ export default function JobPage({ params }: { params: Promise<{ jobId: string }>
                       <DollarSign className="w-5 h-5 text-green-600" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Competitive Salary</h4>
-                      <p className="text-gray-600 text-sm">Industry-standard compensation with performance bonuses</p>
+                      <h4 className="font-semibold text-gray-900 mb-1">Meaningful Compensation</h4>
+                      <p className="text-gray-600 text-sm">A fair and transparent pay structure aligned with experience, responsibility, and contribution.</p>
                     </div>
                   </div>
                   
@@ -382,8 +428,8 @@ export default function JobPage({ params }: { params: Promise<{ jobId: string }>
                       <Clock className="w-5 h-5 text-blue-600" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Flexible Work</h4>
-                      <p className="text-gray-600 text-sm">Remote work options and flexible schedules</p>
+                      <h4 className="font-semibold text-gray-900 mb-1">Thoughtful Flexibility</h4>
+                      <p className="text-gray-600 text-sm">Clear expectations and timelines, with flexibility in how and where you work.</p>
                     </div>
                   </div>
                 </div>
@@ -394,8 +440,8 @@ export default function JobPage({ params }: { params: Promise<{ jobId: string }>
                       <TrendingUp className="w-5 h-5 text-purple-600" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Career Growth</h4>
-                      <p className="text-gray-600 text-sm">Learning opportunities and advancement paths</p>
+                      <h4 className="font-semibold text-gray-900 mb-1">Intellectual Growth</h4>
+                      <p className="text-gray-600 text-sm">Opportunities to learn, improve your skills, and take on more responsibility over time.</p>
                     </div>
                   </div>
                   
@@ -404,8 +450,8 @@ export default function JobPage({ params }: { params: Promise<{ jobId: string }>
                       <Target className="w-5 h-5 text-orange-600" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Make Impact</h4>
-                      <p className="text-gray-600 text-sm">Transform education and change lives</p>
+                      <h4 className="font-semibold text-gray-900 mb-1">Purpose-Driven Work</h4>
+                      <p className="text-gray-600 text-sm">The chance to work on projects that make a real difference in education.</p>
                     </div>
                   </div>
                 </div>
