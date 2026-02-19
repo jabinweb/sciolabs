@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
-import { prisma } from "@/lib/prisma"
 import Credentials from "next-auth/providers/credentials"
+import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
 
@@ -12,41 +12,35 @@ const loginSchema = z.object({
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+
+
+  // MUST be JWT for Credentials
+  session: {
+    strategy: "jwt",
+  },
+
   providers: [
     Credentials({
       credentials: {
         email: {},
         password: {},
       },
-      authorize: async (credentials) => {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing credentials")
-        }
 
-        console.log('Auth attempt for:', credentials.email)
-        
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null
+
         const { email, password } = loginSchema.parse(credentials)
 
         const user = await prisma.user.findUnique({
-          where: { email }
+          where: { email },
         })
 
-        console.log('User found:', user ? { id: user.id, email: user.email, role: user.role } : 'null')
+        if (!user || !user.password) return null
 
-        if (!user || !user.password) {
-          console.log('User not found or no password')
-          throw new Error("Invalid credentials")
-        }
+        const valid = await bcrypt.compare(password, user.password)
 
-        const isPasswordValid = await bcrypt.compare(password, user.password)
-        console.log('Password valid:', isPasswordValid)
+        if (!valid) return null
 
-        if (!isPasswordValid) {
-          console.log('Invalid password')
-          throw new Error("Invalid credentials")
-        }
-
-        console.log('Auth successful for user:', user.email)
         return {
           id: user.id,
           email: user.email,
@@ -54,49 +48,42 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           role: user.role,
         }
       },
-    })
+    }),
   ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        const u = user as typeof user & { role?: string }
+
+        token.id = u.id
+        token.role = u.role
+      }
+
+      return token
+    },
+
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string
+        session.user.role = token.role as string
+      }
+
+      return session
+    },
+
+    async redirect({ url, baseUrl }) {
+      if (url === baseUrl || url === "/") return "/admin"
+      if (url.startsWith("/")) return url
+      if (url.startsWith(baseUrl)) return url
+      return baseUrl
+    },
+  },
+
   pages: {
     signIn: "/auth/signin",
   },
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      console.log('JWT callback - token:', token, 'user:', user)
-      if (user) {
-        token.role = user.role
-        token.id = user.id
-      }
-      return token
-    },
-    async session({ session, token }) {
-      console.log('Session callback - session:', session, 'token:', token)
-      if (token && session.user) {
-        session.user.id = token.sub!
-        session.user.role = token.role as string
-      }
-      return session
-    },
-    async redirect({ url, baseUrl }) {
-      console.log('Redirect callback - url:', url, 'baseUrl:', baseUrl)
-      // After successful login, redirect to admin
-      if (url === baseUrl || url === '/') {
-        return '/admin'
-      }
-      // Allow relative callback URLs
-      if (url.startsWith('/')) {
-        return url
-      }
-      // Allow callback URLs on same origin
-      if (url.startsWith(baseUrl)) {
-        return url
-      }
-      return baseUrl
-    }
-  },
-  debug: process.env.NODE_ENV === 'development',
-})
 
+  debug: process.env.NODE_ENV === "development",
+})
