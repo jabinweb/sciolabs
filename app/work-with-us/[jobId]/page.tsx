@@ -330,7 +330,11 @@ export default function JobPage({ params }: { params: Promise<{ jobId: string }>
                 </div>
                 About This Role
               </h2>
-              <p className="text-gray-700 leading-relaxed text-lg">{jobData.description}</p>
+              <div
+                className="prose prose-lg max-w-none text-gray-700"
+                dangerouslySetInnerHTML={{ __html: jobData.description }}
+              />
+
             </div>
 
             {/* Qualifications */}

@@ -14,7 +14,13 @@ const updateJobSchema = z.object({
   type: z.enum(["Full-time", "Part-time", "Contract"]).optional(),
   experience: z.string().min(1).optional(),
   isActive: z.boolean().optional(),
-  applicationDeadline: z.string().optional(),
+
+  applicationDeadline: z
+    .union([z.string().datetime(), z.date()])
+    .optional()
+    .nullable(),
+
+  categoryId: z.string().optional().nullable(),
 })
 
 // GET /api/admin/jobs/[id] - Get single job
@@ -112,7 +118,10 @@ export async function PUT(
 
     // Handle application deadline
     if (validatedData.applicationDeadline) {
-      updateData.applicationDeadline = new Date(validatedData.applicationDeadline)
+      updateData.applicationDeadline =
+        validatedData.applicationDeadline instanceof Date
+          ? validatedData.applicationDeadline
+          : new Date(validatedData.applicationDeadline)
     }
 
     const job = await prisma.job.update({

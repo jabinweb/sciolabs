@@ -254,9 +254,10 @@ export default function JobsManagementPage() {
                           </div>
                         </div>
                         
-                        <p className="text-gray-600 text-sm line-clamp-2">
-                          {job.description}
-                        </p>
+                        <div
+                          className="text-gray-600 text-sm line-clamp-2 prose prose-sm max-w-none"
+                          dangerouslySetInnerHTML={{ __html: job.description }}
+                        />
                         
                         {job.applicationDeadline && (
                           <div className="mt-2 text-sm text-orange-600">

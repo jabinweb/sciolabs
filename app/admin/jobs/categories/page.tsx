@@ -358,7 +358,7 @@ export default function JobCategoriesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {categories.map((category) => (
-                <Card key={category.id} className="border border-gray-200 hover:border-scio-blue/50 hover:shadow-lg transition-all duration-300 group">
+                <Card key={category.id} className="border border-gray-200 hover:border-scio-blue/50 p-0 hover:shadow-lg transition-all duration-300 group">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3 flex-1">

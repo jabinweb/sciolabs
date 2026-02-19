@@ -36,7 +36,7 @@ export default async function AdminDashboardLayout({ children }: DashboardLayout
 
           
           {/* Main Content */}
-          <main className="flex-1 p-6">
+          <main className="flex-1 pl-8">
             {children}
           </main>
         </div>

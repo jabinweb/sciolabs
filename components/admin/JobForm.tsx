@@ -14,6 +14,7 @@ import {
   Save,
   Loader2
 } from 'lucide-react'
+import TiptapEditor from './TipTapEditor'
 
 interface JobCategory {
   id: string
@@ -45,6 +46,7 @@ interface JobFormProps {
 
 export default function JobForm({ initialData, onSubmit, submitLabel, loading }: JobFormProps) {
   const [jobCategories, setJobCategories] = useState<JobCategory[]>([])
+  const [content, setContent] = useState('');
   
   const [formData, setFormData] = useState<JobFormData>({
     title: initialData?.title || '',
@@ -216,17 +218,17 @@ export default function JobForm({ initialData, onSubmit, submitLabel, loading }:
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Job Description *</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Detailed description of the role, responsibilities, and requirements..."
-              rows={6}
-              required
+         <div className="space-y-2">
+            <Label>Job Description *</Label>
+
+            <TiptapEditor
+              content={formData.description}
+              onChange={(html) =>
+                setFormData(prev => ({ ...prev, description: html }))
+              }
             />
           </div>
+
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">

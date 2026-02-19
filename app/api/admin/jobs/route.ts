@@ -77,9 +77,15 @@ const createJobSchema = z.object({
   type: z.string().min(1),
   experience: z.string().min(1),
   isActive: z.boolean().default(true),
-  applicationDeadline: z.string().datetime().optional(),
-  categoryId: z.string().optional()
+
+  applicationDeadline: z
+    .union([z.string().datetime(), z.date()])
+    .optional()
+    .nullable(),
+
+  categoryId: z.string().optional().nullable(),
 })
+
 
 // POST /api/admin/jobs - Create new job (admin only)
 export async function POST(request: NextRequest) {
@@ -109,9 +115,12 @@ export async function POST(request: NextRequest) {
       data: {
         ...validatedData,
         qualifications: validatedData.qualifications,
-        applicationDeadline: validatedData.applicationDeadline 
-          ? new Date(validatedData.applicationDeadline) 
-          : null,
+        applicationDeadline:
+          validatedData.applicationDeadline instanceof Date
+            ? validatedData.applicationDeadline
+            : validatedData.applicationDeadline
+            ? new Date(validatedData.applicationDeadline)
+            : null,
         createdBy: session.user.id
       },
       include: {

@@ -26,31 +26,46 @@ export default function NewJobPage() {
 
   const handleSubmit = async (formData: JobFormData) => {
     setLoading(true)
-    
+
     try {
-      const filteredQualifications = formData.qualifications.filter((q: string) => q.trim() !== '')
-      
-      const response = await fetch('/api/admin/jobs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          qualifications: filteredQualifications,
-          categoryId: formData.categoryId || undefined,
-          applicationDeadline: formData.applicationDeadline || undefined,
-        })
+      const filteredQualifications = formData.qualifications.filter(
+        (q) => q.trim() !== ""
+      )
+
+      // slug from title
+      const slug = formData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "")
+
+      const payload = {
+        ...formData,
+        qualifications: filteredQualifications,
+        slug,
+        department: "General", // REQUIRED by Prisma
+        categoryId: formData.categoryId || null,
+        applicationDeadline: formData.applicationDeadline
+          ? new Date(formData.applicationDeadline)
+          : null,
+        type: formData.type,
+      }
+
+      const response = await fetch("/api/admin/jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       })
 
       if (response.ok) {
-        toast.success('Job created successfully')
-        router.push('/admin/jobs')
+        toast.success("Job created successfully")
+        router.push("/admin/jobs")
       } else {
         const error = await response.json()
-        toast.error(error.error || 'Failed to create job')
+        toast.error(error.error || "Failed to create job")
       }
     } catch (error) {
-      console.error('Error creating job:', error)
-      toast.error('Failed to create job')
+      console.error("Error creating job:", error)
+      toast.error("Failed to create job")
     } finally {
       setLoading(false)
     }
