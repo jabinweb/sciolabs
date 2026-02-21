@@ -289,9 +289,9 @@ export default function JobPage({ params }: { params: Promise<{ jobId: string }>
           </Link>
           
           <div className="flex items-start gap-6 mb-8">
-            <div className={`w-16 h-16 ${getDepartmentColor(jobData.department)} rounded-2xl flex items-center justify-center flex-shrink-0 shadow-xl border border-white/20`}>
+            {/* <div className={`w-16 h-16 ${getDepartmentColor(jobData.department)} rounded-2xl flex items-center justify-center flex-shrink-0 shadow-xl border border-white/20`}>
               <div className="text-white text-xl">{getDepartmentIcon(jobData.department)}</div>
-            </div>
+            </div> */}
             <div className="flex-1">
               <Badge variant="outline" className="border-white/40 text-white bg-white/15 backdrop-blur-sm mb-3 font-medium">
                 {jobData.department}
