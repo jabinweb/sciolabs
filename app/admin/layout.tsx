@@ -10,9 +10,6 @@ interface DashboardLayoutProps {
 export default async function AdminDashboardLayout({ children }: DashboardLayoutProps) {
   const session = await auth()
 
-  console.log('Admin Dashboard Layout - Session:', session);
-  
-
   if (!session) {
     redirect("/auth/signin")
   }

@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import NextAuth from "next-auth"
+import authConfig from "./authConfig"
+import { NextResponse } from "next/server"
 
-export async function proxy(request: NextRequest) {
-  console.log('Proxy: Path', request.nextUrl.pathname)
-  
-  // Just allow requests to pass through - authentication will be handled client-side
+const { auth } = NextAuth(authConfig)
+
+export default auth(async function proxy() {
   return NextResponse.next()
-}
+})
 
 export const config = {
-  matcher: ['/admin/:path*', '/auth/:path*'],
+  matcher: ['/admin/:path*'],
 }

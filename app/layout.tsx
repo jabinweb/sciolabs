@@ -5,7 +5,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CTASection from "@/components/landing/cta";
 import NewsletterSection from "@/components/landing/newsletter";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider } from "@/components/auth/SessionProvider";
 import { Toaster } from 'sonner'
 import PWAInstallPrompt from "@/components/layout/PWAInstallPrompt";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
