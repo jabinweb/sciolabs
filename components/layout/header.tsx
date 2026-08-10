@@ -2,14 +2,41 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 
+/** Pages with a dark hero — transparent white nav at top */
+const DARK_HERO_ROUTES = [
+  '/',
+  '/about',
+  '/contact',
+  '/blog',
+  '/thrive',
+  '/lingua',
+  '/famdq2025',
+  '/privacy',
+  '/terms',
+  '/sitemap',
+  '/services',
+  '/work-with-us',
+  '/offline',
+]
+
+function hasDarkHero(pathname: string) {
+  return DARK_HERO_ROUTES.some(
+    (route) => pathname === route || (route !== '/' && pathname.startsWith(`${route}/`))
+  )
+}
+
 export default function Header() {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isWhatWeDoOpen, setIsWhatWeDoOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const whatWeDoRef = useRef<HTMLDivElement>(null);
+
+  const solidHeader = isScrolled || isMenuOpen || !hasDarkHero(pathname);
 
   useEffect(() => {
     // Set mounted flag and check initial scroll position
@@ -65,15 +92,15 @@ export default function Header() {
   }
 
   // Improved header class with better background transitions and mobile menu handling
-  const headerClass = (isScrolled || isMenuOpen)
+  const headerClass = solidHeader
     ? "fixed top-0 left-0 right-0 bg-white/98 backdrop-blur-md border-b border-gray-200 z-50 shadow-lg" 
     : "fixed top-0 left-0 right-0 bg-transparent backdrop-blur-sm border-b border-white/10 z-50";
 
-  const textClass = (isScrolled || isMenuOpen) ? "text-gray-800" : "text-white";
-  const hoverTextClass = (isScrolled || isMenuOpen) ? "hover:text-scio-blue" : "hover:text-scio-orange";
-  const underlineClass = (isScrolled || isMenuOpen) ? "bg-scio-blue" : "bg-scio-orange";
-  const mobileButtonClass = (isScrolled || isMenuOpen) ? "text-gray-800 hover:text-scio-blue" : "text-white hover:text-scio-orange";
-  const logoSrc = (isScrolled || isMenuOpen) ? "/sciolabs_logo.png" : "/scioLabs_light.png";
+  const textClass = solidHeader ? "text-gray-800" : "text-white";
+  const hoverTextClass = solidHeader ? "hover:text-scio-blue" : "hover:text-scio-orange";
+  const underlineClass = solidHeader ? "bg-scio-blue" : "bg-scio-orange";
+  const mobileButtonClass = solidHeader ? "text-gray-800 hover:text-scio-blue" : "text-white hover:text-scio-orange";
+  const logoSrc = solidHeader ? "/sciolabs_logo.png" : "/scioLabs_light.png";
 
   const navItems = [
     { name: 'Home', href: '/' },
@@ -220,7 +247,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         <div className={`lg:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className={`border-t ${(isScrolled || isMenuOpen) ? 'border-gray-200/50' : 'border-white/20'} pt-6 pb-6`}>
+          <div className={`border-t ${solidHeader ? 'border-gray-200/50' : 'border-white/20'} pt-6 pb-6`}>
             <div className="flex flex-col space-y-6">
               <Link 
                 href="/"

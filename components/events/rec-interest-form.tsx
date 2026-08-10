@@ -5,24 +5,36 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'sonner'
+
+const INTEREST_OPTIONS = [
+  'Gamified Revision Portals',
+  'Teacher Training',
+  'Curriculum Digitisation',
+  'Bible-based English Courses',
+  'English for Healthcare',
+  'English for Young Learners',
+  'Diagnostic tools for learners',
+  'Skills workshops for GenZ',
+  'Career Guidance & Mentoring',
+] as const
 
 export function RecInterestForm() {
   const [loading, setLoading] = useState(false)
-  const [interest, setInterest] = useState('')
+  const [interests, setInterests] = useState<string[]>([])
+
+  function toggleInterest(option: string, checked: boolean) {
+    setInterests((prev) =>
+      checked ? [...prev, option] : prev.filter((item) => item !== option)
+    )
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    if (!interest) {
-      toast.error('Please select a programme')
+    if (interests.length === 0) {
+      toast.error('Please select at least one option')
       return
     }
 
@@ -34,7 +46,7 @@ export function RecInterestForm() {
       email: (form.elements.namedItem('email') as HTMLInputElement).value,
       organisation: (form.elements.namedItem('organisation') as HTMLInputElement)
         .value,
-      interest,
+      interests,
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
     }
 
@@ -55,7 +67,7 @@ export function RecInterestForm() {
       if (result.success) {
         toast.success("Thanks — we'll be in touch soon.")
         form.reset()
-        setInterest('')
+        setInterests([])
       } else {
         toast.error(result.error || 'Something went wrong. Please try again.')
       }
@@ -81,7 +93,7 @@ export function RecInterestForm() {
             name="name"
             required
             placeholder="Your name"
-            className="h-11 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
+            className="h-10 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
           />
         </div>
 
@@ -98,7 +110,7 @@ export function RecInterestForm() {
             type="email"
             required
             placeholder="you@organisation.org"
-            className="h-11 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
+            className="h-10 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
           />
         </div>
       </div>
@@ -114,34 +126,44 @@ export function RecInterestForm() {
           id="organisation"
           name="organisation"
           placeholder="School, church, or institution"
-          className="h-11 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
+          className="h-10 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
         />
       </div>
 
-      <div className="space-y-2">
-        <Label
-          htmlFor="interest"
-          className="font-heading text-sm font-medium text-gray-700"
-        >
-          Interested in
-        </Label>
-        <Select value={interest} onValueChange={setInterest} required>
-          <SelectTrigger
-            id="interest"
-            className="h-11 w-full rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
-          >
-            <SelectValue placeholder="Select a programme" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="CareBridge">CareBridge</SelectItem>
-            <SelectItem value="BeGin">BeGin</SelectItem>
-            <SelectItem value="ScioSprints">ScioSprints</SelectItem>
-            <SelectItem value="TheoLingua">TheoLingua</SelectItem>
-            <SelectItem value="ScioGuidance">ScioGuidance</SelectItem>
-            <SelectItem value="Other">Other / general enquiry</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <fieldset className="space-y-3">
+        <legend className="font-heading text-sm font-medium text-gray-700">
+          What are you interested in?
+        </legend>
+        <p className="font-body text-xs text-gray-500">
+          Select all that apply
+        </p>
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+          {INTEREST_OPTIONS.map((option) => {
+            const id = `interest-${option.replace(/\s+/g, '-').toLowerCase()}`
+            const checked = interests.includes(option)
+
+            return (
+              <label
+                key={option}
+                htmlFor={id}
+                className="flex cursor-pointer items-start gap-2.5 rounded-lg border border-gray-200 bg-slate-50/80 px-3 py-2.5 transition-colors hover:border-scio-blue/40 hover:bg-white has-[:checked]:border-scio-blue has-[:checked]:bg-scio-blue/5"
+              >
+                <Checkbox
+                  id={id}
+                  checked={checked}
+                  onCheckedChange={(value) =>
+                    toggleInterest(option, value === true)
+                  }
+                  className="mt-0.5"
+                />
+                <span className="font-body text-sm leading-snug text-gray-800">
+                  {option}
+                </span>
+              </label>
+            )
+          })}
+        </div>
+      </fieldset>
 
       <div className="space-y-2">
         <Label
@@ -153,8 +175,8 @@ export function RecInterestForm() {
         <Textarea
           id="message"
           name="message"
-          rows={4}
-          placeholder="How can we help?"
+          rows={3}
+          placeholder="Anything else we should know?"
           className="rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
         />
       </div>
