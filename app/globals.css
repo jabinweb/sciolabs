@@ -16,36 +16,36 @@
   --font-poppins: 'Poppins', sans-serif;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: #1e3a6f;
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: #1e3a6f;
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: #1e3a6f;
+  --primary: #2d5296;
+  --primary-foreground: #ffffff;
+  --secondary: #eef2f8;
+  --secondary-foreground: #1e3a6f;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+  --accent: #fff4e5;
+  --accent-foreground: #1e3a6f;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #2d5296;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-foreground: #1e3a6f;
+  --sidebar-primary: #2d5296;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef2f8;
+  --sidebar-accent-foreground: #1e3a6f;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #2d5296;
 }
 
 @theme inline {
@@ -82,6 +82,14 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-scio-blue: var(--scio-blue);
+  --color-scio-blue-light: var(--scio-blue-light);
+  --color-scio-blue-dark: var(--scio-blue-dark);
+  --color-scio-orange: var(--scio-orange);
+  --color-scio-orange-light: var(--scio-orange-light);
+  --color-scio-orange-dark: var(--scio-orange-dark);
+  --color-scio-green: var(--scio-green);
+  --color-scio-purple: var(--scio-purple);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -93,15 +101,17 @@
 @tailwind utilities; */
 
 @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
   html {
     font-family: var(--font-inter);
-    /* Ensure scrollbar is always visible to prevent layout shift */
     overflow-y: scroll;
   }
 
-  /* Fix scrollbar hiding issue with Select component */
   body {
-    /* Prevent horizontal scroll */
+    @apply bg-background text-foreground;
     overflow-x: hidden;
   }
 
@@ -236,7 +246,11 @@
 
 @layer utilities {
   .bg-scio-blue { background-color: var(--scio-blue); }
+  .bg-scio-blue-light { background-color: var(--scio-blue-light); }
+  .bg-scio-blue-dark { background-color: var(--scio-blue-dark); }
   .bg-scio-orange { background-color: var(--scio-orange); }
+  .bg-scio-orange-light { background-color: var(--scio-orange-light); }
+  .bg-scio-orange-dark { background-color: var(--scio-orange-dark); }
   .bg-scio-green { background-color: var(--scio-green); }
   .bg-scio-purple { background-color: var(--scio-purple); }
   .text-scio-blue { color: var(--scio-blue); }

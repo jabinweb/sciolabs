@@ -180,6 +180,14 @@ export default function Header() {
             </div>
 
             <Link 
+              href="/events"
+              className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
+            >
+              Events
+              <span className={`absolute bottom-0 left-0 w-0 h-0.5 ${underlineClass} transition-all duration-300 group-hover:w-full`}></span>
+            </Link>
+
+            <Link 
               href="/blog"
               className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium relative group py-2`}
             >
@@ -280,6 +288,14 @@ export default function Header() {
                   </div>
                 </div>
               </div>
+
+              <Link 
+                href="/events"
+                className={`font-body ${textClass} ${hoverTextClass} transition-all duration-300 font-medium text-lg hover:translate-x-2`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Events
+              </Link>
 
               <Link 
                 href="/blog"
