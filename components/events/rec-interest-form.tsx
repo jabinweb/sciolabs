@@ -44,8 +44,10 @@ export function RecInterestForm() {
     const data = {
       name: (form.elements.namedItem('name') as HTMLInputElement).value,
       email: (form.elements.namedItem('email') as HTMLInputElement).value,
+      phone: (form.elements.namedItem('phone') as HTMLInputElement).value,
       organisation: (form.elements.namedItem('organisation') as HTMLInputElement)
         .value,
+      city: (form.elements.namedItem('city') as HTMLInputElement).value,
       interests,
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
     }
@@ -115,6 +117,41 @@ export function RecInterestForm() {
         </div>
       </div>
 
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label
+            htmlFor="phone"
+            className="font-heading text-sm font-medium text-gray-700"
+          >
+            Phone number (WhatsApp)
+          </Label>
+          <Input
+            id="phone"
+            name="phone"
+            type="tel"
+            required
+            placeholder="+91 98765 43210"
+            className="h-10 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="city"
+            className="font-heading text-sm font-medium text-gray-700"
+          >
+            City / Town
+          </Label>
+          <Input
+            id="city"
+            name="city"
+            required
+            placeholder="Your city or town"
+            className="h-10 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
+          />
+        </div>
+      </div>
+
       <div className="space-y-2">
         <Label
           htmlFor="organisation"
@@ -170,13 +207,13 @@ export function RecInterestForm() {
           htmlFor="message"
           className="font-heading text-sm font-medium text-gray-700"
         >
-          Message
+          Any questions for us?
         </Label>
         <Textarea
           id="message"
           name="message"
           rows={3}
-          placeholder="Anything else we should know?"
+          placeholder="Optional — ask us anything"
           className="rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
         />
       </div>

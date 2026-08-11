@@ -79,18 +79,18 @@ export default function EventsPage() {
               </div>
 
               <Card className="group border-0 bg-white shadow-md transition-all duration-300 hover:shadow-lg">
-                <CardContent className="p-5">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-scio-blue">
-                      <Mail className="h-4 w-4 text-white" />
+                <CardContent className="p-5 md:p-6">
+                  <div className="flex items-center space-x-3 md:space-x-4">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-scio-blue md:h-12 md:w-12">
+                      <Mail className="h-4 w-4 text-white md:h-5 md:w-5" />
                     </div>
                     <div>
-                      <h4 className="font-heading text-sm font-semibold text-gray-800">
+                      <h4 className="font-heading text-sm font-semibold text-gray-800 md:text-base">
                         Email
                       </h4>
                       <a
                         href="mailto:info@sciolabs.in"
-                        className="font-body text-sm text-gray-600 hover:text-scio-blue"
+                        className="font-body text-sm text-gray-600 hover:text-scio-blue md:text-lg"
                       >
                         info@sciolabs.in
                       </a>
@@ -100,18 +100,18 @@ export default function EventsPage() {
               </Card>
 
               <Card className="group border-0 bg-white shadow-md transition-all duration-300 hover:shadow-lg">
-                <CardContent className="p-5">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-scio-orange">
-                      <Phone className="h-4 w-4 text-white" />
+                <CardContent className="p-5 md:p-6">
+                  <div className="flex items-center space-x-3 md:space-x-4">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-scio-orange md:h-12 md:w-12">
+                      <Phone className="h-4 w-4 text-white md:h-5 md:w-5" />
                     </div>
                     <div>
-                      <h4 className="font-heading text-sm font-semibold text-gray-800">
+                      <h4 className="font-heading text-sm font-semibold text-gray-800 md:text-base">
                         Phone
                       </h4>
                       <a
                         href="tel:+919495212484"
-                        className="font-body text-sm text-gray-600 hover:text-scio-blue"
+                        className="font-body text-sm text-gray-600 hover:text-scio-blue md:text-lg"
                       >
                         +91 9495-212-484
                       </a>
