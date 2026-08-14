@@ -42,13 +42,14 @@ export function RecInterestForm() {
 
     const form = e.currentTarget
     const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
+    const city = (form.elements.namedItem('city') as HTMLInputElement).value.trim()
     const data = {
       name: (form.elements.namedItem('name') as HTMLInputElement).value,
       ...(email ? { email } : {}),
       phone: (form.elements.namedItem('phone') as HTMLInputElement).value,
       organisation: (form.elements.namedItem('organisation') as HTMLInputElement)
         .value,
-      city: (form.elements.namedItem('city') as HTMLInputElement).value,
+      ...(city ? { city } : {}),
       interests,
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
     }
@@ -141,12 +142,12 @@ export function RecInterestForm() {
             htmlFor="city"
             className="font-heading text-sm font-medium text-gray-700"
           >
-            City / Town
+            City / Town{' '}
+            <span className="font-normal text-gray-500">(optional)</span>
           </Label>
           <Input
             id="city"
             name="city"
-            required
             placeholder="Your city or town"
             className="h-10 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
           />
