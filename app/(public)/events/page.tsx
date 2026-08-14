@@ -11,10 +11,22 @@ export const metadata: Metadata = {
 }
 
 const stats = [
-  { value: '25,000+', label: 'Learners trained' },
-  { value: '20+', label: 'Partners' },
-  { value: '4,000+', label: 'Games built' },
-  { value: '70,000+', label: 'Learning hours' },
+  {
+    value: '25,000+',
+    lines: ['Students & Educators', 'trained over 6 years'],
+  },
+  {
+    value: '20+',
+    lines: ['Institutional partnerships', 'for courses'],
+  },
+  {
+    value: '4000+',
+    lines: ['Gamified revision', 'games built'],
+  },
+  {
+    value: '70,000+',
+    lines: ['Learning hours', 'delivered'],
+  },
 ]
 
 export default function EventsPage() {
@@ -32,29 +44,42 @@ export default function EventsPage() {
                 Upward Equipping.
               </h1>
               <p className="font-body text-body mb-4 text-base leading-relaxed text-gray-600 md:text-lg">
-                Purpose-built learning for outcomes that last.
+                Purpose-built learning for
+                <br />
+                outcomes that last.
               </p>
               <p className="font-body text-sm leading-relaxed text-gray-600 md:text-base">
                 Reimagining Education calls for churches and communities to
                 build learning that forms wisdom, character, and competence.
-                ScioLabs equips that work with programmes, tools, and training
-                for the institutions carrying the mission forward.
+                ScioLabs equips that work through purpose built programmes,
+                engaging learning tools, and custom curriculum and training for
+                the institutions carrying the mission forward.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 sm:gap-5">
-              {stats.map((stat) => (
-                <Card key={stat.label} className="border-0 bg-white shadow-md">
-                  <CardContent className="p-5 md:p-6">
-                    <p className="font-heading text-2xl font-bold text-scio-blue md:text-3xl">
-                      {stat.value}
-                    </p>
-                    <p className="font-body mt-1 text-sm text-gray-600">
-                      {stat.label}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
+            <div>
+              <h2 className="font-heading mb-4 text-lg font-semibold text-scio-blue md:text-xl">
+                Numbers Speak
+              </h2>
+              <div className="grid grid-cols-2 gap-4 sm:gap-5">
+                {stats.map((stat) => (
+                  <Card
+                    key={stat.value}
+                    className="border-0 bg-white shadow-md"
+                  >
+                    <CardContent className="p-5 md:p-6">
+                      <p className="font-heading text-2xl font-bold text-scio-blue md:text-3xl">
+                        {stat.value}
+                      </p>
+                      <div className="font-body mt-1 text-sm text-gray-600">
+                        {stat.lines.map((line) => (
+                          <p key={line}>{line}</p>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           </div>
         </div>

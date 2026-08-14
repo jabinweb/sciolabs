@@ -41,9 +41,10 @@ export function RecInterestForm() {
     setLoading(true)
 
     const form = e.currentTarget
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim()
     const data = {
       name: (form.elements.namedItem('name') as HTMLInputElement).value,
-      email: (form.elements.namedItem('email') as HTMLInputElement).value,
+      ...(email ? { email } : {}),
       phone: (form.elements.namedItem('phone') as HTMLInputElement).value,
       organisation: (form.elements.namedItem('organisation') as HTMLInputElement)
         .value,
@@ -59,7 +60,8 @@ export function RecInterestForm() {
         body: JSON.stringify({
           formName: 'rec-2026',
           data,
-          email: data.email,
+          ...(email ? { email } : {}),
+          phone: data.phone,
           source: 'events-rec-2026',
         }),
       })
@@ -104,13 +106,12 @@ export function RecInterestForm() {
             htmlFor="email"
             className="font-heading text-sm font-medium text-gray-700"
           >
-            Email
+            Email <span className="font-normal text-gray-500">(optional)</span>
           </Label>
           <Input
             id="email"
             name="email"
             type="email"
-            required
             placeholder="you@organisation.org"
             className="h-10 rounded-lg border-gray-300 focus:border-scio-blue focus:ring-scio-blue"
           />
@@ -169,7 +170,7 @@ export function RecInterestForm() {
 
       <fieldset className="space-y-3">
         <legend className="font-heading text-sm font-medium text-gray-700">
-          What are you interested in?
+          What we offer?
         </legend>
         <p className="font-body text-xs text-gray-500">
           Select all that apply
