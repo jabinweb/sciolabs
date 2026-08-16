@@ -13,7 +13,7 @@ export const ROADMAP_STATUSES: { value: RoadmapStatus; label: string }[] = [
   { value: "shipped", label: "Shipped" },
 ];
 
-export const ROADMAP_VOTER_COOKIE = "dbcrm_roadmap_voter";
+export const ROADMAP_VOTER_COOKIE = "sciolabs_roadmap_voter";
 
 const STATUS_SET = new Set<RoadmapStatus>([
   "considering",

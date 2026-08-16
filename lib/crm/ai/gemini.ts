@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { getSetting, SETTING_KEYS } from "@/lib/crm/app-settings";
 
-/** Same default chain as discovery-bible-platform `@repo/ai` (2026-08). */
+/** Default Gemini model fallback chain. */
 export const DEFAULT_GEMINI_MODELS = [
   "gemini-3.1-flash-lite",
   "gemini-3.5-flash-lite",

@@ -18,13 +18,13 @@ export default async function HelpHomePage() {
   return (
     <div className="space-y-10">
       <section className="space-y-5 py-6 md:py-10">
-        <p className="text-sm font-medium tracking-wide text-[#921a1d]">Discovery Bible Support</p>
+        <p className="text-sm font-medium tracking-wide text-primary">ScioLabs Support</p>
         <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
-          How can we help you study well?
+          How can we help?
         </h1>
         <p className="max-w-xl text-base leading-7 text-muted-foreground">
-          Browse answers, send feedback from the reader, or open a support ticket. Signed-in
-          customers can track every conversation in one place.
+          Browse answers or open a support ticket. Signed-in customers can track every
+          conversation in one place.
         </p>
         <div className="flex flex-wrap gap-3">
           <Button nativeButton={false} render={<Link href="/support/tickets/new" />}>
@@ -32,9 +32,6 @@ export default async function HelpHomePage() {
           </Button>
           <Button nativeButton={false} variant="outline" render={<Link href="/support/articles" />}>
             Browse knowledge
-          </Button>
-          <Button nativeButton={false} variant="ghost" render={<Link href="/support/roadmap" />}>
-            Feature roadmap
           </Button>
           {email ? (
             <Button nativeButton={false} variant="ghost" render={<Link href="/support/tickets" />}>
@@ -55,7 +52,7 @@ export default async function HelpHomePage() {
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {featured.map((article) => (
-            <Link key={article.id} href={`/articles/${article.slug}`}>
+            <Link key={article.id} href={`/support/articles/${article.slug}`}>
               <Card className="h-full transition-colors hover:bg-card/80">
                 <CardHeader>
                   <CardDescription>{article.category}</CardDescription>

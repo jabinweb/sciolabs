@@ -76,7 +76,7 @@ export default async function ContactDetailPage({
       <Card>
         <CardHeader>
           <CardTitle>Tickets</CardTitle>
-          <CardDescription>Every conversation linked to this Discovery Bible account.</CardDescription>
+          <CardDescription>Every conversation linked to this contact.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           {tickets.map((ticket) => (

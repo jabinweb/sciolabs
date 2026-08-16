@@ -83,14 +83,14 @@ async function verifyIngestConnection() {
 
   const publicUrl = (await getSetting(SETTING_KEYS.appUrl)).replace(/\/$/, "");
   if (publicUrl) {
-    const remote = await fetch(`${publicUrl}/api/ingest/tickets`, {
+    const remote = await fetch(`${publicUrl}/api/crm/ingest/tickets`, {
       method: "GET",
       headers: { authorization: `Bearer ${key}` },
       cache: "no-store",
       signal: AbortSignal.timeout(8_000),
     });
     if (remote.status === 401) {
-      throw new Error("Public URL reached ingest but rejected the key. Save the same key the app uses.");
+      throw new Error("Public URL reached ingest but rejected the key. Save the same key the client uses.");
     }
     if (!remote.ok) {
       throw new Error(`Ingest at ${publicUrl} returned ${remote.status}.`);
@@ -105,7 +105,7 @@ async function verifyFreshdeskConnection() {
   const url =
     (await getSetting(SETTING_KEYS.freshdeskUrl)) ||
     process.env.FRESHDESK_URL ||
-    "https://discoverybible.freshdesk.com";
+    "https://desk.freshdesk.com";
   const apiKey =
     (await getSetting(SETTING_KEYS.freshdeskApiKey)) || process.env.FRESHDESK_API_KEY || "";
   if (!apiKey.trim()) throw new Error("Save a Freshdesk API key first.");

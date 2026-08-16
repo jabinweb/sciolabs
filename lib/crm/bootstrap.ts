@@ -4,7 +4,6 @@ import * as schema from "@/db/schema";
 import {
   cannedResponses,
   kbArticles,
-  roadmapItems,
 } from "@/db/schema";
 
 type AppDb = PostgresJsDatabase<typeof schema>;
@@ -145,17 +144,17 @@ async function seedCannedResponses(database: AppDb) {
     {
       title: "Thanks, looking into it",
       shortcut: "#thanks",
-      body: "Thank you for the report — we have this in the reader queue and will update you as soon as we reproduce it.",
+      body: "Thank you for writing in. We have your request and will follow up shortly.",
     },
     {
-      title: "License / devices",
-      shortcut: "#devices",
-      body: "A Full license is per person. Churches typically assign one Full seat per teacher.",
+      title: "Need a bit more detail",
+      shortcut: "#details",
+      body: "Could you share a bit more context so we can help accurately? Screenshots or the page URL are useful if you have them.",
     },
     {
-      title: "Billing received",
-      shortcut: "#billing",
-      body: "I see the Stripe event on our side. I am reviewing the invoice now and will confirm refund or credit shortly.",
+      title: "Resolved — closing out",
+      shortcut: "#resolved",
+      body: "Glad this is sorted. I am marking the ticket resolved. Reply on this thread if anything else comes up.",
     },
   ]);
 }
@@ -163,69 +162,16 @@ async function seedCannedResponses(database: AppDb) {
 async function seedKbArticles(database: AppDb) {
   await database.insert(kbArticles).values([
     {
-      title: "Contact Discovery Bible support",
+      title: "Contact ScioLabs support",
       slug: "contact-support",
       category: "Getting started",
-      body: "From the reader, open Help → Send feedback. In-app feedback becomes a CRM ticket automatically.",
+      body: "Open a ticket at /support/tickets/new or submit a form on the website. We reply by email and in this portal.",
     },
     {
-      title: "Device limits on a Full license",
-      slug: "device-limits",
-      category: "Billing",
-      body: "Full licenses allow a small set of devices per person. Sharing one login across a church staff is not supported.",
-    },
-  ]);
-}
-
-async function seedRoadmapItems(database: AppDb) {
-  await database.insert(roadmapItems).values([
-    {
-      title: "Offline chapter download",
-      body: "Download a book or chapter for reading without a network connection.",
-      status: "in_progress",
-      published: true,
-      sortOrder: 10,
-      voteCount: 42,
-    },
-    {
-      title: "Shared church reading plans",
-      body: "Pastors assign a plan; members see progress together.",
-      status: "planned",
-      published: true,
-      sortOrder: 10,
-      voteCount: 28,
-    },
-    {
-      title: "Dark mode for the reader",
-      body: "System-aware and manual dark theme across reading and study panes.",
-      status: "shipped",
-      published: true,
-      sortOrder: 10,
-      voteCount: 61,
-    },
-    {
-      title: "Audio Bible playback",
-      body: "Listen while following along in the text, with verse sync.",
-      status: "considering",
-      published: true,
-      sortOrder: 10,
-      voteCount: 55,
-    },
-    {
-      title: "Export highlights to PDF",
-      body: "Export selected notes and highlights as a printable PDF.",
-      status: "considering",
-      published: true,
-      sortOrder: 20,
-      voteCount: 19,
-    },
-    {
-      title: "Multi-column parallel layout on desktop",
-      body: "Compare three translations side by side on wide screens.",
-      status: "planned",
-      published: true,
-      sortOrder: 20,
-      voteCount: 33,
+      title: "Track an existing request",
+      slug: "track-ticket",
+      category: "Getting started",
+      body: "Sign in to the support portal with the email you used on the form. Your tickets appear under My tickets.",
     },
   ]);
 }
@@ -239,10 +185,6 @@ export async function bootstrapDb(database: AppDb) {
   const [kbCount] = await database.select({ n: count() }).from(kbArticles)
   if ((kbCount?.n ?? 0) === 0) {
     await seedKbArticles(database)
-  }
-  const [roadmapCount] = await database.select({ n: count() }).from(roadmapItems)
-  if ((roadmapCount?.n ?? 0) === 0) {
-    await seedRoadmapItems(database)
   }
 }
 

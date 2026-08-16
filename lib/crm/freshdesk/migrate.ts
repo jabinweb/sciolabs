@@ -436,7 +436,7 @@ export async function startFreshdeskMigration(input: {
   apiKey: string;
 }) {
   const baseUrl = normalizeFreshdeskBaseUrl(
-    input.url || process.env.FRESHDESK_URL || "https://discoverybible.freshdesk.com",
+    input.url || process.env.FRESHDESK_URL || "https://yourcompany.freshdesk.com",
   );
   const apiKey = normalizeFreshdeskApiKey(
     input.apiKey || process.env.FRESHDESK_API_KEY || "",
@@ -509,7 +509,7 @@ export async function syncAllFromFreshdesk(input?: { url?: string; apiKey?: stri
   await ensureDb();
   const remapped = await remapFreshdeskTicketNumbers();
   const baseUrl = normalizeFreshdeskBaseUrl(
-    input?.url || process.env.FRESHDESK_URL || "https://discoverybible.freshdesk.com",
+    input?.url || process.env.FRESHDESK_URL || "https://yourcompany.freshdesk.com",
   );
   const apiKey = normalizeFreshdeskApiKey(input?.apiKey || process.env.FRESHDESK_API_KEY || "");
   if (!apiKey) throw new Error("FRESHDESK_API_KEY is required");
@@ -596,7 +596,7 @@ export async function syncAllFromFreshdesk(input?: { url?: string; apiKey?: stri
 export async function importFreshdeskAgentsFromEnv() {
   await ensureDb();
   const baseUrl = normalizeFreshdeskBaseUrl(
-    process.env.FRESHDESK_URL || "https://discoverybible.freshdesk.com",
+    process.env.FRESHDESK_URL || "https://yourcompany.freshdesk.com",
   );
   const apiKey = normalizeFreshdeskApiKey(process.env.FRESHDESK_API_KEY || "");
   if (!apiKey) throw new Error("FRESHDESK_API_KEY is required");

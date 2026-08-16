@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
         (typeof body.url === "string" ? body.url : "") ||
         (await getSetting(SETTING_KEYS.freshdeskUrl)) ||
         process.env.FRESHDESK_URL ||
-        "https://discoverybible.freshdesk.com";
+        "https://yourcompany.freshdesk.com";
       const apiKey =
         (typeof body.apiKey === "string" ? body.apiKey : "") ||
         (await getSetting(SETTING_KEYS.freshdeskApiKey)) ||

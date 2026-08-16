@@ -36,7 +36,7 @@ export default async function ContactsPage({
         <div className="min-w-0">
           <h1 className="text-2xl font-semibold tracking-tight">Contacts</h1>
           <p className="text-sm text-muted-foreground">
-            Discovery Bible app users synced when they send feedback or open a ticket.
+            Website form submissions and support tickets create contacts, matched by email.
           </p>
         </div>
         <form action="/crm/contacts" method="get" className="flex w-full gap-2 sm:max-w-md">
@@ -90,7 +90,7 @@ export default async function ContactsPage({
             {contacts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
-                  No contacts yet. In-app feedback creates them automatically.
+                  No contacts yet. Form submissions and tickets create them automatically.
                 </TableCell>
               </TableRow>
             ) : null}

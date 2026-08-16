@@ -24,7 +24,7 @@ export default async function KnowledgePage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Knowledge</h1>
         <p className="text-sm text-muted-foreground">
-          Internal articles agents can reuse in replies. The reader Help Center can point here later.
+          Internal articles agents can reuse in replies. Published ones also appear on /support.
         </p>
       </div>
       {[...grouped.entries()].map(([category, items]) => (

@@ -34,8 +34,7 @@ export default async function HelpNewTicketPage({
         <CardHeader>
           <CardTitle>New ticket</CardTitle>
           <CardDescription>
-            Already have an account on Discovery Bible? Use the same email so we can match your
-            history.
+            Use the email you submitted on the website so we can match your history.
           </CardDescription>
         </CardHeader>
         <CardContent>

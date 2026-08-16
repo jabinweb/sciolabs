@@ -30,10 +30,10 @@ export default async function HelpArticlesPage({
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Knowledge base</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Guides for licensing, the reader, and getting help.
+            Guides for programs, events, and getting help.
           </p>
         </div>
-        <form className="flex flex-wrap gap-2" action="/articles" method="get">
+        <form className="flex flex-wrap gap-2" action="/support/articles" method="get">
           <Input
             name="q"
             defaultValue={q}
@@ -58,7 +58,7 @@ export default async function HelpArticlesPage({
           </h2>
           <div className="grid gap-3 md:grid-cols-2">
             {items.map((article) => (
-              <Link key={article.id} href={`/articles/${article.slug}`}>
+              <Link key={article.id} href={`/support/articles/${article.slug}`}>
                 <Card className="h-full hover:bg-card/80">
                   <CardHeader>
                     <CardTitle>{article.title}</CardTitle>

@@ -7,7 +7,7 @@ async function fromAddress() {
   return (
     (await getSetting(SETTING_KEYS.emailFrom)) ||
     (await getSetting(SETTING_KEYS.smtpUser)) ||
-    "Discovery Bible Support <hello@discoverybible.com>"
+    "ScioLabs Support <hello@sciolabs.in>"
   );
 }
 
@@ -120,13 +120,13 @@ export async function sendTestEmail(to: string) {
   await sendEmail(
     {
       to: address,
-      subject: "Discovery Bible CRM — test email",
+      subject: "ScioLabs CRM — test email",
       text: [
-        "This is a test from Discovery Bible CRM.",
+        "This is a test from ScioLabs CRM.",
         "",
         "If you received this, outgoing mail is working.",
         "",
-        "— Discovery Bible Support",
+        "— ScioLabs Support",
       ].join("\n"),
     },
     true,
@@ -157,14 +157,14 @@ export async function notifyCustomerTicketCreated(opts: {
     to: opts.to,
     subject: `We received your request ${ref}: ${opts.subject}`,
     text: [
-      `Thanks for contacting Discovery Bible support.`,
+      `Thanks for contacting ScioLabs support.`,
       ``,
       `Ticket ${ref}: ${opts.subject}`,
       ``,
       `Track updates here:`,
       link,
       ``,
-      `— Discovery Bible Support`,
+      `— ScioLabs Support`,
     ].join("\n"),
   });
 }
@@ -190,7 +190,7 @@ export async function notifyCustomerAgentReply(opts: {
       `View and reply:`,
       link,
       ``,
-      `— Discovery Bible Support`,
+      `— ScioLabs Support`,
     ].join("\n"),
   });
 }

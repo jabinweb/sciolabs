@@ -21,7 +21,7 @@ export default async function MigratePage() {
   const defaultUrl =
     values[SETTING_KEYS.freshdeskUrl] ||
     process.env.FRESHDESK_URL ||
-    "https://discoverybible.freshdesk.com";
+    "https://yourcompany.freshdesk.com";
   const hasSavedKey = Boolean(masked[SETTING_KEYS.freshdeskApiKey] || fromEnv[SETTING_KEYS.freshdeskApiKey]);
 
   return (

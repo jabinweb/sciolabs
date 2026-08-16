@@ -48,7 +48,7 @@ export default async function TicketsPage({
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
           <p className="text-sm text-muted-foreground">
-            Freshdesk-style queue — filter by view, status, and priority.
+            Filter by view, status, and priority.
           </p>
         </div>
         <div className="flex gap-2">

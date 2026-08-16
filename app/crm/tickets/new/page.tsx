@@ -48,7 +48,7 @@ export default async function NewTicketPage({
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">New ticket</h1>
         <p className="text-sm text-muted-foreground">
-          Log a conversation that started outside the app — phone, email, or a church admin.
+          Log a conversation that started outside the website — phone, email, or walk-in.
         </p>
       </div>
 

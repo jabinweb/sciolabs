@@ -8,7 +8,6 @@ import {
   Kanban,
   LayoutDashboard,
   LogOut,
-  Map,
   Plus,
   Settings,
   Users,
@@ -91,7 +90,6 @@ function navItems(role: Agent["role"]): NavItem[] {
     },
     { href: "/crm/contacts", label: "Contacts", icon: Users },
     { href: "/crm/knowledge", label: "Knowledge", icon: BookOpen },
-    { href: "/crm/roadmap", label: "Roadmap", icon: Map },
     {
       href: settingsHome,
       label: "Settings",

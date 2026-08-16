@@ -30,14 +30,6 @@ export async function PortalShell({ children }: { children: React.ReactNode }) {
               nativeButton={false}
               variant="ghost"
               size="sm"
-              render={<Link href="/support/roadmap" />}
-            >
-              Roadmap
-            </Button>
-            <Button
-              nativeButton={false}
-              variant="ghost"
-              size="sm"
               render={<Link href="/support/tickets/new" />}
             >
               Contact us

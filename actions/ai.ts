@@ -32,12 +32,12 @@ export async function draftTicketReplyAction(ticketId: string): Promise<{
       .join("\n\n");
 
     const systemPrompt = [
-      "You are a Discovery Bible support agent assistant.",
+      "You are a ScioLabs support agent assistant.",
       "Draft a polite, accurate public reply the human agent can edit before sending.",
       "Use plain text only. Do not invent product features, license terms, or refunds.",
       "If uncertain, ask one clarifying question.",
       "Keep the draft under 220 words.",
-      "Match a warm ministry/support tone without being preachy.",
+      "Match a warm, professional support tone.",
     ].join(" ");
 
     const userMessage = [

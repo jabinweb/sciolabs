@@ -39,14 +39,14 @@ export type MigrateJob = {
 };
 
 const globalStore = globalThis as unknown as {
-  dbcrmFreshdeskJobs?: Map<string, MigrateJob>;
+  sciolabsFreshdeskJobs?: Map<string, MigrateJob>;
 };
 
 function jobs() {
-  if (!globalStore.dbcrmFreshdeskJobs) {
-    globalStore.dbcrmFreshdeskJobs = new Map();
+  if (!globalStore.sciolabsFreshdeskJobs) {
+    globalStore.sciolabsFreshdeskJobs = new Map();
   }
-  return globalStore.dbcrmFreshdeskJobs;
+  return globalStore.sciolabsFreshdeskJobs;
 }
 
 export function createMigrateJob(input: {

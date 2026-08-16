@@ -102,7 +102,7 @@ export function SmtpFields({
           name="smtp_user"
           autoComplete="off"
           defaultValue={user}
-          placeholder="hello@discoverybible.com"
+          placeholder="hello@sciolabs.in"
         />
       </div>
       <div className="space-y-1.5">

@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-export const PORTAL_COOKIE = "dbcrm_portal";
+export const PORTAL_COOKIE = "sciolabs_support";
 
 function secret() {
   const value = process.env.CRM_SESSION_SECRET;

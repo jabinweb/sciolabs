@@ -23,6 +23,7 @@ import type {
   TicketType,
 } from "./types";
 import { hashPassword } from "./password";
+import { upsertSiteStaffUser } from "./site-user";
 import { isInternalImportTag } from "./format";
 import { slaDueDatesFor, applySlaDues } from "./sla";
 import { runAutomations } from "./automations";
@@ -104,7 +105,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       unassigned: sql<number>`cast(count(*) filter (where ${tickets.status} in ('open','pending') and ${tickets.assigneeId} is null) as int)`,
       urgent: sql<number>`cast(count(*) filter (where ${tickets.status} in ('open','pending') and ${tickets.priority} = 'urgent') as int)`,
       resolvedToday: sql<number>`cast(count(*) filter (where ${tickets.status} = 'resolved' and ${tickets.resolvedAt} >= date_trunc('day', now())) as int)`,
-      fromApp24h: sql<number>`cast(count(*) filter (where ${tickets.source} in ('app','feedback') and ${tickets.createdAt} >= now() - interval '24 hours') as int)`,
+      fromApp24h: sql<number>`cast(count(*) filter (where ${tickets.source} in ('portal','app','feedback') and ${tickets.createdAt} >= now() - interval '24 hours') as int)`,
     })
     .from(tickets);
 
@@ -408,6 +409,8 @@ export type IngestTicketInput = {
   subject?: string | null;
   path?: string | null;
   source?: Ticket["source"];
+  tags?: string[];
+  phone?: string | null;
 };
 
 function mapFeedbackType(type: string | null | undefined): {
@@ -460,6 +463,7 @@ export async function ingestTicket(input: IngestTicketInput) {
     };
     if (input.email) patch.email = input.email;
     if (input.name) patch.name = input.name;
+    if (input.phone) patch.phone = input.phone;
     if (license) patch.licenseTier = license;
     if (input.subscriptionStatus) patch.subscriptionStatus = input.subscriptionStatus;
     await db.update(contacts).set(patch).where(eq(contacts.id, contactId));
@@ -470,10 +474,11 @@ export async function ingestTicket(input: IngestTicketInput) {
         appUserId: input.appUserId ?? null,
         email: input.email ?? null,
         name: input.name ?? null,
+        phone: input.phone ?? null,
         licenseTier: license,
         subscriptionStatus: input.subscriptionStatus ?? null,
         lastSeenAt: new Date(),
-        tags: ["app"],
+        tags: input.tags?.length ? input.tags : ["website"],
       })
       .returning();
     contactId = created.id;
@@ -498,7 +503,10 @@ export async function ingestTicket(input: IngestTicketInput) {
       priority: mapped.priority,
       type: mapped.type,
       source,
-      tags: input.path ? [input.path] : [],
+      tags: [
+        ...(input.path ? [input.path] : []),
+        ...(input.tags ?? []),
+      ],
       appFeedbackId: input.feedbackId ?? null,
       createdAt,
       ...dues,
@@ -773,6 +781,12 @@ export async function createAgent(opts: {
       status: "online",
     })
     .returning();
+  await upsertSiteStaffUser({
+    email,
+    name: created.name,
+    password: opts.password,
+    role: opts.role,
+  });
   return toAgent(created);
 }
 
@@ -791,6 +805,14 @@ export async function updateAgentProfile(
   if (fields.status) patch.status = fields.status;
   if (Object.keys(patch).length === 0) return;
   await db.update(agents).set(patch).where(eq(agents.id, agentId));
+  const row = await db.query.agents.findFirst({ where: eq(agents.id, agentId) });
+  if (row && (fields.name || fields.role)) {
+    await upsertSiteStaffUser({
+      email: row.email,
+      name: row.name,
+      role: row.role === "admin" ? "admin" : "agent",
+    });
+  }
 }
 
 export async function setAgentPassword(agentId: string, password: string) {
@@ -799,6 +821,15 @@ export async function setAgentPassword(agentId: string, password: string) {
     .update(agents)
     .set({ passwordHash: hashPassword(password) })
     .where(eq(agents.id, agentId));
+  const row = await db.query.agents.findFirst({ where: eq(agents.id, agentId) });
+  if (row) {
+    await upsertSiteStaffUser({
+      email: row.email,
+      name: row.name,
+      password,
+      role: row.role === "admin" ? "admin" : "agent",
+    });
+  }
 }
 
 export async function createCannedResponse(opts: {

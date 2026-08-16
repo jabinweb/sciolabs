@@ -25,20 +25,24 @@ export function SettingsShell({
   return (
     <Tabs
       value={current}
+      className="w-full"
       onValueChange={(next) => {
         const id = String(next);
         router.replace(`/crm/settings?tab=${id}`, { scroll: false });
       }}
     >
-      <TabsList variant="line" className="h-auto w-full flex-wrap justify-start">
+      <TabsList
+        variant="line"
+        className="h-auto w-full shrink-0 flex-wrap justify-start border-b border-border pb-px"
+      >
         {tabs.map((item) => (
-          <TabsTrigger key={item.id} value={item.id} className="px-3">
+          <TabsTrigger key={item.id} value={item.id}>
             {item.label}
           </TabsTrigger>
         ))}
       </TabsList>
       {tabs.map((item) => (
-        <TabsContent key={item.id} value={item.id} className="mt-4 space-y-6">
+        <TabsContent key={item.id} value={item.id} className="mt-4 flex flex-col gap-6">
           {panels[item.id]}
         </TabsContent>
       ))}

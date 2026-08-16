@@ -48,7 +48,7 @@ function notice(
   const okKey = Array.isArray(ok) ? ok[0] : ok;
   const errKey = Array.isArray(error) ? error[0] : error;
   const detail = flashDetail(detailRaw);
-  if (okKey === "agent") return { tone: "ok" as const, text: "Agent created. They can sign in with that email and password." };
+  if (okKey === "agent") return { tone: "ok" as const, text: "Agent created. They can sign in at /auth/signin with that email and password." };
   if (okKey === "updated") return { tone: "ok" as const, text: "Agent updated." };
   if (okKey === "macro") return { tone: "ok" as const, text: "Canned response added." };
   if (okKey === "kb") return { tone: "ok" as const, text: "Knowledge article published." };
@@ -209,7 +209,7 @@ export default async function SettingsPage({
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="new-email">Email</Label>
-                <Input id="new-email" name="email" type="email" required placeholder="agent@discoverybible.com" />
+                <Input id="new-email" name="email" type="email" required placeholder="agent@sciolabs.in" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="new-password">Temporary password</Label>
@@ -406,7 +406,7 @@ export default async function SettingsPage({
                 </TestRow>
                 <TestRow target="database" label="Test database">
                   <p className="text-xs text-muted-foreground">
-                    Confirms the CRM can query Postgres (or local PGlite).
+                    Confirms the CRM can query the shared Postgres database.
                   </p>
                 </TestRow>
               </CardContent>
@@ -436,7 +436,7 @@ export default async function SettingsPage({
                       <Input
                         id="email_from"
                         name="email_from"
-                        placeholder="Discovery Bible Support &lt;support@example.com&gt;"
+                        placeholder="ScioLabs Support &lt;hello@sciolabs.in&gt;"
                         defaultValue={values[SETTING_KEYS.emailFrom]}
                       />
                       <p className="text-xs text-muted-foreground">
@@ -450,7 +450,7 @@ export default async function SettingsPage({
                         id="notify_to"
                         name="notify_to"
                         type="email"
-                        placeholder="support@discoverybible.com"
+                        placeholder="hello@sciolabs.in"
                         defaultValue={values[SETTING_KEYS.notifyTo]}
                       />
                       <p className="text-xs text-muted-foreground">
@@ -517,8 +517,7 @@ export default async function SettingsPage({
               <CardHeader>
                 <CardTitle>AI</CardTitle>
                 <CardDescription>
-                  Gemini powers Draft with AI on the ticket reply box. Use the same key as
-                  discovery-bible-platform.
+                  Gemini powers Draft with AI on the ticket reply box.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -567,8 +566,9 @@ export default async function SettingsPage({
               <CardHeader>
                 <CardTitle>App ingest</CardTitle>
                 <CardDescription>
-                  Discovery Bible posts feedback to{" "}
-                  <code className="font-mono text-xs">POST /api/ingest/tickets</code> with this Bearer token.
+                  Website forms create tickets automatically (no key needed). Use this Bearer token
+                  only for external apps posting to{" "}
+                  <code className="font-mono text-xs">POST /api/crm/ingest/tickets</code>.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -591,18 +591,17 @@ export default async function SettingsPage({
                 </form>
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <p>
-                    On the Discovery Bible app set{" "}
-                    <code className="font-mono text-xs">CRM_INGEST_URL</code> to this desk’s ingest URL and match
-                    the saved key.
+                    Enquiry forms on the site save a Form Response in Admin and open a CRM ticket
+                    tagged with the form name. Contacts are matched by email.
                   </p>
                   <p>
-                    Local example:{" "}
-                    <code className="font-mono text-xs">http://localhost:3000/api/ingest/tickets</code>
+                    Optional ingest URL:{" "}
+                    <code className="font-mono text-xs">https://your-domain/api/crm/ingest/tickets</code>
                   </p>
                 </div>
                 <TestRow target="ingest" label="Test ingest key">
                   <p className="text-xs text-muted-foreground">
-                    Save first. If a public app URL is set, this calls GET /api/ingest/tickets with the key.
+                    Save first. If a public app URL is set, this calls GET /api/crm/ingest/tickets with the key.
                   </p>
                 </TestRow>
               </CardContent>

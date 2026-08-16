@@ -29,7 +29,7 @@ export default async function DashboardPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
         <p className="text-sm text-muted-foreground">
-          Freshdesk-style agent home — jump straight into the queues that need work.
+          Open queues, unassigned work, and tickets that need a first reply.
         </p>
       </div>
 
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
         <StatCard href="/crm/tickets?view=unassigned" title="Unassigned" value={stats.unassigned} hint="No agent yet" />
         <StatCard href="/crm/tickets?view=urgent" title="Urgent" value={stats.urgent} hint="Highest first-response SLA" />
         <StatCard href="/crm/tickets?view=mine" title="My open" value={mineCount} hint="Assigned to you" />
-        <StatCard href="/crm/tickets?view=open" title="From the app (24h)" value={stats.fromApp24h} hint="In-app feedback and reader tickets" />
+        <StatCard href="/crm/tickets?view=open" title="Website (24h)" value={stats.fromApp24h} hint="Forms and support portal tickets" />
       </div>
 
       <Card>

@@ -11,11 +11,11 @@ export function BrandMark({
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <Image
-        src="/sciolabs_logo.png"
+        src="/favicon.png"
         alt="ScioLabs"
         width={32}
         height={32}
-        className="size-8 shrink-0 rounded-full object-contain"
+        className="size-8 shrink-0 rounded-md object-contain"
         priority
       />
       <div className="min-w-0">
@@ -26,7 +26,7 @@ export function BrandMark({
             tone === "sidebar" ? "text-sidebar-foreground/55" : "text-muted-foreground",
           )}
         >
-          Support desk
+          CRM
         </p>
       </div>
     </div>
