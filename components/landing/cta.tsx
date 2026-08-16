@@ -2,8 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { usePathname } from 'next/navigation';
 
 export default function CTASection() {
+  const pathname = usePathname();
+  if (pathname.startsWith('/crm') || pathname.startsWith('/support')) {
+    return null;
+  }
   return (
     <section className="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
       {/* Background decorative elements */}

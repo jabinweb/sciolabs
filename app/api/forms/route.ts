@@ -55,18 +55,25 @@ export async function POST(req: NextRequest) {
 
     // Send emails asynchronously (don't wait for them to complete)
     Promise.all([
-      // Send notification to admin(s)
       sendFormSubmissionNotification(emailData).catch(error => {
         console.error('Failed to send admin notification:', error)
       }),
-      
-      // Send auto-reply to user if email provided
       parsed.email ? sendAutoReply(emailData).catch(error => {
         console.error('Failed to send auto-reply:', error)
-      }) : Promise.resolve()
+      }) : Promise.resolve(),
+      import('@/lib/crm/from-form').then(({ upsertCrmFromForm }) =>
+        upsertCrmFromForm({
+          formName: parsed.formName,
+          email: parsed.email,
+          phone: parsed.phone,
+          source: parsed.source,
+          data: parsed.data as Record<string, unknown>,
+        })
+      ).catch(error => {
+        console.error('CRM lead sync failed:', error)
+      }),
     ]).catch(error => {
       console.error('Email sending failed:', error)
-      // Don't fail the request if emails fail
     })
 
     return NextResponse.json({ 

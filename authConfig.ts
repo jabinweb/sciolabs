@@ -79,9 +79,9 @@ export default {
       const role = auth?.user?.role
       const isOnAdmin = nextUrl.pathname.startsWith("/admin")
 
-      if (isOnAdmin) {
+      if (isOnAdmin || nextUrl.pathname.startsWith("/crm")) {
         if (!isLoggedIn) return false
-        if (role === "admin") return true
+        if (role === "admin" || role === "agent") return true
         return Response.redirect(new URL("/", nextUrl))
       }
 

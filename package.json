@@ -84,7 +84,12 @@
     "tsx": "^4.20.3",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
-    "zod": "^4.0.5"
+    "zod": "^4.0.5",
+    "drizzle-orm": "^0.45.2",
+    "postgres": "^3.4.9",
+    "@google/genai": "^2.17.1",
+    "resend": "^6.20.0",
+    "@base-ui/react": "^1.7.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -118,7 +123,9 @@
       "@prisma/engines",
       "esbuild",
       "prisma",
-      "unrs-resolver"
+      "unrs-resolver",
+      "@google/genai",
+      "protobufjs"
     ]
   }
 }

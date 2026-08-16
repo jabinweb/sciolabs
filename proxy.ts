@@ -9,5 +9,5 @@ export default auth(async function proxy() {
 })
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/crm/:path*'],
 }

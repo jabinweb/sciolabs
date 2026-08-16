@@ -171,14 +171,11 @@ export default function FormResponsesPage() {
   )
   const pageItems = getPageItems(currentPage, totalPages)
 
-  useEffect(() => {
-    setPage(1)
-  }, [formFilter, dateRange])
-
   const hasActiveFilters = formFilter !== 'all' || Boolean(dateRange?.from)
 
   function applyDatePreset(preset: string) {
     const today = new Date()
+    setPage(1)
     if (preset === 'all') {
       setDateRange(undefined)
       return
@@ -338,7 +335,13 @@ export default function FormResponsesPage() {
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <Filter className="h-5 w-5 shrink-0 text-gray-400" />
-            <Select value={formFilter} onValueChange={setFormFilter}>
+            <Select
+              value={formFilter}
+              onValueChange={(value) => {
+                setFormFilter(value)
+                setPage(1)
+              }}
+            >
               <SelectTrigger size="sm" className="w-[160px] bg-white sm:w-[180px]">
                 <SelectValue placeholder="All forms" />
               </SelectTrigger>
@@ -390,7 +393,10 @@ export default function FormResponsesPage() {
                 numberOfMonths={1}
                 defaultMonth={dateRange?.from}
                 selected={dateRange}
-                onSelect={setDateRange}
+                onSelect={(range) => {
+                  setDateRange(range)
+                  setPage(1)
+                }}
                 captionLayout="dropdown"
               />
             </PopoverContent>
@@ -403,6 +409,7 @@ export default function FormResponsesPage() {
               onClick={() => {
                 setFormFilter('all')
                 setDateRange(undefined)
+                setPage(1)
               }}
             >
               <X className="h-4 w-4" />
@@ -412,22 +419,22 @@ export default function FormResponsesPage() {
 
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={exportCsv}
             disabled={loading || filteredResponses.length === 0}
-            className="flex items-center gap-1"
+            aria-label="Export CSV"
+            title="Export CSV"
           >
             <Download className="h-4 w-4" />
-            Export CSV
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => window.location.reload()}
-            className="flex items-center gap-1"
+            aria-label="Refresh"
+            title="Refresh"
           >
             <RefreshCw className="h-4 w-4" />
-            Refresh
           </Button>
         </div>
       </div>

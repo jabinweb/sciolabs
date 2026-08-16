@@ -73,6 +73,12 @@ const sidebarItems: SidebarItem[] = [
     href: '/admin/form-responses'
   },
   {
+    id: 'crm',
+    label: 'CRM',
+    icon: 'fas fa-headset',
+    href: '/crm/dashboard'
+  },
+  {
     id: 'analytics',
     label: 'Analytics',
     icon: 'fas fa-chart-bar',

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/header";
-import Footer from "@/components/layout/footer";
+import MarketingFooter from "@/components/layout/marketing-footer";
 import CTASection from "@/components/landing/cta";
 import NewsletterSection from "@/components/landing/newsletter";
 import { SessionProvider } from "@/components/auth/SessionProvider";
@@ -106,7 +106,7 @@ export default async function RootLayout({
           {children}
           <CTASection />
           {/* <NewsletterSection /> */}
-          <Footer />
+          <MarketingFooter />
           {/* <PWAInstallPrompt /> */}
           <Toaster 
             position="top-right" 

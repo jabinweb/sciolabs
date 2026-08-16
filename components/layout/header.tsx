@@ -68,6 +68,10 @@ export default function Header() {
     };
   }, []);
 
+  if (pathname.startsWith('/crm') || pathname.startsWith('/support')) {
+    return null
+  }
+
   // Don't render until mounted to prevent hydration mismatch
   if (!isMounted) {
     return (
