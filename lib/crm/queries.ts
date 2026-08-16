@@ -251,20 +251,24 @@ export async function listCannedResponses(): Promise<CannedResponse[]> {
 
 export async function listContacts(
   q?: string,
-  opts: { page?: number; pageSize?: number } = {},
+  opts: { page?: number; pageSize?: number; tag?: string } = {},
 ): Promise<{ items: (Contact & { ticketCount: number })[]; total: number }> {
   const query = q?.trim()
+  const tag = opts.tag?.trim()
   const pageSize = Math.max(1, opts.pageSize ?? 200)
   const page = Math.max(1, opts.page ?? 1)
-  const where: Prisma.CrmContactWhereInput = query
-    ? {
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { email: { contains: query, mode: "insensitive" } },
-          { tags: { has: query } },
-        ],
-      }
-    : {}
+  const and: Prisma.CrmContactWhereInput[] = []
+  if (tag) and.push({ tags: { has: tag } })
+  if (query) {
+    and.push({
+      OR: [
+        { name: { contains: query, mode: "insensitive" } },
+        { email: { contains: query, mode: "insensitive" } },
+        { tags: { has: query } },
+      ],
+    })
+  }
+  const where: Prisma.CrmContactWhereInput = and.length ? { AND: and } : {}
 
   const [total, rows] = await Promise.all([
     prisma.crmContact.count({ where }),
@@ -327,6 +331,7 @@ export type IngestTicketInput = {
   source?: Ticket["source"]
   tags?: string[]
   phone?: string | null
+  assigneeId?: string | null
 }
 
 function mapFeedbackType(type: string | null | undefined): {
@@ -364,15 +369,26 @@ export async function ingestTicket(input: IngestTicketInput) {
     })
     contactId = found?.id ?? null
   }
+  if (!contactId && input.phone) {
+    const found = await prisma.crmContact.findFirst({
+      where: { phone: input.phone },
+    })
+    contactId = found?.id ?? null
+  }
 
   const license =
     input.licenseTier === "FULL" || input.licenseTier === "FREE" ? input.licenseTier : null
 
   if (contactId) {
+    const current = await prisma.crmContact.findUnique({ where: { id: contactId } })
+    const tags = Array.from(
+      new Set([...(current?.tags ?? []), ...(input.tags ?? [])]),
+    )
     await prisma.crmContact.update({
       where: { id: contactId },
       data: {
         lastSeenAt: new Date(),
+        tags,
         ...(input.email ? { email: input.email } : {}),
         ...(input.name ? { name: input.name } : {}),
         ...(input.phone ? { phone: input.phone } : {}),
@@ -380,7 +396,7 @@ export async function ingestTicket(input: IngestTicketInput) {
         ...(input.subscriptionStatus ? { subscriptionStatus: input.subscriptionStatus } : {}),
       },
     })
-  } else if (input.email || input.appUserId) {
+  } else if (input.email || input.appUserId || input.phone) {
     const created = await prisma.crmContact.create({
       data: {
         appUserId: input.appUserId ?? null,
@@ -408,6 +424,7 @@ export async function ingestTicket(input: IngestTicketInput) {
   const ticket = await prisma.crmTicket.create({
     data: {
       contactId,
+      assigneeId: input.assigneeId ?? null,
       subject,
       description: message,
       status: "open",

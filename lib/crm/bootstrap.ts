@@ -94,6 +94,53 @@ export async function bootstrapCrm() {
     })
   }
   await replaceLegacySeed()
+  await seedFormRoutingRules()
+}
+
+const FORM_ROUTING_RULES = [
+  {
+    name: "ScioLabs: REC enquiries",
+    trigger: "ticket_created",
+    conditions: [{ field: "tag", op: "eq", value: "rec" }],
+    actions: [
+      { type: "set_type", value: "question" },
+      { type: "add_tag", value: "events" },
+    ],
+  },
+  {
+    name: "ScioLabs: Job applications",
+    trigger: "ticket_created",
+    conditions: [{ field: "tag", op: "eq", value: "jobs" }],
+    actions: [
+      { type: "set_type", value: "general" },
+      { type: "add_tag", value: "hiring" },
+    ],
+  },
+  {
+    name: "ScioLabs: Website support",
+    trigger: "ticket_created",
+    conditions: [{ field: "tag", op: "eq", value: "support" }],
+    actions: [{ type: "set_type", value: "question" }],
+  },
+] as const
+
+async function seedFormRoutingRules() {
+  for (const rule of FORM_ROUTING_RULES) {
+    const existing = await prisma.crmAutomationRule.findFirst({
+      where: { name: rule.name },
+    })
+    if (existing) continue
+    await prisma.crmAutomationRule.create({
+      data: {
+        name: rule.name,
+        trigger: rule.trigger,
+        conditions: JSON.stringify(rule.conditions),
+        actions: JSON.stringify(rule.actions),
+        enabled: true,
+        sortOrder: Date.now() % 1_000_000,
+      },
+    })
+  }
 }
 
 /** @deprecated Use bootstrapCrm */

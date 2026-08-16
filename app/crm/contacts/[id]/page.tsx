@@ -19,6 +19,7 @@ import {
 import { StatusBadge, PriorityBadge, TagChips } from "@/components/crm/badges";
 import { Button } from "@/components/crm/ui/button";
 import { getContact, listTicketsForContact } from "@/lib/crm/queries";
+import { listFormResponsesForContact } from "@/lib/crm/from-form";
 import { relativeTime, ticketRef } from "@/lib/crm/format";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +30,10 @@ export default async function ContactDetailPage({
   const { id } = await params;
   const contact = await getContact(id);
   if (!contact) notFound();
-  const tickets = await listTicketsForContact(id);
+  const [tickets, forms] = await Promise.all([
+    listTicketsForContact(id),
+    listFormResponsesForContact({ email: contact.email, phone: contact.phone }),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -98,6 +102,41 @@ export default async function ContactDetailPage({
           ))}
           {tickets.length === 0 ? (
             <p className="text-sm text-muted-foreground">No tickets yet.</p>
+          ) : null}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Form submissions</CardTitle>
+          <CardDescription>Website forms matched to this contact by email or phone.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {forms.map((form) => (
+            <div key={form.id} className="rounded-lg p-3 ring-1 ring-foreground/10">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="font-medium">{form.formName}</p>
+                  {form.source ? (
+                    <p className="text-xs text-muted-foreground">{form.source}</p>
+                  ) : null}
+                </div>
+                <span className="text-xs text-muted-foreground">{relativeTime(form.createdAt)}</span>
+              </div>
+              {form.fields.length ? (
+                <dl className="mt-2 grid gap-1 text-sm">
+                  {form.fields.map((field) => (
+                    <div key={field.key} className="grid gap-0.5 sm:grid-cols-[8rem_1fr]">
+                      <dt className="text-muted-foreground">{field.key}</dt>
+                      <dd className="min-w-0 wrap-break-word">{field.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : null}
+            </div>
+          ))}
+          {forms.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No form submissions on file.</p>
           ) : null}
         </CardContent>
       </Card>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Download, GitMerge, Upload } from "lucide-react";
 import { Input } from "@/components/crm/ui/input";
 import { Button } from "@/components/crm/ui/button";
 import { Badge } from "@/components/crm/ui/badge";
@@ -14,37 +15,105 @@ import { listContacts } from "@/lib/crm/queries";
 import { relativeTime } from "@/lib/crm/format";
 import { TagChips } from "@/components/crm/badges";
 import { TablePagination, TABLE_PAGE_SIZE, parsePage } from "@/components/crm/table-pagination";
+import {
+  importFormResponseContactsAction,
+  mergeDuplicateContactsAction,
+} from "@/actions/contacts";
 
 export const dynamic = "force-dynamic";
+
+const TAG_FILTERS = [
+  { id: "", label: "All" },
+  { id: "support", label: "Support" },
+  { id: "rec", label: "REC / events" },
+  { id: "jobs", label: "Job applicants" },
+] as const;
+
+function notice(params: Record<string, string | string[] | undefined>) {
+  const imported = typeof params.imported === "string" ? params.imported : undefined;
+  const updated = typeof params.updated === "string" ? params.updated : undefined;
+  const skipped = typeof params.skipped === "string" ? params.skipped : undefined;
+  const merged = typeof params.merged === "string" ? params.merged : undefined;
+  if (merged != null) {
+    return `Merged ${merged} duplicate contact${merged === "1" ? "" : "s"} with the same email.`;
+  }
+  if (imported == null && updated == null) return null;
+  const created = Number(imported ?? 0);
+  const changed = Number(updated ?? 0);
+  const skippedCount = Number(skipped ?? 0);
+  return `Imported form responses: ${created} new contact${created === 1 ? "" : "s"}, ${changed} updated, ${skippedCount} skipped (no email or phone).`;
+}
 
 export default async function ContactsPage({
   searchParams,
 }: PageProps<"/crm/contacts">) {
   const params = await searchParams;
   const q = typeof params.q === "string" ? params.q : "";
+  const tag = typeof params.tag === "string" ? params.tag : "";
   const page = parsePage(params.page);
   const paged = await listContacts(q, {
     page,
     pageSize: TABLE_PAGE_SIZE,
+    tag: tag || undefined,
   });
   const contacts = Array.isArray(paged) ? paged : (paged.items ?? []);
   const total = Array.isArray(paged) ? paged.length : (paged.total ?? 0);
+  const flash = notice(params as Record<string, string | string[] | undefined>);
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-4">
-      <div className="flex shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex shrink-0 flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="min-w-0">
           <h1 className="text-2xl font-semibold tracking-tight">Contacts</h1>
           <p className="text-sm text-muted-foreground">
             Website form submissions and support tickets create contacts, matched by email.
           </p>
+          {flash ? <p className="mt-2 text-sm text-foreground">{flash}</p> : null}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {TAG_FILTERS.map((filter) => {
+              const href = filter.id ? `/crm/contacts?tag=${filter.id}` : "/crm/contacts";
+              const active = tag === filter.id;
+              return (
+                <Button
+                  key={filter.label}
+                  nativeButton={false}
+                  size="sm"
+                  variant={active ? "default" : "outline"}
+                  render={<Link href={href} />}
+                >
+                  {filter.label}
+                </Button>
+              );
+            })}
+          </div>
         </div>
-        <form action="/crm/contacts" method="get" className="flex w-full gap-2 sm:max-w-md">
-          <Input name="q" defaultValue={q} placeholder="Search name or email" />
-          <Button type="submit" variant="outline">
-            Search
-          </Button>
-        </form>
+        <div className="flex w-full flex-col gap-2 sm:max-w-md">
+          <div className="flex flex-wrap gap-2">
+            <form action={importFormResponseContactsAction}>
+              <Button type="submit" variant="outline">
+                <Upload />
+                Import form responses
+              </Button>
+            </form>
+            <Button nativeButton={false} variant="outline" render={<Link href="/crm/contacts/export" />}>
+              <Download />
+              Export CSV
+            </Button>
+            <form action={mergeDuplicateContactsAction}>
+              <Button type="submit" variant="outline">
+                <GitMerge />
+                Merge duplicates
+              </Button>
+            </form>
+          </div>
+          <form action="/crm/contacts" method="get" className="flex w-full gap-2">
+            {tag ? <input type="hidden" name="tag" value={tag} /> : null}
+            <Input name="q" defaultValue={q} placeholder="Search name or email" />
+            <Button type="submit" variant="outline">
+              Search
+            </Button>
+          </form>
+        </div>
       </div>
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
         <Table className="table-fixed" containerClassName="min-h-0 flex-1">
