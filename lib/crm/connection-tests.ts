@@ -1,5 +1,5 @@
-import { db, ensureDb } from "@/lib/crm/db";
-import { appSettings } from "@/db/schema";
+import { prisma } from "@/lib/prisma"
+import { ensureDb } from "@/lib/crm/db"
 import { getSetting, SETTING_KEYS } from "@/lib/crm/app-settings";
 import { appBaseUrl } from "@/lib/crm/app-url";
 import { resolveDatabaseUrl, shouldUseLocalFileDb } from "@/lib/crm/database-url";
@@ -53,7 +53,7 @@ export async function runConnectionTest(
 
 async function verifyDatabaseConnection() {
   await ensureDb();
-  await db.select({ key: appSettings.key }).from(appSettings).limit(1);
+  await prisma.crmAppSetting.findFirst({ select: { key: true } });
   if (shouldUseLocalFileDb()) return "Connected to local PGlite";
   try {
     const host = new URL(resolveDatabaseUrl().replace(/^postgres(ql)?:/i, "http:")).host;

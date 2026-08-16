@@ -1,10 +1,8 @@
-import { randomBytes } from "node:crypto";
-import { eq, inArray, sql } from "drizzle-orm";
-import { db, ensureDb } from "@/lib/crm/db";
-import { agents, contacts, ticketMessages, tickets } from "@/db/schema";
+import type { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { ensureDb } from "@/lib/crm/db";
 import type { TicketPriority, TicketStatus, TicketType } from "@/lib/crm/types";
 import { slaDueDatesFor } from "@/lib/crm/sla";
-import { hashPassword } from "@/lib/crm/password";
 import { cleanMessageText, htmlToText } from "@/lib/crm/message-body";
 import {
   FreshdeskApiError,
@@ -83,9 +81,9 @@ function conversationBody(item: FreshdeskConversation) {
 
 export async function clearExistingTickets(job: MigrateJob) {
   await ensureDb();
-  const [{ n }] = await db.select({ n: sql<number>`cast(count(*) as int)` }).from(tickets);
-  await db.delete(ticketMessages);
-  await db.delete(tickets);
+  const n = await prisma.crmTicket.count();
+  await prisma.crmTicketMessage.deleteMany();
+  await prisma.crmTicket.deleteMany();
   job.stats.ticketsCleared = n ?? 0;
   appendLog(
     job,
@@ -102,38 +100,34 @@ async function upsertContactFromFreshdesk(job: MigrateJob, contact: FreshdeskCon
   const importedTags = (contact.tags ?? []).filter(Boolean);
 
   if (email) {
-    const [existing] = await db
-      .select()
-      .from(contacts)
-      .where(sql`lower(${contacts.email}) = ${email}`)
-      .limit(1);
+    const existing = await prisma.crmContact.findFirst({
+      where: { email: { equals: email, mode: "insensitive" } },
+    });
     if (existing) {
       const tags = Array.from(new Set([...(existing.tags ?? []), ...importedTags, tag, "freshdesk"]));
-      await db
-        .update(contacts)
-        .set({
+      await prisma.crmContact.update({
+        where: { id: existing.id },
+        data: {
           name: contact.name?.trim() || existing.name,
           phone: phone ?? existing.phone,
           tags,
-          updatedAt: new Date(),
-        })
-        .where(eq(contacts.id, existing.id));
+        },
+      });
       job.contactIdByFreshdeskId.set(contact.id, existing.id);
       return existing.id;
     }
   }
 
-  const [created] = await db
-    .insert(contacts)
-    .values({
+  const created = await prisma.crmContact.create({
+    data: {
       email,
       name,
       phone,
       tags: Array.from(new Set([...importedTags, "freshdesk", tag])),
       createdAt: new Date(contact.created_at),
       updatedAt: new Date(contact.updated_at),
-    })
-    .returning();
+    },
+  });
   job.contactIdByFreshdeskId.set(contact.id, created.id);
   return created.id;
 }
@@ -168,30 +162,18 @@ async function upsertCrmAgentFromFreshdesk(job: MigrateJob, agent: FreshdeskAgen
 
   job.agentEmailById.set(agent.id, { email, name });
 
-  const [existing] = await db
-    .select()
-    .from(agents)
-    .where(sql`lower(${agents.email}) = ${email}`)
-    .limit(1);
-  if (existing) {
-    if (name && name !== existing.name) {
-      await db.update(agents).set({ name }).where(eq(agents.id, existing.id));
-    }
-    return existing.id;
+  const existing = await prisma.user.findFirst({
+    where: { email: { equals: email, mode: "insensitive" } },
+  });
+  if (!existing) return null;
+  if (name && name !== existing.name) {
+    await prisma.user.update({ where: { id: existing.id }, data: { name } });
   }
-
-  const [created] = await db
-    .insert(agents)
-    .values({
-      email,
-      name,
-      role: "agent",
-      passwordHash: hashPassword(randomBytes(32).toString("hex")),
-      status: "offline",
-    })
-    .returning();
-  job.stats.agentsImported += 1;
-  return created.id;
+  if (existing.role !== "admin" && existing.role !== "agent") {
+    await prisma.user.update({ where: { id: existing.id }, data: { role: "agent" } });
+    job.stats.agentsImported += 1;
+  }
+  return existing.id;
 }
 
 async function loadAgentMap(job: MigrateJob, client: FreshdeskClient) {
@@ -207,7 +189,7 @@ async function loadAgentMap(job: MigrateJob, client: FreshdeskClient) {
     appendLog(
       job,
       "info",
-      `Loaded ${job.agentEmailById.size} Freshdesk agent(s); created ${created} CRM login(s) (passwords cannot be imported — set them in Settings)`,
+      `Loaded ${job.agentEmailById.size} Freshdesk agent(s); matched ${created} existing site user(s)`,
     );
   } catch (error) {
     appendLog(
@@ -224,22 +206,20 @@ async function resolveAssigneeId(job: MigrateJob, responderId: number | null) {
   if (!mapped?.email) return null;
   const cached = job.assigneeIdByResponderId.get(responderId);
   if (cached !== undefined) return cached;
-  const [row] = await db
-    .select({ id: agents.id })
-    .from(agents)
-    .where(sql`lower(${agents.email}) = ${mapped.email}`)
-    .limit(1);
+  const row = await prisma.user.findFirst({
+    where: { email: { equals: mapped.email, mode: "insensitive" } },
+    select: { id: true },
+  });
   const id = row?.id ?? null;
   job.assigneeIdByResponderId.set(responderId, id);
   return id;
 }
 
 async function importOneTicket(job: MigrateJob, client: FreshdeskClient, ticket: FreshdeskTicket) {
-  const [already] = await db
-    .select({ id: tickets.id })
-    .from(tickets)
-    .where(eq(tickets.number, ticket.id))
-    .limit(1);
+  const already = await prisma.crmTicket.findFirst({
+    where: { number: ticket.id },
+    select: { id: true },
+  });
   if (already) return "skipped";
 
   const contactId = await resolveContactId(job, client, ticket.requester_id);
@@ -254,9 +234,8 @@ async function importOneTicket(job: MigrateJob, client: FreshdeskClient, ticket:
   );
   const dues = await slaDueDatesFor(createdAt, priority);
 
-  const [created] = await db
-    .insert(tickets)
-    .values({
+  const created = await prisma.crmTicket.create({
+    data: {
       number: ticket.id,
       contactId,
       assigneeId,
@@ -272,20 +251,19 @@ async function importOneTicket(job: MigrateJob, client: FreshdeskClient, ticket:
       createdAt,
       updatedAt,
       ...dues,
-    })
-    .returning();
+    },
+  });
 
   let contactName = "Contact";
   if (contactId) {
-    const [row] = await db
-      .select({ name: contacts.name })
-      .from(contacts)
-      .where(eq(contacts.id, contactId))
-      .limit(1);
+    const row = await prisma.crmContact.findUnique({
+      where: { id: contactId },
+      select: { name: true },
+    });
     contactName = row?.name || "Contact";
   }
 
-  const messageRows: (typeof ticketMessages.$inferInsert)[] = [
+  const messageRows: Prisma.CrmTicketMessageCreateManyInput[] = [
     {
       ticketId: created.id,
       authorType: "contact",
@@ -328,15 +306,15 @@ async function importOneTicket(job: MigrateJob, client: FreshdeskClient, ticket:
 
   const chunk = 80;
   for (let i = 0; i < messageRows.length; i += chunk) {
-    await db.insert(ticketMessages).values(messageRows.slice(i, i + chunk));
+    await prisma.crmTicketMessage.createMany({ data: messageRows.slice(i, i + chunk) });
   }
   job.stats.messagesImported += messageRows.length;
 
   if (firstAgentReplyAt) {
-    await db
-      .update(tickets)
-      .set({ firstResponseAt: firstAgentReplyAt })
-      .where(eq(tickets.id, created.id));
+    await prisma.crmTicket.update({
+      where: { id: created.id },
+      data: { firstResponseAt: firstAgentReplyAt },
+    });
   }
   return "imported";
 }
@@ -484,22 +462,22 @@ export async function advanceFreshdeskMigration(jobId: string, adminId: string) 
 
 export async function remapFreshdeskTicketNumbers() {
   await ensureDb();
-  const rows = await db.select({ id: tickets.id, number: tickets.number, tags: tickets.tags }).from(tickets);
+  const rows = await prisma.crmTicket.findMany({ select: { id: true, number: true, tags: true } });
   let updated = 0;
   for (const row of rows) {
     const tag = (row.tags ?? []).find((t) => t.startsWith("freshdesk-ticket:"));
     if (!tag) continue;
     const fdId = Number(tag.slice("freshdesk-ticket:".length));
     if (!Number.isFinite(fdId) || row.number === fdId) continue;
-    await db.update(tickets).set({ number: fdId, updatedAt: new Date() }).where(eq(tickets.id, row.id));
+    await prisma.crmTicket.update({ where: { id: row.id }, data: { number: fdId } });
     updated += 1;
   }
   try {
-    await db.execute(
-      sql`SELECT setval(pg_get_serial_sequence('tickets', 'number'), (SELECT COALESCE(MAX(number), 1001) FROM tickets))`,
+    await prisma.$executeRawUnsafe(
+      `SELECT setval(pg_get_serial_sequence('tickets', 'number'), (SELECT COALESCE(MAX(number), 1001) FROM tickets))`,
     );
   } catch {
-    // PGlite / identity sequence name may differ
+    // identity sequence name may differ
   }
   return updated;
 }
@@ -548,10 +526,10 @@ export async function syncAllFromFreshdesk(input?: { url?: string; apiKey?: stri
     if (!batch.length) break;
     const existing = new Set(
       (
-        await db
-          .select({ number: tickets.number })
-          .from(tickets)
-          .where(inArray(tickets.number, batch.map((ticket) => ticket.id)))
+        await prisma.crmTicket.findMany({
+          where: { number: { in: batch.map((ticket) => ticket.id) } },
+          select: { number: true },
+        })
       ).map((row) => row.number),
     );
     const pending = batch.filter((ticket) => !existing.has(ticket.id));
@@ -592,7 +570,7 @@ export async function syncAllFromFreshdesk(input?: { url?: string; apiKey?: stri
   return { remapped, job: publicJob(job) };
 }
 
-/** Create CRM agent logins from Freshdesk (email + name only) and map ticket assignees. */
+/** Map Freshdesk agents onto existing site users and ticket assignees. */
 export async function importFreshdeskAgentsFromEnv() {
   await ensureDb();
   const baseUrl = normalizeFreshdeskBaseUrl(
@@ -614,16 +592,15 @@ export async function importFreshdeskAgentsFromEnv() {
       const assigneeId = await resolveAssigneeId(job, ticket.responder_id);
       if (!assigneeId) continue;
       const tag = `freshdesk-ticket:${ticket.id}`;
-      const [row] = await db
-        .select({ id: tickets.id, assigneeId: tickets.assigneeId })
-        .from(tickets)
-        .where(sql`${tag} = any(${tickets.tags})`)
-        .limit(1);
+      const row = await prisma.crmTicket.findFirst({
+        where: { tags: { has: tag } },
+        select: { id: true, assigneeId: true },
+      });
       if (row && row.assigneeId !== assigneeId) {
-        await db
-          .update(tickets)
-          .set({ assigneeId, updatedAt: new Date() })
-          .where(eq(tickets.id, row.id));
+        await prisma.crmTicket.update({
+          where: { id: row.id },
+          data: { assigneeId },
+        });
         assigneesUpdated += 1;
       }
     }

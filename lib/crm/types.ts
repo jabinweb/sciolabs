@@ -78,21 +78,6 @@ export type KbArticle = {
   updatedAt: Date;
 };
 
-export type RoadmapStatus = "considering" | "planned" | "in_progress" | "shipped";
-
-export type RoadmapItem = {
-  id: string;
-  title: string;
-  body: string;
-  status: RoadmapStatus;
-  published: boolean;
-  sortOrder: number;
-  voteCount: number;
-  votedByMe: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 export type DashboardStats = {
   open: number;
   pending: number;

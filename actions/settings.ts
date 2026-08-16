@@ -4,12 +4,11 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAgent } from "@/lib/crm/auth";
 import {
-  createAgent,
   createCannedResponse,
   createKbArticle,
-  setAgentPassword,
   updateAgentProfile,
 } from "@/lib/crm/queries";
+import { grantDeskAccess } from "@/lib/crm/site-user";
 import type { AgentRole } from "@/lib/crm/types";
 import {
   CONNECTION_TAB,
@@ -39,27 +38,25 @@ function settingsRedirect(
   redirect(`/crm/settings?${params.toString()}`);
 }
 
-export async function createAgentAction(formData: FormData) {
+export async function grantDeskAccessAction(formData: FormData) {
   await requireAdmin();
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  const name = String(formData.get("name") ?? "").trim();
-  const password = String(formData.get("password") ?? "");
+  const userId = String(formData.get("userId") ?? "").trim();
   const roleRaw = String(formData.get("role") ?? "agent");
   const role: AgentRole = roleRaw === "admin" ? "admin" : "agent";
 
-  if (!email || !name || password.length < 8) {
-    settingsRedirect("team", { error: "agent" });
+  if (!userId) {
+    settingsRedirect("team", { error: "user" });
   }
 
   try {
-    await createAgent({ email, name, password, role });
+    await grantDeskAccess(userId, role);
   } catch (error) {
-    console.error("create agent failed", error);
-    settingsRedirect("team", { error: "exists" });
+    console.error("grant desk access failed", error);
+    settingsRedirect("team", { error: "user" });
   }
 
   revalidatePath("/crm/settings");
-  settingsRedirect("team", { ok: "agent" });
+  settingsRedirect("team", { ok: "granted" });
 }
 
 export async function updateAgentAction(formData: FormData) {
@@ -68,7 +65,6 @@ export async function updateAgentAction(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const roleRaw = String(formData.get("role") ?? "agent");
   const statusRaw = String(formData.get("status") ?? "online");
-  const password = String(formData.get("password") ?? "");
 
   if (!agentId || !name) {
     settingsRedirect("team", { error: "agent" });
@@ -79,11 +75,6 @@ export async function updateAgentAction(formData: FormData) {
     statusRaw === "away" || statusRaw === "offline" ? statusRaw : "online";
 
   await updateAgentProfile(agentId, { name, role, status });
-  if (password.length >= 8) {
-    await setAgentPassword(agentId, password);
-  } else if (password.length > 0) {
-    settingsRedirect("team", { error: "password" });
-  }
 
   revalidatePath("/crm/settings");
   settingsRedirect("team", { ok: "updated" });

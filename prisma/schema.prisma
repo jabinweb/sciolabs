@@ -42,6 +42,7 @@ model User {
   image         String?
   password      String?
   role          String    @default("user")
+  deskStatus    String    @default("online") @map("desk_status")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
@@ -49,6 +50,7 @@ model User {
   blogPosts     BlogPost[]
   uploadedFiles MediaFile[]
   jobs          Job[]
+  assignedTickets CrmTicket[] @relation("TicketAssignee")
 }
 
 model VerificationToken {
@@ -172,4 +174,124 @@ model Setting {
   updatedAt DateTime @updatedAt
   
   @@index([category])
+}
+
+model CrmContact {
+  id                 String      @id @default(uuid()) @db.Uuid
+  appUserId          String?     @unique @map("app_user_id") @db.Uuid
+  email              String?
+  name               String?
+  licenseTier        String?     @map("license_tier")
+  subscriptionStatus String?     @map("subscription_status")
+  phone              String?
+  tags               String[]    @default([])
+  lastSeenAt         DateTime?   @map("last_seen_at") @db.Timestamptz(6)
+  createdAt          DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
+  tickets            CrmTicket[]
+
+  @@map("contacts")
+}
+
+model CrmTicket {
+  id                 String             @id @default(uuid()) @db.Uuid
+  number             Int                @unique @default(autoincrement())
+  contactId          String?            @map("contact_id") @db.Uuid
+  assigneeId         String?            @map("assignee_id")
+  subject            String
+  description        String
+  status             String             @default("open")
+  priority           String             @default("medium")
+  type               String             @default("general")
+  source             String             @default("app")
+  tags               String[]           @default([])
+  appFeedbackId      String?            @unique @map("app_feedback_id") @db.Uuid
+  firstResponseAt    DateTime?          @map("first_response_at") @db.Timestamptz(6)
+  resolvedAt         DateTime?          @map("resolved_at") @db.Timestamptz(6)
+  csatScore          Int?               @map("csat_score")
+  csatComment        String?            @map("csat_comment")
+  firstResponseDueAt DateTime?          @map("first_response_due_at") @db.Timestamptz(6)
+  resolutionDueAt    DateTime?          @map("resolution_due_at") @db.Timestamptz(6)
+  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  contact            CrmContact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  assignee           User?              @relation("TicketAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  messages           CrmTicketMessage[]
+
+  @@index([status, createdAt], map: "tickets_status_created_idx")
+  @@index([assigneeId], map: "tickets_assignee_idx")
+  @@index([contactId], map: "tickets_contact_idx")
+  @@map("tickets")
+}
+
+model CrmTicketMessage {
+  id         String    @id @default(uuid()) @db.Uuid
+  ticketId   String    @map("ticket_id") @db.Uuid
+  authorType String    @map("author_type")
+  authorId   String?   @map("author_id")
+  authorName String    @map("author_name")
+  body       String
+  isInternal Boolean   @default(false) @map("is_internal")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  ticket     CrmTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId, createdAt], map: "ticket_messages_ticket_idx")
+  @@map("ticket_messages")
+}
+
+model CrmCannedResponse {
+  id        String   @id @default(uuid()) @db.Uuid
+  title     String
+  shortcut  String?  @unique
+  body      String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("canned_responses")
+}
+
+model CrmKbArticle {
+  id        String   @id @default(uuid()) @db.Uuid
+  title     String
+  slug      String   @unique
+  category  String   @default("General")
+  body      String
+  published Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("kb_articles")
+}
+
+model CrmAppSetting {
+  key       String   @id
+  value     String   @default("")
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("app_settings")
+}
+
+model CrmSlaPolicy {
+  id                 String   @id @default(uuid()) @db.Uuid
+  name               String
+  isDefault          Boolean  @default(true) @map("is_default")
+  firstResponseHours String   @map("first_response_hours")
+  resolveHours       String   @map("resolve_hours")
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("sla_policies")
+}
+
+model CrmAutomationRule {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String
+  enabled    Boolean  @default(true)
+  trigger    String
+  conditions String   @default("[]")
+  actions    String   @default("[]")
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([trigger, enabled], map: "automation_rules_trigger_idx")
+  @@map("automation_rules")
 }

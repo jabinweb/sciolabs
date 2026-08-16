@@ -92,6 +92,14 @@ export default {
         token.role = user.role
         token.id = user.id
       }
+      const userId = (token.id as string | undefined) || token.sub
+      if (userId && process.env.NEXT_PHASE !== "phase-production-build") {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { role: true },
+        })
+        if (dbUser) token.role = dbUser.role
+      }
       return token
     },
     async session({ session, token }) {

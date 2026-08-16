@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import {
-  createAgentAction,
   createCannedResponseAction,
   createKbArticleAction,
+  grantDeskAccessAction,
   saveAiSettingsAction,
   saveEmailSettingsAction,
   saveFreshdeskSettingsAction,
@@ -15,6 +15,7 @@ import {
 import { getSessionAgent } from "@/lib/crm/auth";
 import { getSettingsForAdminForm, SETTING_KEYS } from "@/lib/crm/app-settings";
 import { listAgents, listCannedResponses, listKbArticles } from "@/lib/crm/queries";
+import { listSiteUsersWithoutDeskAccess } from "@/lib/crm/site-user";
 import { Badge } from "@/components/crm/ui/badge";
 import { Button } from "@/components/crm/ui/button";
 import { Input } from "@/components/crm/ui/input";
@@ -48,8 +49,8 @@ function notice(
   const okKey = Array.isArray(ok) ? ok[0] : ok;
   const errKey = Array.isArray(error) ? error[0] : error;
   const detail = flashDetail(detailRaw);
-  if (okKey === "agent") return { tone: "ok" as const, text: "Agent created. They can sign in at /auth/signin with that email and password." };
-  if (okKey === "updated") return { tone: "ok" as const, text: "Agent updated." };
+  if (okKey === "granted") return { tone: "ok" as const, text: "Desk access granted. They can open /crm with their existing login." };
+  if (okKey === "updated") return { tone: "ok" as const, text: "Teammate updated." };
   if (okKey === "macro") return { tone: "ok" as const, text: "Canned response added." };
   if (okKey === "kb") return { tone: "ok" as const, text: "Knowledge article published." };
   if (okKey === "general") return { tone: "ok" as const, text: "General settings saved." };
@@ -64,9 +65,8 @@ function notice(
     return { tone: "err" as const, text: detail || "Connection failed. Save settings, then try again." };
   }
   if (errKey === "admin") return { tone: "err" as const, text: "Only admins can change settings." };
-  if (errKey === "exists") return { tone: "err" as const, text: "That email is already an agent." };
-  if (errKey === "password") return { tone: "err" as const, text: "Password must be at least 8 characters." };
-  if (errKey === "agent") return { tone: "err" as const, text: "Name, email, and an 8+ character password are required." };
+  if (errKey === "user") return { tone: "err" as const, text: "Choose an existing site user to grant desk access." };
+  if (errKey === "agent") return { tone: "err" as const, text: "Name is required." };
   if (errKey === "macro") return { tone: "err" as const, text: "Title and body are required for a canned response." };
   if (errKey === "kb") return { tone: "err" as const, text: "Title, slug, and body are required for a knowledge article." };
   return null;
@@ -112,8 +112,9 @@ export default async function SettingsPage({
   const agent = await getSessionAgent();
   const isAdmin = agent?.role === "admin";
   const tab = parseSettingsTab(queryParam(params, "tab"), isAdmin);
-  const [agents, macros, articles, integration, mailLabel] = await Promise.all([
+  const [agents, eligibleUsers, macros, articles, integration, mailLabel] = await Promise.all([
     listAgents(),
+    listSiteUsersWithoutDeskAccess(),
     listCannedResponses(),
     listKbArticles(),
     getSettingsForAdminForm(),
@@ -125,9 +126,13 @@ export default async function SettingsPage({
   const teamPanel = (
     <Card>
       <CardHeader>
-        <CardTitle>Agents</CardTitle>
+        <CardTitle>Desk staff</CardTitle>
         <CardDescription>
-          People who can sign in to this desk. Admins can onboard new teammates with credentials.
+          CRM uses the same accounts as the rest of the site. Admins and agents in{" "}
+          <Link href="/admin/users" className="underline-offset-2 hover:underline">
+            Admin → Users
+          </Link>{" "}
+          can open /crm with their existing password.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -175,19 +180,8 @@ export default async function SettingsPage({
                     ]}
                   />
                 </div>
-                <div className="space-y-1.5 sm:col-span-2">
-                  <Label htmlFor={`password-${item.id}`}>Reset password</Label>
-                  <Input
-                    id={`password-${item.id}`}
-                    name="password"
-                    type="password"
-                    minLength={8}
-                    placeholder="Leave blank to keep current password"
-                    autoComplete="new-password"
-                  />
-                </div>
                 <Button type="submit" variant="outline" className="sm:col-span-2 sm:w-fit">
-                  Save agent
+                  Save
                 </Button>
               </form>
             ) : null}
@@ -195,43 +189,50 @@ export default async function SettingsPage({
         ))}
 
         {isAdmin ? (
-          <form action={createAgentAction} className="space-y-3 rounded-lg border border-dashed border-border p-4">
-            <div>
-              <p className="text-sm font-medium">Onboard agent</p>
-              <p className="text-xs text-muted-foreground">
-                Creates a login. Share the email and temporary password with them.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label htmlFor="new-name">Name</Label>
-                <Input id="new-name" name="name" required placeholder="Jordan Lee" />
+          eligibleUsers.length > 0 ? (
+            <form action={grantDeskAccessAction} className="space-y-3 rounded-lg border border-dashed border-border p-4">
+              <div>
+                <p className="text-sm font-medium">Grant desk access</p>
+                <p className="text-xs text-muted-foreground">
+                  Pick someone who already has a site account. They keep the same email and password.
+                </p>
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="new-email">Email</Label>
-                <Input id="new-email" name="email" type="email" required placeholder="agent@sciolabs.in" />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-1.5 sm:col-span-2">
+                  <Label htmlFor="grant-user">Existing user</Label>
+                  <FormSelect
+                    id="grant-user"
+                    name="userId"
+                    required
+                    defaultValue={eligibleUsers[0]?.id ?? ""}
+                    options={eligibleUsers.map((user) => ({
+                      value: user.id,
+                      label: `${user.name || "Unnamed"} · ${user.email ?? "no email"}`,
+                    }))}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="grant-role">Desk role</Label>
+                  <FormSelect
+                    id="grant-role"
+                    name="role"
+                    defaultValue="agent"
+                    options={[
+                      { value: "agent", label: "Agent" },
+                      { value: "admin", label: "Admin" },
+                    ]}
+                  />
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="new-password">Temporary password</Label>
-                <Input id="new-password" name="password" type="password" required minLength={8} autoComplete="new-password" />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="new-role">Role</Label>
-                <FormSelect
-                  id="new-role"
-                  name="role"
-                  defaultValue="agent"
-                  options={[
-                    { value: "agent", label: "Agent" },
-                    { value: "admin", label: "Admin" },
-                  ]}
-                />
-              </div>
-            </div>
-            <Button type="submit">Create agent login</Button>
-          </form>
+              <Button type="submit">Grant access</Button>
+            </form>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Every site user already has desk access. Create more people in Admin → Users first.
+            </p>
+          )
         ) : (
-          <p className="text-sm text-muted-foreground">Ask an admin to onboard additional agents.</p>
+          <p className="text-sm text-muted-foreground">Ask an admin to grant desk access from existing users.</p>
         )}
       </CardContent>
     </Card>
@@ -303,7 +304,7 @@ export default async function SettingsPage({
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="kb-slug">Slug</Label>
-                  <Input id="kb-slug" name="slug" required placeholder="device-limits" />
+                  <Input id="kb-slug" name="slug" required placeholder="contact-support" />
                 </div>
                 <div className="space-y-1.5 sm:col-span-2">
                   <Label htmlFor="kb-category">Category</Label>

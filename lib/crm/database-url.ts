@@ -7,12 +7,3 @@ export function resolveDatabaseUrl() {
 export function shouldUseLocalFileDb() {
   return false
 }
-
-export function postgresClientOptions() {
-  return {
-    max: 5,
-    idle_timeout: 20,
-    connect_timeout: 15,
-    ssl: "require" as const,
-  }
-}
