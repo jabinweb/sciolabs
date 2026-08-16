@@ -102,9 +102,20 @@ const defaultSettings: SiteSettings = {
   }
 }
 
+let settingsCache: { value: SiteSettings; expiresAt: number } | null = null
+const SETTINGS_CACHE_MS = 60_000
+
+function invalidateSettingsCache() {
+  settingsCache = null
+}
+
 // Get all settings from database
 export async function getSettings(): Promise<SiteSettings> {
   try {
+    if (settingsCache && settingsCache.expiresAt > Date.now()) {
+      return settingsCache.value
+    }
+
     // Check if prisma.setting exists before using it
     if (!prisma.setting) {
       console.warn('Setting model not found in Prisma client, using defaults')
@@ -132,6 +143,7 @@ export async function getSettings(): Promise<SiteSettings> {
       }
     }
     
+    settingsCache = { value: settings, expiresAt: Date.now() + SETTINGS_CACHE_MS }
     return settings
   } catch (error) {
     console.error('Error fetching settings from database:', error)
@@ -268,6 +280,7 @@ export async function updateMultipleSettings(updates: Partial<SiteSettings>): Pr
     } else {
       console.log('No operations to execute')
     }
+    invalidateSettingsCache()
   } catch (error) {
     console.error('Error updating multiple settings:', error)
     
@@ -356,6 +369,7 @@ export async function updateSettings(category: keyof SiteSettings, data: SiteSet
         })
       }
     }
+    invalidateSettingsCache()
   } catch (error) {
     console.error('Error updating settings in database:', error)
     throw new Error('Failed to update settings')

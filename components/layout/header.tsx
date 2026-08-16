@@ -80,6 +80,7 @@ export default function Header() {
                   src="/sciolabs_logo.png"
                   alt="Scio Labs Logo"
                   fill
+                  sizes="48px"
                   className="object-contain"
                   priority
                 />
@@ -120,6 +121,7 @@ export default function Header() {
                 src={logoSrc}
                 alt="Scio Labs Logo"
                 fill
+                sizes="48px"
                 className="object-contain transition-opacity duration-300"
                 priority
               />

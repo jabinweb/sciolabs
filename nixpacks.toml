@@ -1,9 +1,9 @@
 # Coolify/Nixpacks: install devDependencies for Next.js build (TypeScript, Tailwind, Prisma CLI)
 [phases.install]
-cmds = ["npm ci --include=dev"]
+cmds = ["pnpm install --frozen-lockfile --prod=false"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["pnpm run build"]
 
 [start]
-cmd = "npm start"
+cmd = "pnpm start"

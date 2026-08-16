@@ -1,11 +1,49 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { DateRange } from "react-day-picker";
+import { format, startOfDay, endOfDay, subDays, startOfMonth } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Calendar as CalendarPicker } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ClipboardList, Filter, RefreshCw, Eye, User, Mail, Phone, Calendar, Tag, MapPin, FileText, Briefcase, School, Heart, Code } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  ClipboardList,
+  Filter,
+  RefreshCw,
+  Eye,
+  User,
+  Mail,
+  Phone,
+  Calendar,
+  Tag,
+  MapPin,
+  FileText,
+  Briefcase,
+  School,
+  Heart,
+  Code,
+  Download,
+  X,
+} from "lucide-react";
 import { toast } from 'sonner'
 
 // Universal FormResponse type
@@ -22,11 +60,56 @@ interface FormResponse {
   updatedAt: string
 }
 
+function csvCell(value: unknown): string {
+  if (value === null || value === undefined || value === '') return ''
+  let text: string
+  if (Array.isArray(value)) {
+    text = value.map((item) => (typeof item === 'object' ? JSON.stringify(item) : String(item))).join('; ')
+  } else if (typeof value === 'object') {
+    text = JSON.stringify(value)
+  } else {
+    text = String(value)
+  }
+  if (/[",\n\r]/.test(text)) {
+    return `"${text.replace(/"/g, '""')}"`
+  }
+  return text
+}
+
+function inDateRange(isoDate: string, range?: DateRange) {
+  if (!range?.from) return true
+  const created = new Date(isoDate)
+  const from = startOfDay(range.from)
+  const to = endOfDay(range.to ?? range.from)
+  return created >= from && created <= to
+}
+
+const PAGE_SIZE = 10
+
+function getPageItems(current: number, total: number): Array<number | 'ellipsis'> {
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+
+  const items: Array<number | 'ellipsis'> = [1]
+  const start = Math.max(2, current - 1)
+  const end = Math.min(total - 1, current + 1)
+
+  if (start > 2) items.push('ellipsis')
+  for (let i = start; i <= end; i++) items.push(i)
+  if (end < total - 1) items.push('ellipsis')
+  items.push(total)
+
+  return items
+}
+
 export default function FormResponsesPage() {
   const [responses, setResponses] = useState<FormResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState<string>("all");
+  const [formFilter, setFormFilter] = useState<string>("all");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [page, setPage] = useState(1);
   const [selectedResponse, setSelectedResponse] = useState<FormResponse | null>(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
 
@@ -66,13 +149,119 @@ export default function FormResponsesPage() {
     fetchResponses();
   }, []);
 
-  // Filter responses by formName
-  const filteredResponses = filter === "all"
-    ? responses
-    : responses.filter(r => r.formName === filter);
+  const formNames = useMemo(
+    () => Array.from(new Set(responses.map((r) => r.formName))).sort(),
+    [responses]
+  )
 
-  // Get unique form names for filter dropdown
-  const formNames = Array.from(new Set(responses.map(r => r.formName)));
+  const filteredResponses = useMemo(
+    () =>
+      responses.filter((r) => {
+        const matchesForm = formFilter === 'all' || r.formName === formFilter
+        return matchesForm && inDateRange(r.createdAt, dateRange)
+      }),
+    [responses, formFilter, dateRange]
+  )
+
+  const totalPages = Math.max(1, Math.ceil(filteredResponses.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const paginatedResponses = filteredResponses.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  )
+  const pageItems = getPageItems(currentPage, totalPages)
+
+  useEffect(() => {
+    setPage(1)
+  }, [formFilter, dateRange])
+
+  const hasActiveFilters = formFilter !== 'all' || Boolean(dateRange?.from)
+
+  function applyDatePreset(preset: string) {
+    const today = new Date()
+    if (preset === 'all') {
+      setDateRange(undefined)
+      return
+    }
+    if (preset === 'today') {
+      setDateRange({ from: today, to: today })
+      return
+    }
+    if (preset === '7d') {
+      setDateRange({ from: subDays(today, 6), to: today })
+      return
+    }
+    if (preset === '30d') {
+      setDateRange({ from: subDays(today, 29), to: today })
+      return
+    }
+    if (preset === 'month') {
+      setDateRange({ from: startOfMonth(today), to: today })
+    }
+  }
+
+  function exportCsv() {
+    if (filteredResponses.length === 0) {
+      toast.error('No responses to export for the current filters')
+      return
+    }
+
+    const dataKeys = Array.from(
+      new Set(filteredResponses.flatMap((r) => Object.keys(r.data || {})))
+    ).sort()
+
+    const headers = [
+      'id',
+      'formName',
+      'email',
+      'phone',
+      'status',
+      'source',
+      'tags',
+      'createdAt',
+      ...dataKeys,
+    ]
+
+    const rows = filteredResponses.map((r) =>
+      [
+        r.id,
+        r.formName,
+        r.email,
+        r.phone,
+        r.status,
+        r.source,
+        r.tags,
+        r.createdAt,
+        ...dataKeys.map((key) => r.data?.[key]),
+      ]
+        .map(csvCell)
+        .join(',')
+    )
+
+    const csv = `\uFEFF${[headers.join(','), ...rows].join('\n')}`
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    const fromLabel = dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : 'all'
+    const toLabel = dateRange?.to
+      ? format(dateRange.to, 'yyyy-MM-dd')
+      : dateRange?.from
+        ? format(dateRange.from, 'yyyy-MM-dd')
+        : 'all'
+    link.href = url
+    link.download = `form-responses-${formFilter}-${fromLabel}-to-${toLabel}.csv`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+    toast.success(`Exported ${filteredResponses.length} response${filteredResponses.length === 1 ? '' : 's'}`)
+  }
+
+  const dateLabel = dateRange?.from
+    ? dateRange.to
+      ? `${format(dateRange.from, 'LLL d, yyyy')} – ${format(dateRange.to, 'LLL d, yyyy')}`
+      : format(dateRange.from, 'LLL d, yyyy')
+    : 'All dates'
 
   const handleViewResponse = (response: FormResponse) => {
     setSelectedResponse(response);
@@ -138,35 +327,106 @@ export default function FormResponsesPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-heading text-3xl text-gray-800 flex items-center gap-2">
-            <ClipboardList className="w-7 h-7 text-scio-blue" />
+          <h1 className="font-heading flex items-center gap-2 text-2xl text-gray-800 sm:text-3xl">
+            <ClipboardList className="h-6 w-6 text-scio-blue sm:h-7 sm:w-7" />
             Form Responses
           </h1>
-          <p className="text-gray-600 mt-1">View and manage all form submissions</p>
+          <p className="mt-1 text-gray-600">View and manage all form submissions</p>
         </div>
-        <div className="flex gap-2 items-center">
-          <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-gray-400" />
-            <select
-              className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:border-scio-blue"
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-            >
-              <option value="all">All Forms</option>
-              {formNames.map(name => (
-                <option key={name} value={name}>{name}</option>
-              ))}
-            </select>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            <Filter className="h-5 w-5 shrink-0 text-gray-400" />
+            <Select value={formFilter} onValueChange={setFormFilter}>
+              <SelectTrigger size="sm" className="w-[160px] bg-white sm:w-[180px]">
+                <SelectValue placeholder="All forms" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Forms</SelectItem>
+                {formNames.map((name) => (
+                  <SelectItem key={name} value={name}>
+                    {name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="max-w-full min-w-[180px] justify-start font-normal"
+              >
+                <Calendar className="h-4 w-4" />
+                <span className="truncate">{dateLabel}</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto max-w-[calc(100vw-2rem)] p-3" align="end">
+              <div className="mb-3 flex flex-wrap gap-1.5">
+                {[
+                  { value: 'all', label: 'All dates' },
+                  { value: 'today', label: 'Today' },
+                  { value: '7d', label: 'Last 7 days' },
+                  { value: '30d', label: 'Last 30 days' },
+                  { value: 'month', label: 'This month' },
+                ].map((preset) => (
+                  <Button
+                    key={preset.value}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    onClick={() => applyDatePreset(preset.value)}
+                  >
+                    {preset.label}
+                  </Button>
+                ))}
+              </div>
+              <CalendarPicker
+                mode="range"
+                numberOfMonths={1}
+                defaultMonth={dateRange?.from}
+                selected={dateRange}
+                onSelect={setDateRange}
+                captionLayout="dropdown"
+              />
+            </PopoverContent>
+          </Popover>
+
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setFormFilter('all')
+                setDateRange(undefined)
+              }}
+            >
+              <X className="h-4 w-4" />
+              Clear
+            </Button>
+          )}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={exportCsv}
+            disabled={loading || filteredResponses.length === 0}
+            className="flex items-center gap-1"
+          >
+            <Download className="h-4 w-4" />
+            Export CSV
+          </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => window.location.reload()}
             className="flex items-center gap-1"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="h-4 w-4" />
             Refresh
           </Button>
         </div>
@@ -174,64 +434,137 @@ export default function FormResponsesPage() {
 
       <Card className="border-0 shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex flex-wrap items-center gap-2">
             <span>Responses ({filteredResponses.length})</span>
+            {filteredResponses.length > 0 && (
+              <span className="text-sm font-normal text-gray-500">
+                Showing {(currentPage - 1) * PAGE_SIZE + 1}–
+                {Math.min(currentPage * PAGE_SIZE, filteredResponses.length)}
+              </span>
+            )}
             {loading && <i className="fas fa-spinner fa-spin text-scio-blue"></i>}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="flex flex-col items-center py-12">
-              <i className="fas fa-spinner fa-spin text-3xl text-scio-blue mb-4"></i>
+              <i className="fas fa-spinner fa-spin mb-4 text-3xl text-scio-blue"></i>
               <p className="text-gray-600">Loading responses...</p>
             </div>
           ) : error ? (
-            <div className="text-red-600 py-8 text-center">{error}</div>
+            <div className="py-8 text-center text-red-600">{error}</div>
           ) : filteredResponses.length === 0 ? (
-            <div className="text-gray-500 py-8 text-center">No responses found for this filter.</div>
-          ) : (
-            <div className="overflow-x-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 rounded-lg">
-              <table className="min-w-full text-sm bg-white rounded-lg overflow-hidden">
-                <thead className="bg-scio-blue/10">
-                  <tr>
-                    <th className="p-3 text-left font-heading">Form</th>
-                    <th className="p-3 text-left font-heading">Email</th>
-                    <th className="p-3 text-left font-heading">Phone</th>
-                    <th className="p-3 text-left font-heading">Status</th>
-                    <th className="p-3 text-left font-heading">Source</th>
-                    <th className="p-3 text-left font-heading">Date</th>
-                    <th className="p-3 text-left font-heading">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredResponses.map(r => (
-                    <tr key={r.id} className="border-b hover:bg-blue-50/30 transition-colors">
-                      <td className="p-3 font-medium">
-                        <Badge variant="outline" className="bg-scio-blue/10 text-scio-blue border-scio-blue">{r.formName}</Badge>
-                      </td>
-                      <td className="p-3">{r.email || "-"}</td>
-                      <td className="p-3">{r.phone || "-"}</td>
-                      <td className="p-3">
-                        <Badge variant="secondary" className="text-xs">{r.status || "new"}</Badge>
-                      </td>
-                      <td className="p-3">{r.source || "-"}</td>
-                      <td className="p-3 text-xs text-gray-500">{new Date(r.createdAt).toLocaleString()}</td>
-                      <td className="p-3">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleViewResponse(r)}
-                          className="flex items-center gap-1 hover:bg-scio-blue hover:text-white transition-colors"
-                        >
-                          <Eye className="w-3 h-3" />
-                          View
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="py-8 text-center text-gray-500">
+              No responses found for the selected filters.
             </div>
+          ) : (
+            <>
+              <div className="max-w-full overflow-x-auto rounded-lg">
+                <table className="min-w-[720px] w-full bg-white text-sm">
+                  <thead className="bg-scio-blue/10">
+                    <tr>
+                      <th className="p-3 text-left font-heading">Form</th>
+                      <th className="p-3 text-left font-heading">Email</th>
+                      <th className="p-3 text-left font-heading">Phone</th>
+                      <th className="p-3 text-left font-heading">Status</th>
+                      <th className="p-3 text-left font-heading">Source</th>
+                      <th className="p-3 text-left font-heading">Date</th>
+                      <th className="p-3 text-left font-heading">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginatedResponses.map((r) => (
+                      <tr
+                        key={r.id}
+                        className="border-b transition-colors hover:bg-blue-50/30"
+                      >
+                        <td className="p-3 font-medium">
+                          <Badge
+                            variant="outline"
+                            className="border-scio-blue bg-scio-blue/10 text-scio-blue"
+                          >
+                            {r.formName}
+                          </Badge>
+                        </td>
+                        <td className="max-w-[200px] truncate p-3">{r.email || '-'}</td>
+                        <td className="whitespace-nowrap p-3">{r.phone || '-'}</td>
+                        <td className="p-3">
+                          <Badge variant="secondary" className="text-xs">
+                            {r.status || 'new'}
+                          </Badge>
+                        </td>
+                        <td className="max-w-[180px] truncate p-3">{r.source || '-'}</td>
+                        <td className="whitespace-nowrap p-3 text-xs text-gray-500">
+                          {new Date(r.createdAt).toLocaleString()}
+                        </td>
+                        <td className="p-3">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleViewResponse(r)}
+                            className="flex items-center gap-1 hover:bg-scio-blue hover:text-white"
+                          >
+                            <Eye className="h-3 w-3" />
+                            View
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {totalPages > 1 && (
+                <Pagination className="mt-6">
+                  <PaginationContent className="flex-wrap">
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setPage((p) => Math.max(1, p - 1))
+                        }}
+                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                      />
+                    </PaginationItem>
+                    {pageItems.map((item, index) =>
+                      item === 'ellipsis' ? (
+                        <PaginationItem key={`ellipsis-${index}`}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      ) : (
+                        <PaginationItem key={item}>
+                          <PaginationLink
+                            href="#"
+                            isActive={item === currentPage}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              setPage(item)
+                            }}
+                          >
+                            {item}
+                          </PaginationLink>
+                        </PaginationItem>
+                      )
+                    )}
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setPage((p) => Math.min(totalPages, p + 1))
+                        }}
+                        className={
+                          currentPage === totalPages
+                            ? 'pointer-events-none opacity-50'
+                            : ''
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

@@ -20,6 +20,7 @@ export default function Footer() {
                   src="/scioLabs_light.png"
                   alt="ScioLabs Logo"
                   fill
+                  sizes="160px"
                   className="object-contain object-left"
                   priority
                 />

@@ -22,18 +22,12 @@ export default async function AdminDashboardLayout({ children }: DashboardLayout
     <div className="min-h-screen bg-gray-50"> {/* Add top padding for main header */}
       <div className="h-[80px] w-full flex justify-end bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900">
       </div>
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[280px_1fr] pt-10">
-        {/* Sidebar Column */}
-        <div className="bg-white border-r border-gray-200">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 pt-6 sm:px-6 lg:grid-cols-[280px_1fr] lg:gap-8 lg:pt-10">
+        <aside className="overflow-hidden rounded-2xl bg-white shadow-lg">
           <Sidebar />
-        </div>
-        
-        {/* Main Content Column */}
-        <div className="flex flex-col">
-
-          
-          {/* Main Content */}
-          <main className="flex-1 pl-8">
+        </aside>
+        <div className="flex min-w-0 flex-col">
+          <main className="min-w-0 flex-1 pb-10">
             {children}
           </main>
         </div>
